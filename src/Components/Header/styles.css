@@ -1,0 +1,14 @@
+.headerContainer {
+  display: flex;
+  gap: 15px;
+  padding: 15px 0;
+}
+
+.headerLinkContainer {
+  background-color: #000000;
+}
+
+.headerLink {
+  text-decoration: none;
+  color: #ffffff;
+}
