@@ -1,0 +1,22 @@
+.copyrightText {
+  font-size: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.footerContainer {
+  width: calc(100% - 70px);
+  padding: 0 35px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.prevPage, .nextPage {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.footerLink {
+  text-decoration: none;
+  color: var(--black);
+}

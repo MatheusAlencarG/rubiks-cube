@@ -1,14 +1,33 @@
 .headerContainer {
   display: flex;
-  gap: 15px;
-  padding: 15px 0;
+  width: 100%;
 }
 
 .headerLinkContainer {
-  background-color: #000000;
+  width: -webkit-fill-available;
+  text-align: center;
+  background-color: var(--white);
+  text-decoration: none;
+  color: var(--black);
+  border-radius: 13px;
 }
 
-.headerLink {
-  text-decoration: none;
-  color: #ffffff;
+.headerContainer div {
+  padding: 13px 0;
+}
+
+.headerLinkContainer.active {
+  background-color: var(--black);
+  border: #D7FA19 solid;
+  color: var(--primary-color);
+}
+
+.headerLinkContainer.tutorial.active {
+  border-width: 0 2px 2px 0;
+  border-radius: 13px 0;
+}
+
+.headerLinkContainer.rubick.active {
+  border-width: 0 0 2px 2px;
+  border-radius: 0 13px;
 }

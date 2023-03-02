@@ -1,4 +1,5 @@
 import React from "react";
+import "./styles.css";
 
 import Header from "../Header";
 import Footer from "../Footer";
@@ -10,9 +11,12 @@ type PageRenderProps = {
 function PageRender({ page }: PageRenderProps) {
   return(
     <div className="pageRender">
-      <Header />
-      {page}
-      <Footer />
+      <h1 className="projectTitle">Rubick's Cube Project</h1>
+      <div className="pageContainer">
+        <Header />
+        {page}
+        <Footer />
+      </div>
     </div>
   );
 }

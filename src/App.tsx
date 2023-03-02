@@ -14,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<PageRender page={<Tutorial />} />} />
           <Route path="/tutorial" element={<PageRender page={<Tutorial />} />} />
+          <Route path="/tutorial/:id" element={<PageRender page={<Tutorial />} />} />
           <Route path="/rubicksCube" element={<PageRender page={<RubicksCube />} />} />
         </Routes>
       </Router>
