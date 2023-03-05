@@ -20,3 +20,11 @@
   text-decoration: none;
   color: var(--black);
 }
+
+.footerContainer img {
+  width: 30px;
+}
+
+.prevPage img {
+  transform: rotate(180deg);
+}

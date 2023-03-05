@@ -2,6 +2,7 @@
   padding: 35px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 20px;
   width: calc(100% - 70px);
   height: calc(100% - 70px);
@@ -15,12 +16,13 @@
 
 .tutorialContent {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .tutorialContent p {
   display: flex;
   justify-content: center;
+  gap: 4px;
   flex-direction: column;
   max-width: 45%;
   margin: 0;
@@ -29,4 +31,20 @@
 .tutorialDescription {
   margin: 0;
   text-align: center;
+}
+
+.movementCommands img {
+  width: 14px;
+}
+
+.movementCommands .bottom {
+  transform: rotate(90deg);
+}
+
+.movementCommands .left {
+  transform: rotate(180deg);
+}
+
+.movementCommands .top {
+  transform: rotate(270deg);
 }

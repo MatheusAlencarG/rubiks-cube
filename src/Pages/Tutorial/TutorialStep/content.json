@@ -1,0 +1,32 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "title": "First step - White Cross"
+    },
+    {
+      "id": 2,
+      "title": "Second step - First layer"
+    },
+    {
+      "id": 3,
+      "title": "Third step - Second layer"
+    },
+    {
+      "id": 4,
+      "title": "Fourth step - Yellow cross"
+    },
+    {
+      "id": 5,
+      "title": "Five step - Yelloy face"
+    },
+    {
+      "id": 6,
+      "title": "Sixth step - Corners"
+    },
+    {
+      "id": 7,
+      "title": "Seventh step - Means (Final)"
+    }
+  ]
+}
