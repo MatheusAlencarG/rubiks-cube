@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { ChangePageStateProps } from "./FooterContextTypes";
 
 export const INITIAL_STATE = {
   pageState: {
@@ -19,6 +20,7 @@ export const INITIAL_STATE = {
   },
   prevPage: () => {},
   nextPage: () => {},
+  changePageState: ({newcurrentPageIndex}: ChangePageStateProps) => {},
 }
 
 export const Context = createContext(INITIAL_STATE);

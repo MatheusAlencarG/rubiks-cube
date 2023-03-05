@@ -1,0 +1,47 @@
+.tutorialPartsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+  padding: 20px 35px;
+}
+
+.tutorialPartsDescription h2 {
+  margin: 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.tutorialPartsDescription .description {
+  text-align: center;
+}
+
+.cubeParts {
+  display: flex;
+  gap: 50px;
+}
+
+.partContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+  background: var(--black);
+  border: 2px var(--primary-color) solid;
+  border-radius: 16px;
+  width: 33.3%;
+}
+
+.partContainer h3 {
+  color: var(--primary-color);
+}
+
+.partContainer img {
+  width: 100px;
+}
+
+.partDescription {
+  color: var(--white);
+  padding: 5px;
+}

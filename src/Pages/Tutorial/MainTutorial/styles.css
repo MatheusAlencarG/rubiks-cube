@@ -1,14 +1,13 @@
-.tutorialConatiner {
-  padding: 35px;
+.tutorialContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 20px;
+  justify-content: space-evenly;
   width: calc(100% - 70px);
-  height: calc(100% - 70px);
+  height: 100%;
+  padding: 0 35px;
 }
 
-.tutorialConatiner h2 {
+.tutorialContainer h2 {
   margin: 0;
   text-align: center;
   font-weight: 500;
@@ -31,6 +30,12 @@
 .tutorialDescription {
   margin: 0;
   text-align: center;
+}
+
+.movementCommands {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .movementCommands img {

@@ -3,7 +3,7 @@ import "./styles.css";
 
 function MainTutorial() {
   return(
-    <div className="tutorialConatiner">
+    <div className="tutorialContainer">
       <h2>Game Commands</h2>
       <div className="tutorialContent">
         <div>

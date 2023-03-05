@@ -10,7 +10,11 @@ type TutorialStepProps = {
 function TutorialStep({ id }: TutorialStepProps) {
   const pageId = Number(id) -1;
 
-  return <>{data.content[pageId].title}</>;
+  return(
+    <div className="tutorialStepContainer">
+      {data.content[pageId].title}
+    </div>
+  );
 }
 
 export default TutorialStep;

@@ -4,6 +4,7 @@ import "./styles.css";
 
 import Header from "../Header";
 import Footer from "../Footer";
+import FooterContext from "../Footer/FooterContext/FooterContext";
 
 type PageRenderProps = {
   page: React.ReactElement;
@@ -18,7 +19,7 @@ function PageRender({ page }: PageRenderProps) {
       ...params,
       ...page.props
     }
-  )
+  );
 
   return(
     <div className="pageRender">
@@ -26,7 +27,9 @@ function PageRender({ page }: PageRenderProps) {
       <div className="pageContainer">
         <Header />
         {clonePage}
-        <Footer />
+        <FooterContext>
+          <Footer />
+        </FooterContext>
       </div>
     </div>
   );
