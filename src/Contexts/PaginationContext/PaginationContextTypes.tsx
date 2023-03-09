@@ -11,6 +11,6 @@ export type ChangePageStateProps = {
   newcurrentPageIndex: number;
 }
 
-export type FooterContextProps = {
+export type PaginationContextProps = {
   children: ReactNode;
 }

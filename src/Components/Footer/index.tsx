@@ -1,14 +1,12 @@
 import React, { useContext } from "react";
 import "./styles.css";
-import { Context } from "./FooterContext/Context";
+import { Context } from "../../Contexts/PaginationContext/Context";
 
 import { Link } from "react-router-dom";
 
 function Footer() {
   const { pageState, nextPage, prevPage, changePageState } = useContext(Context);
 
-  console.log(pageState);
-  
   function verifyPage(): boolean {
     return window.location.pathname.includes('tutorial') || window.location.pathname === '/';
   }
@@ -37,18 +35,14 @@ function Footer() {
             </div>
           )}
           {pageState.listOfPages.map((page, index) => {
-            if (pageState.listOfPages.indexOf(page) === pageState.currentPageIndex) {
-              return <Link to={page} onClick={() => changePageState({newcurrentPageIndex: index})}> 
-                <div 
-                  key={index} 
-                  className="page active">
-                </div>
+            return (
+              <Link 
+                key={index}
+                to={page} 
+                onClick={() => changePageState({newcurrentPageIndex: index})}>
+                <div className={`page ${pageState.listOfPages.indexOf(page) === pageState.currentPageIndex ? 'active' : ''}`}></div>
               </Link>
-            } 
-
-            return <Link to={page} onClick={() => changePageState({newcurrentPageIndex: index})}>
-              <div key={index} className="page"></div>
-            </Link>
+            )
           })}
           {verifyNextPage() ? (
             <div className="nextPage active">

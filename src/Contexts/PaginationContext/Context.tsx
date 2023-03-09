@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { ChangePageStateProps } from "./FooterContextTypes";
+import { ChangePageStateProps } from "./PaginationContextTypes";
 
 export const INITIAL_STATE = {
   pageState: {

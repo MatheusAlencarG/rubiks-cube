@@ -16,8 +16,6 @@ function App() {
         <Route path="/tutorial" element={<PageRender page={<MainTutorial />} />} />
         <Route path="/tutorial/parts" element={<PageRender page={<TutorialParts />} />} />
         <Route path="/tutorial/step/:id" element={<PageRender page={<TutorialStep />} />} />
-      </Routes>
-      <Routes>
         <Route path="*" element={<PageNotFound />}></Route>
         <Route path="/rubicksCube" element={<PageRender page={<RubicksCube />} />} />
       </Routes>

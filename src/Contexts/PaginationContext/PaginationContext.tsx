@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { Context, INITIAL_STATE } from '../../Footer/FooterContext/Context';
-import { ChangePageStateProps, FooterContextProps, PageSTate } from './FooterContextTypes';
+import { Context, INITIAL_STATE } from './Context';
+import { ChangePageStateProps, PaginationContextProps, PageSTate } from './PaginationContextTypes';
 
-function FooterContext({ children }: FooterContextProps) {
+function PaginationContext({ children }: PaginationContextProps) {
   const location = useLocation();
   const [ pageState, setPageState ] = useState<PageSTate>(INITIAL_STATE.pageState);
 
@@ -51,4 +51,4 @@ function FooterContext({ children }: FooterContextProps) {
   )
 }
 
-export default FooterContext;
+export default PaginationContext;

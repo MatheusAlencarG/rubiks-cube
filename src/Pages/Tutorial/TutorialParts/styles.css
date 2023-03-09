@@ -2,8 +2,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  height: 100%;
   padding: 20px 35px;
+  width: calc(100% - 70px);
 }
 
 .tutorialPartsDescription h2 {
@@ -18,7 +18,9 @@
 
 .cubeParts {
   display: flex;
+  overflow-x: auto;
   gap: 50px;
+  width: calc(9 * 200px);
 }
 
 .partContainer {
@@ -30,7 +32,7 @@
   background: var(--black);
   border: 2px var(--primary-color) solid;
   border-radius: 16px;
-  width: 33.3%;
+  width: 200px;
 }
 
 .partContainer h3 {
@@ -38,10 +40,11 @@
 }
 
 .partContainer img {
-  width: 100px;
+  width: 120px;
 }
 
 .partDescription {
   color: var(--white);
   padding: 5px;
+  font-size: 13px;
 }
