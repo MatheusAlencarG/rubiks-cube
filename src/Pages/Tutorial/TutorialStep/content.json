@@ -2,31 +2,258 @@
   "content": [
     {
       "id": 1,
-      "title": "First step - White Cross"
+      "title": "First step - White Cross",
+      "description": "At this stage, we need to make a white cross under the cube, remembering that for better teaching we will always leave the cube with the white center facing down by default",
+      "parts": [
+        {
+          "id": 1,
+          "title": "White Cross on Yellow center",
+          "image": "/images/white-cross-yellow-center.png",
+          "description": "This part has no formula, it needs greater intuition to leave the pieces in the correct position, but a tip is to always remember the 6 movements of the faces available in the cube"
+        },
+        {
+          "id": 2,
+          "title": "Middle White Aligned With Side Center",
+          "image": "/images/white-cross-center-alignment.png",
+          "description": "In this part you will need to align the second color of the middle white with any side center, as shown in the image where two were aligned, but you can do it in just one and move on to the next part and then come back to that part to do the other white pieces"
+        },
+        {
+          "id": 3,
+          "title": "Final movements",
+          "image": "/images/white-cross-movements.png",
+          "description": "In this part you will need to move the already aligned white pieces with the center down 2 times, as shown in the image, you need to do this for all white pieces aligned with the center"
+        },
+        {
+          "id": 4,
+          "title": "Final",
+          "image": "/images/white-cross-final.png",
+          "description": "At the end of these movements, the result has to be this:"
+        }
+      ],
+      "videoURLOne": "https://www.youtube.com/watch?v=CNHOWsQes7w&list=PLm6BV626ZnNIylC56ikwrsRCxi9fgCsM2&index=2",
+      "videoURLTwo": "https://www.youtube.com/watch?v=jVciPHWqIpQ&list=PLm6BV626ZnNIylC56ikwrsRCxi9fgCsM2&index=3"
     },
     {
       "id": 2,
-      "title": "Second step - First layer"
+      "title": "Second step - First layer",
+      "description": "In this step we need to finish the first layer, for that we will be faced with some situations to align the corners, the steps below explain each one of them",
+      "parts": [
+        {
+          "id": 1,
+          "title": "Align white corner - Situation 1",
+          "image": "/images/align-white-corner-one.png",
+          "description": "If you find a corner positioned at the top of the cube exactly as shown in the image, do this formula: D, Q, Q, 'D. This will place the white color on the third layer. If you find a piece already in the third layer, go to part 4"
+        },
+        {
+          "id": 2,
+          "title": "Align white corner - Situation 2",
+          "image": "/images/align-white-corner-two.png",
+          "description": "If you find a corner positioned at the first layer of the cube exactly as shown in the image, do this formula: D, 'Q, 'D. This will place the white color on the third layer. If you find a piece already in the third layer, go to part 4"
+        },
+        {
+          "id": 3,
+          "title": "Align white corner - Situation 3",
+          "image": "/images/align-white-corner-three.png",
+          "description": "If you find a corner positioned at the bottom of the cube but the other two colors are not aligned with the other 2 centers, position the cube as in the image and do this formula: D, 'Q, 'D. This will place the white color on the third layer. If you find a piece already in the third layer, go to part 4"
+        },
+        {
+          "id": 4,
+          "title": "Aligning the white corner on the white face",
+          "image": "/images/align-white-corner-on-face.png",
+          "description": "With one of the white corners already aligned in the third layer, you need to take the side color of the white corner that is already in the third layer and align with the center of the same color, as in the example of the image the red can do this with the furniture Q, This done and with the cube positioned the same way in the image make this formula: D, Q, 'D, this will leave the white corner on the white face."
+        },
+        {
+          "id": 5,
+          "title": "First layer finished",
+          "image": "/images/first-layer-finished.png",
+          "description": "After completing the previous step with all the white corners, the cube will have its face and the first layer finished, as shown in the image."
+        }
+      ],
+      "videoURLOne": "https://www.youtube.com/watch?v=tpnbwqHFyCw&list=PLm6BV626ZnNIylC56ikwrsRCxi9fgCsM2&index=4"
     },
     {
       "id": 3,
-      "title": "Third step - Second layer"
+      "title": "Third step - Second layer",
+      "description": "In this step we need to align the middles of the second layer, for this we need to have means in the third layer that none of the two colors is yellow. If all are yellow, follow the first part of this step, if not, continue with the second part",
+      "parts": [
+        {
+          "id": 1,
+          "title": "Place a middle without yellow in the third layer",
+          "image": "/images/place-middle-without-yellow.png",
+          "description": "If you don't have any middle without yellow in the third layer, but you have a wrong middle in the second layer as shown in the image, position the cube as shown in the image and do this formula: D, 'Q, 'D, 'Q, 'W, Q, W. This will take the middle of the second layer and put it on the third layer"
+        }, 
+        {
+          "id": 2,
+          "title": "Align the middle with the side center",
+          "image": "/images/place-middle-without-yellow-center.png",
+          "description": "With the middle that doesn't have yellow in the third layer, we need to align the color of the side with the center side, as in the image example:"
+        },
+        {
+          "id": 3,
+          "title": "Align the middle in the correct place",
+          "image": "/images/place-middle-without-yellow-correct-place.png",
+          "description": "With the middle aligned with the lateral center, we need to place this middle in the correct place, but for that there are two variants, if the top color (green in the example of the image) is the same as the center of the right (as in the example of the image) , follow this formula: Q, D, 'Q, 'D, 'Q, 'W, Q, W. If it's to the left, follow this formula: 'Q, A, Q, 'A, Q, W, 'Q, 'W"
+        },
+        {
+          "id": 4,
+          "title": "Second layer finished",
+          "image": "/images/second-layer-finished.png",
+          "description": "After finishing these formulas with all the middle that don't have yellow, you finish the second layer, looking as shown in the image:"
+        }
+      ],
+      "videoURLOne": "https://www.youtube.com/watch?v=uB1szuiQETQ&list=PLm6BV626ZnNIylC56ikwrsRCxi9fgCsM2&index=5"
     },
     {
       "id": 4,
-      "title": "Fourth step - Yellow cross"
+      "title": "Fourth step - Yellow cross",
+      "description": "In this step you need to have a yellow cross at the top of the cube as in the image of the last part of this step, if you already have this yellow cross, you can move on to the next step",
+      "parts": [
+        {
+          "id": 1,
+          "title": "Only yellow center",
+          "image": "/images/only-yellow-center.png",
+          "description": "In this part, if you only have the yellow center and no yellow middle is facing up, do this formula: W, D, Q, 'D, 'Q, 'W. If not, you can proceed to the next part."
+        },
+        {
+          "id": 2,
+          "title": "Reverse yellow L",
+          "image": "/images/reverse-yellow-l.png",
+          "description": "In this part you need to position the cube as shown in the image and make this formula: W, D, Q, 'D, 'Q, 'W"
+        },
+        {
+          "id": 3,
+          "title": "Yellow line",
+          "image": "/images/yellow-line.png",
+          "description": "In this part you need to position the cube as shown in the image and make this formula: W, D, Q, 'D, 'Q, 'W"
+        },
+        {
+          "id": 4,
+          "title": "Yellow cross finished",
+          "image": "/images/yellow-cross-finished.png",
+          "description": "In the end we need to have the cube like this:"
+        }
+      ],
+      "videoURLOne": "https://www.youtube.com/watch?v=4gzlzxbam4Y&list=PLm6BV626ZnNIylC56ikwrsRCxi9fgCsM2&index=6"
     },
     {
       "id": 5,
-      "title": "Five step - Yelloy face"
+      "title": "Five step - Yelloy face",
+      "description": "At this stage we can have several variants of the yellow face, with the list of variants you can only verify which is your case and follow the formula, if it is already the same way as the image of the last part of this step, you can move on to the next step",
+      "parts": [
+        {
+          "id": 1,
+          "title": "Yellow face - Situation 1",
+          "image": "/images/yellow-face-situation-1.png",
+          "description": "In this part, check if the cube has this color configuration and in that position, if so, follow this formula: D, Q, 'D, Q, D, Q, Q, 'D. After that double check your cube color configuration"
+        },
+        {
+          "id": 2,
+          "title": "Yellow face - Situation 2",
+          "image": "/images/yellow-face-situation-2.png",
+          "description": "In this part, check if the cube has this color configuration and in that position, if so, follow this formula: D, Q, 'D, Q, D, Q, Q, 'D. After that double check your cube color configuration"
+        },
+        {
+          "id": 3,
+          "title": "Yellow face - Situation 3",
+          "image": "/images/yellow-face-situation-3.png",
+          "description": "In this part, check if the cube has this color configuration and in that position, if so, follow this formula: D, Q, 'D, Q, D, Q, Q, 'D. After that double check your cube color configuration"
+        },
+        {
+          "id": 4,
+          "title": "Yellow face - Situation 4",
+          "image": "/images/yellow-face-situation-4.png",
+          "description": "In this part, check if the cube has this color configuration and in that position, if so, follow this formula: D, Q, 'D, Q, D, Q, Q, 'D. After that double check your cube color configuration"
+        },
+        {
+          "id": 5,
+          "title": "Yellow face - Situation 5",
+          "image": "/images/yellow-face-situation-5.png",
+          "description": "In this part, check if the cube has this color configuration and in that position, if so, follow this formula: D, Q, 'D, Q, D, Q, Q, 'D. After that double check your cube color configuration"
+        },
+        {
+          "id": 6,
+          "title": "Yellow face - Situation 6",
+          "image": "/images/yellow-face-situation-6.png",
+          "description": "In this part, check if the cube has this color configuration and in that position, if so, follow this formula: D, Q, 'D, Q, D, Q, Q, 'D. After that double check your cube color configuration"
+        },
+        {
+          "id": 7,
+          "title": "Yellow face - Situation 7",
+          "image": "/images/yellow-face-situation-7.png",
+          "description": "In this part, check if the cube has this color configuration and in that position, if so, follow this formula: D, Q, 'D, Q, D, Q, Q, 'D. After that double check your cube color configuration"
+        },
+        {
+          "id": 8,
+          "title": "Yellow face finished",
+          "image": "/images/yellow-face-finished.png",
+          "description": "In the end we need to have the cube like this:"
+        }
+      ],
+      "videoURLOne": "https://www.youtube.com/watch?v=JsS-619lLz0&list=PLm6BV626ZnNIylC56ikwrsRCxi9fgCsM2&index=7"
     },
     {
       "id": 6,
-      "title": "Sixth step - Corners"
+      "title": "Sixth step - Corners",
+      "description": "In this step we need to align all the corners with their centers at the same time, if it is already the same way as the image of the last part of this step, you can move on to the next step",
+      "parts": [
+        {
+          "id": 1,
+          "title": "Corners - Situation 1",
+          "image": "/images/corners-situation-1.png",
+          "description": "In this situation, where we don't have any pair of corners of the same color on the same face as shown in the image, follow this formula: 🠻, D, 'Q, D, E, E, 'D, Q, D, E, E, D ,D"
+        },
+        {
+          "id": 2,
+          "title": "Corners - Situation 2",
+          "image": "/images/corners-situation-2.png",
+          "description": "In this situation, where we have at least one pair of corners of the same color on the same face as shown in the image, follow this formula with this pair of corners in front of the cube also in the image: 🠻, D, 'Q, D, E, E , 'D, Q, D, E, E, D, D"
+        },
+        {
+          "id": 3,
+          "title": "Corners finished",
+          "image": "/images/corners-finished.png",
+          "description": "In the end we need to have the cube like this:"
+        }
+      ],
+      "videoURLOne": "https://www.youtube.com/watch?v=mSHSU84BTwI&list=PLm6BV626ZnNIylC56ikwrsRCxi9fgCsM2&index=8"
     },
     {
       "id": 7,
-      "title": "Seventh step - Means (Final)"
+      "title": "Seventh step - Middles (Final)",
+      "description": "In this step we need to align all the middles with their centers at the same time",
+      "parts": [
+        {
+          "id": 1,
+          "title": "Middles - Situation 1",
+          "image": "/images/corners-finished.png",
+          "description": "In this situation, where we don't have any completed side faces, like in the picture, you need to follow this formula from any position of the cube: W, W, Q, 'D, 'A, W, W, D, A, Q, W, W"
+        },
+        {
+          "id": 2,
+          "title": "Middles - Situation 2",
+          "image": "/images/middles-situation-2.png",
+          "description": "With a complete side face the same as shown in the image, depending on the positions of the pieces it has different formulas where it will be presented in the next 2 parts"
+        },
+        {
+          "id": 3,
+          "title": "Middles - Situation 3",
+          "image": "/images/middles-situation-3.png",
+          "description": "With a complete side face, you need to check if the middle piece color and right of the cube (blue in the image example) is the same as the center color (red in the image example), as in the example it is not equal, you need to follow this formula : W, W, 'Q, 'D, 'A, W, W, D, A, 'Q, W, W"
+        },
+        {
+          "id": 4,
+          "title": "Middles - Situation 4",
+          "image": "/images/middles-situation-4.png",
+          "description": "With a complete side face, you need to check if the middle color on the right of the cube (better red in the image example) is the same as the center color (red in the image example), as in the example it is the same, you need to follow this formula: W, W, Q, 'D, 'A, W, W, D, A, Q, W, W"
+        },
+        {
+          "id": 5,
+          "title": "Middles finished",
+          "image": "/images/middles-finished.png",
+          "description": "In the end we need to have the cube like this:"
+        }
+      ],
+      "videoURLOne": "https://www.youtube.com/watch?v=RAvMGnXazlc&list=PLm6BV626ZnNIylC56ikwrsRCxi9fgCsM2&index=9"
     }
   ]
 }

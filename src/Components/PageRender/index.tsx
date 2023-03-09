@@ -4,7 +4,8 @@ import "./styles.css";
 
 import Header from "../Header";
 import Footer from "../Footer";
-import FooterContext from "../Footer/FooterContext/FooterContext";
+import PaginationContext from "../../Contexts/PaginationContext/PaginationContext";
+import RubicksCubeContext from "../../Contexts/RubicksCubeContext/RubicksCubeContext";
 
 type PageRenderProps = {
   page: React.ReactElement;
@@ -25,11 +26,13 @@ function PageRender({ page }: PageRenderProps) {
     <div className="pageRender">
       <h1 className="projectTitle">Rubick's Cube Project</h1>
       <div className="pageContainer">
-        <Header />
-        {clonePage}
-        <FooterContext>
-          <Footer />
-        </FooterContext>
+        <PaginationContext>
+          <RubicksCubeContext>
+            <Header />
+            {clonePage}
+            <Footer />
+          </RubicksCubeContext>
+        </PaginationContext>
       </div>
     </div>
   );

@@ -8,22 +8,22 @@ function MainTutorial() {
       <div className="tutorialContent">
         <div>
           <div>
-            <b>W</b> = Front move<br />
+            <b>W</b> = Front face movement<br />
           </div>
           <div>
-            <b>A</b> = Left move<br />
+            <b>A</b> = Left face movement<br />
           </div>
           <div>
-            <b>S</b> = Back move<br />
+            <b>S</b> = Back face movement<br />
           </div>
           <div>
-            <b>D</b> = Rigth move<br />
+            <b>D</b> = Rigth face movement<br />
           </div>
           <div>
-            <b>Q</b> = Top move<br />
+            <b>Q</b> = Top face movement<br />
           </div>
           <div>
-            <b>E</b> = Botton move<br />
+            <b>E</b> = Botton face movement<br />
           </div>
         </div>
         <div className="movementCommands">

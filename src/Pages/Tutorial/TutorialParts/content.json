@@ -1,0 +1,53 @@
+{
+  "content": {
+    "title": "Cube parts names and positions",
+    "description": "We have <strong>3</strong> diferents parts on the cube, first of then is the <strong>Corner</strong>, the second is the <strong>Middle</strong>, and the last one is the <strong>Center</strong>. We have 3 diferent layers on cube, we gonna call then <strong>First layer</strong>, <strong>Second Layer</strong>, <strong>Third Layer</strong>. We have 3 diferents faces, the first of then it's <strong>Top Face</strong>, the second one is the <strong>Botton Face</strong>, and the last one is the <strong>Lateral Face</strong>",
+    "parts": [
+      {
+        "title": "Corner",
+        "imgURL": "/images/cube-corner.png",
+        "partDescription": "This is the part of the cube that has 3 colors in total"
+      },
+      {
+        "title": "Middle",
+        "imgURL": "/images/cube-middle.png",
+        "partDescription": "This is the part of the cube that has 2 colors in total"
+      },
+      {
+        "title": "Center",
+        "imgURL": "/images/cube-center.png",
+        "partDescription": "This is the part of the cube that has only 1 color, it is a fixed part, it defines where the colored face is"
+      },
+      {
+        "title": "First Layer",
+        "imgURL": "/images/first-layer.png",
+        "partDescription": "The first layer is all the cube base pieces"
+      },
+      {
+        "title": "Second Layer",
+        "imgURL": "/images/second-layer.png",
+        "partDescription": "The second layer is all the middle pieces of the cube"
+      },
+      {
+        "title": "Third Layer",
+        "imgURL": "/images/third-layer.png",
+        "partDescription": "The third layer is all the top pieces of the cube"
+      },
+      {
+        "title": "Top Face",
+        "imgURL": "/images/top-face.png",
+        "partDescription": "The top face of the cube is just the top color which is always represented by the center piece color of the face in question"
+      },
+      {
+        "title": "Botton Face",
+        "imgURL": "/images/botton-face.png",
+        "partDescription": "The botton face of the cube is just the botton color which is always represented by the center piece color of the face in question"
+      },
+      {
+        "title": "Lateral Face",
+        "imgURL": "/images/lateral-face.png",
+        "partDescription": "The lateral face of the cube is just the color of all laterals which is always represented by the center piece color of the face in question"
+      }
+    ]
+  }
+}

@@ -5,3 +5,69 @@
   height: 100%;
   padding: 20px 35px;
 }
+
+.tutorialStepDescription h2 {
+  margin: 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.tutorialStepDescription p {
+  text-align: center;
+}
+
+.partsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  background: var(--black);
+  border: var(--primary-color) 2px solid;
+  border-radius: 16px;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 600px;
+  min-height: 350px;
+}
+
+.part {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: calc(50% - 60px);
+  background: var(--white);
+  border: var(--primary-color) 2px solid;
+  border-radius: 16px;
+  padding: 15px;
+  position: relative;
+}
+
+.part h3 {
+  margin: 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.part img {
+  width: 160px;
+}
+
+.videos {
+  text-align: center;
+}
+
+.videos a {
+  padding: 3px;
+}
+
+.partId {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  background: var(--black);
+  color: var(--primary-color);
+  padding: 3px;
+  border: var(--primary-color) 2px solid;
+  border-radius: 10px;
+}
