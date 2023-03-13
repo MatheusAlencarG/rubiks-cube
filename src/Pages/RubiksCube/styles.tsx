@@ -21,9 +21,14 @@ const Cube = styled.div<CubeProps>`
   height: ${props => {return props.heightCustom + 'px'}};
   transform-style: preserve-3d;
   transition: .5s;
-  transform: ${porps => {
-    return `rotateX(${porps.rotateX}deg) rotateY(${porps.rotateY}deg) rotateZ(${porps.rotateZ}deg)`}
-  };
+  transform: ${props => {
+    return `
+      rotate3d(0, 0, 1, ${props.rotateZ}deg)
+      rotateX(${props.rotateX}deg)
+      rotateY(${props.rotateY}deg)
+    `
+  }};
+  user-select: none;
 `;
 
 const Piece = styled.div<PieceProps>`
@@ -45,9 +50,9 @@ const Piece = styled.div<PieceProps>`
       translateX(${props.translateX}px) 
       translateY(${props.translateY}px) 
       translateZ(${props.translateZ + props.widthCustom}px)
-      rotateX(${props.rotateX})
-      rotateY(${props.rotateY})
-      rotateZ(${props.rotateZ})
+      rotateX(${props.rotateX}deg)
+      rotateY(${props.rotateY}deg)
+      rotateZ(${props.rotateZ}deg)
     `
   }};
 
@@ -61,7 +66,7 @@ const Piece = styled.div<PieceProps>`
   &[data-piecetype="middle"][data-firstcolor="yellow"] .top,
   &[data-piecetype="middle"][data-secondcolor="yellow"] .top,
   &[data-piecetype="center"][data-firstcolor="yellow"] .top {
-    background-color: ${props => {return props.firstFace}};
+    background-color: ${props => {return props.topFaceColor}};
   }
 
   &[data-piecetype="corner"][data-firstcolor="red"] .front,
@@ -70,7 +75,7 @@ const Piece = styled.div<PieceProps>`
   &[data-piecetype="middle"][data-firstcolor="red"] .front,
   &[data-piecetype="middle"][data-secondcolor="red"] .front,
   &[data-piecetype="center"][data-firstcolor="red"] .front {
-    background-color: ${props => {return props.thirdFace}};
+    background-color: ${props => {return props.frontFaceColor}};
   }
 
   &[data-piecetype="corner"][data-firstcolor="green"] .right,
@@ -79,7 +84,7 @@ const Piece = styled.div<PieceProps>`
   &[data-piecetype="middle"][data-firstcolor="green"] .right,
   &[data-piecetype="middle"][data-secondcolor="green"] .right,
   &[data-piecetype="center"][data-firstcolor="green"] .right {
-    background-color: ${props => {return props.sixthFace}};
+    background-color: ${props => {return props.rightFaceColor}};
   }
 
   &[data-piecetype="corner"][data-firstcolor="white"] .bottom,
@@ -88,7 +93,7 @@ const Piece = styled.div<PieceProps>`
   &[data-piecetype="middle"][data-firstcolor="white"] .bottom,
   &[data-piecetype="middle"][data-secondcolor="white"] .bottom,
   &[data-piecetype="center"][data-firstcolor="white"] .bottom {
-    background-color: ${props => {return props.secondFace}};
+    background-color: ${props => {return props.bottomFaceColor}};
   }
 
   &[data-piecetype="corner"][data-firstcolor="orange"] .back,
@@ -97,7 +102,7 @@ const Piece = styled.div<PieceProps>`
   &[data-piecetype="middle"][data-firstcolor="orange"] .back,
   &[data-piecetype="middle"][data-secondcolor="orange"] .back,
   &[data-piecetype="center"][data-firstcolor="orange"] .back {
-    background-color: ${props => {return props.fourthFace}};
+    background-color: ${props => {return props.backFaceColor}};
   }
 
   &[data-piecetype="corner"][data-firstcolor="blue"] .left,
@@ -106,7 +111,7 @@ const Piece = styled.div<PieceProps>`
   &[data-piecetype="middle"][data-firstcolor="blue"] .left,
   &[data-piecetype="middle"][data-secondcolor="blue"] .left,
   &[data-piecetype="center"][data-firstcolor="blue"] .left {
-    background-color: ${props => {return props.fivethFace}};
+    background-color: ${props => {return props.leftFaceColor}};
   }
 `;
 

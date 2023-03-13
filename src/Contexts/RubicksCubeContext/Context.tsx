@@ -1,6 +1,7 @@
 import { createContext } from "react";
+import { Cube, FacePiece, Initial_State } from "./RubicksCubeContextTypes";
 
-const facePiece = {
+const facePiece: FacePiece = {
   width: 80,
   height: 80,
   lineHeight: 80,
@@ -11,7 +12,7 @@ const facePiece = {
   }
 }
 
-const cube = {
+const cube: Cube = {
   cube: {
     width: 240,
     height: 240,
@@ -21,12 +22,702 @@ const cube = {
       z: 0,
     },
     pieceRadius: 20,
-    firstFace: "#ffff00",
-    secondFace: "#ffffff",
-    thirdFace: "#ff0000",
-    fourthFace: "#ffa500",
-    fivethFace: "#0000ff",
-    sixthFace: "#008000",
+    frontFace: {
+      cornerPieces: [
+        {
+          transformOrigin: {
+            x: 120,
+            y: 120,
+            z: 40,
+          },
+          colors: [
+            "red",
+            "yellow",
+            "blue",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: 120,
+            z: 40,
+          },
+          colors: [
+            "red",
+            "yellow",
+            "green",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: -40,
+            z: 40,
+          },
+          colors: [
+            "red",
+            "green",
+            "white",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: -40,
+            z: 40,
+          },
+          colors: [
+            "red",
+            "blue",
+            "white",
+          ]
+        }
+      ],
+      middlePieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 120,
+            z: 40,
+          },
+          colors: [
+            "red",
+            "yellow",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: 40,
+            z: 40,
+          },
+          colors: [
+            "red",
+            "green",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: -40,
+            z: 40,
+          },
+          colors: [
+            "red",
+            "white",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: 40,
+            z: 40,
+          },
+          colors: [
+            "red",
+            "blue",
+          ]
+        }
+      ],
+      centerPieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: 40,
+          },
+          colors: [
+            "red",
+          ]
+        }
+      ],
+      rotateAxle: "z",
+      faceColor: {
+        hexadecimal: "#ff0000",
+        color: "red"
+      },
+      color: "red",
+    },
+    backFace: {
+      cornerPieces: [
+        {
+          transformOrigin: {
+            x: -40,
+            y: 120,
+            z: 40,
+          },
+          colors: [
+            "orange",
+            "green",
+            "yellow",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: 120,
+            z: 40,
+          },
+          colors: [
+            "orange",
+            "yellow",
+            "blue",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: -40,
+            z: 40,
+          },
+          colors: [
+            "orange",
+            "blue",
+            "white",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: -40,
+            z: 40,
+          },
+          colors: [
+            "orange",
+            "green",
+            "white",
+          ]
+        }
+      ],
+      middlePieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 120,
+            z: 40,
+          },
+          colors: [
+            "orange",
+            "yellow",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: 40,
+            z: 40,
+          },
+          colors: [
+            "orange",
+            "blue",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: -40,
+            z: 40,
+          },
+          colors: [
+            "orange",
+            "white",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: 40,
+            z: 40,
+          },
+          colors: [
+            "orange",
+            "green",
+          ]
+        }
+      ],
+      centerPieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: 40,
+          },
+          colors: [
+            "orange",
+          ]
+        }
+      ],
+      rotateAxle: "z",
+      faceColor: {
+        hexadecimal: "#ffa500",
+        color: "orange"
+      },
+      color: "orange",
+    },
+    topFace: {
+      cornerPieces: [
+        {
+          transformOrigin: {
+            x: 120,
+            y: 40,
+            z: -80,
+          },
+          colors: [
+            "yellow",
+            "blue",
+            "red",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: 40,
+            z: -80,
+          },
+          colors: [
+            "yellow",
+            "green",
+            "red",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: 40,
+            z: 80,
+          },
+          colors: [
+            "yellow",
+            "green",
+            "orange",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: 40,
+            z: 80,
+          },
+          colors: [
+            "yellow",
+            "orange",
+            "blue",
+          ]
+        }
+      ],
+      middlePieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: -80,
+          },
+          colors: [
+            "yellow",
+            "red",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: 40,
+            z: 0,
+          },
+          colors: [
+            "yellow",
+            "green",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: 80,
+          },
+          colors: [
+            "yellow",
+            "orange",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: 0,
+            z: 0,
+          },
+          colors: [
+            "yellow",
+            "blue",
+          ]
+        }
+      ],
+      centerPieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 0,
+            z: 0,
+          },
+          colors: [
+            "yellow",
+          ]
+        }
+      ],
+      rotateAxle: "y",
+      faceColor: {
+        hexadecimal: "#ffff00",
+        color: "yellow",
+      },
+      color: "yellow",
+    },
+    bottomFace: {
+      cornerPieces: [
+        {
+          transformOrigin: {
+            x: -40,
+            y: 40,
+            z: -80,
+          },
+          colors: [
+            "white",
+            "green",
+            "red",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: 40,
+            z: -80,
+          },
+          colors: [
+            "white",
+            "blue",
+            "red",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: 40,
+            z: 80,
+          },
+          colors: [
+            "white",
+            "blue",
+            "orange",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: 40,
+            z: 80,
+          },
+          colors: [
+            "white",
+            "orange",
+            "green",
+          ]
+        }
+      ],
+      middlePieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: -80,
+          },
+          colors: [
+            "white",
+            "red",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 120,
+            y: 40,
+            z: 0,
+          },
+          colors: [
+            "white",
+            "blue",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: 80,
+          },
+          colors: [
+            "white",
+            "orange",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: -40,
+            y: 40,
+            z: 0,
+          },
+          colors: [
+            "white",
+            "green",
+          ]
+        }
+      ],
+      centerPieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 0,
+            z: 0,
+          },
+          colors: [
+            "white",
+          ]
+        }
+      ],
+      rotateAxle: "y",
+      faceColor: {
+        hexadecimal: "#ffffff",
+        color: "white",
+      },
+      color: "white",
+    },
+    rightFace: {
+      cornerPieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 120,
+            z: -80,
+          },
+          colors: [
+            "green",
+            "yellow",
+            "red",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: 120,
+            z: 80,
+          },
+          colors: [
+            "green",
+            "yellow",
+            "orange",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: -40,
+            z: -80,
+          },
+          colors: [
+            "green",
+            "red",
+            "white",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: -40,
+            z: 80,
+          },
+          colors: [
+            "green",
+            "orange",
+            "white",
+          ]
+        }
+      ],
+      middlePieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 120,
+            z: 0,
+          },
+          colors: [
+            "green",
+            "yellow",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: 80,
+          },
+          colors: [
+            "green",
+            "orange",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: -40,
+            z: 0,
+          },
+          colors: [
+            "green",
+            "white",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: -80,
+          },
+          colors: [
+            "green",
+            "red",
+          ]
+        }
+      ],
+      centerPieces: [
+        {
+          transformOrigin: {
+            x: 0,
+            y: 40,
+            z: 0,
+          },
+          colors: [
+            "green",
+          ]
+        }
+      ],
+      rotateAxle: "x",
+      faceColor: {
+        hexadecimal: "#008000",
+        color: "green",
+      },
+      color: "green",
+    },
+    leftFace: {
+      cornerPieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 120,
+            z: 80,
+          },
+          colors: [
+            "blue",
+            "orange",
+            "yellow",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: 120,
+            z: -80,
+          },
+          colors: [
+            "blue",
+            "yellow",
+            "red",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: -40,
+            z: -80,
+          },
+          colors: [
+            "blue",
+            "red",
+            "white",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: -40,
+            z: 80,
+          },
+          colors: [
+            "blue",
+            "orange",
+            "white",
+          ]
+        }
+      ],
+      middlePieces: [
+        {
+          transformOrigin: {
+            x: 40,
+            y: 120,
+            z: 0,
+          },
+          colors: [
+            "blue",
+            "yellow",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: -80,
+          },
+          colors: [
+            "blue",
+            "red",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: -40,
+            z: 0,
+          },
+          colors: [
+            "blue",
+            "white",
+          ]
+        },
+        {
+          transformOrigin: {
+            x: 40,
+            y: 40,
+            z: 80,
+          },
+          colors: [
+            "blue",
+            "orange",
+          ]
+        }
+      ],
+      centerPieces: [
+        {
+          transformOrigin: {
+            x: 0,
+            y: 40,
+            z: 0,
+          },
+          colors: [
+            "blue",
+          ]
+        }
+      ],
+      rotateAxle: "x",
+      faceColor: {
+        hexadecimal: "#0000ff",
+        color: "blue",
+      },
+      color: "blue",
+    },
     pieces: [
       {
         id: 1,
@@ -51,7 +742,7 @@ const cube = {
         data: {
           layer: 'third',
           type: 'corner',
-          colors: {
+          colors: { // Tentar separar as cores das faces para conseguir verificar melhor 
             firstColor: {
               color: "yellow",
               face: "yellow"
@@ -957,10 +1648,16 @@ const cube = {
   }
 }
 
-export const INITIAL_STATE = {
+export const INITIAL_STATE: Initial_State = {
   rubicksCubeState: cube,
-  horizontalMovement: (movementType: string) => {},
-  verticalMovement: (movementType: string) => {},
+  horizontalCubeMovement: (movementType: string) => {},
+  verticalCubeMovement: (movementType: string) => {},
+  rightPiecesMovement: (movementType: string) => {},
+  leftPiecesMovement: (movementType: string) => {},
+  topPiecesMovement: (movementType: string) => {},
+  bottomPiecesMovement: (movementType: string) => {},
+  frontPiecesMovement: (movementType: string) => {},
+  backPiecesMovement: (movementType: string) => {},
 }
 
 export const Context = createContext(INITIAL_STATE);

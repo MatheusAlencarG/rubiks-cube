@@ -20,12 +20,12 @@ export type PieceProps = {
   rotateX: number;
   rotateY: number;
   rotateZ: number;
-  firstFace: string;
-  secondFace: string;
-  thirdFace: string;
-  fourthFace: string;
-  fivethFace: string;
-  sixthFace: string;
+  topFaceColor: string;
+  bottomFaceColor: string;
+  leftFaceColor: string;
+  rightFaceColor: string;
+  frontFaceColor: string;
+  backFaceColor: string;
 }
 
 export type PieceFaceProps = {

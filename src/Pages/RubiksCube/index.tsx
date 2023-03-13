@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { ReactNode, useContext, useEffect } from "react";
 import "./styles.css";
 import classNames from "classnames";
@@ -6,11 +7,20 @@ import { Context } from "../../Contexts/RubicksCubeContext/Context";
 import { RenderPieceFaceProps } from "./RubiksCubeTypes";
 import { Cube, Piece, PieceFace, CubeContainer } from "./styles";
 
+var keyPressed: any = {};
+
 function RubicksCube() {
   const { 
     rubicksCubeState: { cube }, 
-    horizontalMovement,
-    verticalMovement 
+    horizontalCubeMovement,
+    verticalCubeMovement,
+    rightPiecesMovement,
+    leftPiecesMovement,
+    topPiecesMovement,
+    bottomPiecesMovement,
+    frontPiecesMovement,
+    backPiecesMovement,
+    // minhaFuncaoPrincipal
   } = useContext(Context);
   
   console.log('cube', cube);
@@ -28,29 +38,96 @@ function RubicksCube() {
   }
 
   function keydownListener(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'ArrowLeft':
-        horizontalMovement('left');
+    keyPressed[event.key] = true;
+    console.log('keyPressed', keyPressed, event.key);
+
+    switch (true) {
+      case keyPressed['ArrowLeft']:
+        horizontalCubeMovement('left');
+        keyPressed = {};
         break;
-      case 'ArrowRight':
-        horizontalMovement('right');
+      case keyPressed['ArrowRight']:
+        horizontalCubeMovement('right');
+        keyPressed = {};
         break;
-      case 'ArrowUp':
-        verticalMovement('top');
+      case keyPressed['ArrowUp']:
+        verticalCubeMovement('top');
+        keyPressed = {};
         break;
-      case 'ArrowDown':
-        verticalMovement('bottom');
+      case keyPressed['ArrowDown']:
+        verticalCubeMovement('bottom');
+        keyPressed = {};
+        break;
+      case keyPressed['Shift'] && keyPressed['W']:
+        frontPiecesMovement('top');
+        delete keyPressed['W'];
+        break;
+      case keyPressed['Shift'] && keyPressed['A']:
+        leftPiecesMovement('bottom');
+        delete keyPressed['A'];
+        break;
+      case keyPressed['Shift'] && keyPressed['S']:
+        backPiecesMovement('bottom');
+        delete keyPressed['S'];
+        break;
+      case keyPressed['Shift'] && keyPressed['D']:
+        rightPiecesMovement('top');
+        delete keyPressed['D'];
+        break;
+      case keyPressed['Shift'] && keyPressed['Q']:
+        topPiecesMovement('bottom');
+        delete keyPressed['Q'];
+        break;
+      case keyPressed['Shift'] && keyPressed['E']:
+        bottomPiecesMovement('top');
+        delete keyPressed['E'];
+        break;
+      case keyPressed['w']:
+        frontPiecesMovement('bottom');
+        keyPressed = {};
+        break;
+      case keyPressed['a']:
+        leftPiecesMovement('top');
+        keyPressed = {};
+        break;
+      case keyPressed['s']:
+        backPiecesMovement('top');
+        keyPressed = {};
+        break;
+      case keyPressed['d']:
+        rightPiecesMovement('bottom');
+        keyPressed = {};
+        break;
+      case keyPressed['q']:
+        topPiecesMovement('top');
+        keyPressed = {};
+        break;
+      case keyPressed['e']:
+        bottomPiecesMovement('bottom');
+        keyPressed = {};
+        break;
+      case keyPressed['Shift']:
         break;
       default:
+        keyPressed = {};
         break;
     }
   }
 
+  function removeShift(event: KeyboardEvent) {
+    const key = event.key;
+    if(key === 'Shift') {
+      delete keyPressed['Shift'];
+    }
+  }
+
   useEffect(() => {
-    document.addEventListener("keydown", keydownListener)
+    document.addEventListener("keydown", keydownListener);
+    document.addEventListener("keyup", removeShift);
     
     return () => {
       document.removeEventListener('keydown', keydownListener);
+      document.addEventListener("keyup", removeShift);
     };
   }, [cube])
 
@@ -61,7 +138,13 @@ function RubicksCube() {
         heightCustom={cube.height} 
         rotateX={cube.rotate.x} 
         rotateY={cube.rotate.y} 
-        rotateZ={cube.rotate.z}
+        rotateZ={cube.rotate.z} 
+        data-frontface={cube.frontFace.color} 
+        data-backface={cube.backFace.color} 
+        data-topface={cube.topFace.color} 
+        data-bottomface={cube.bottomFace.color} 
+        data-rightface={cube.rightFace.color} 
+        data-leftface={cube.leftFace.color} 
       >
         {cube.pieces.map((piece, index) => (
           <Piece
@@ -77,12 +160,12 @@ function RubicksCube() {
             rotateX={piece.rotate.x}
             rotateY={piece.rotate.y}
             rotateZ={piece.rotate.z}
-            firstFace={cube.firstFace}
-            secondFace={cube.secondFace}
-            thirdFace={cube.thirdFace}
-            fourthFace={cube.fourthFace}
-            fivethFace={cube.fivethFace}
-            sixthFace={cube.sixthFace}
+            topFaceColor={cube.topFace.faceColor.hexadecimal}
+            bottomFaceColor={cube.bottomFace.faceColor.hexadecimal}
+            leftFaceColor={cube.leftFace.faceColor.hexadecimal}
+            rightFaceColor={cube.rightFace.faceColor.hexadecimal}
+            frontFaceColor={cube.frontFace.faceColor.hexadecimal}
+            backFaceColor={cube.backFace.faceColor.hexadecimal}
             data-layer={piece.data.layer}
             data-firstcolor={piece.data.colors.firstColor.color}
             data-secondcolor={piece.data.colors.secondColor?.color}
