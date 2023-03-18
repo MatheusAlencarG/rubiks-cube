@@ -8,15 +8,12 @@ export function getNewPieces({
   movementType,
   faceColor,
   rotateAxle,
-  typeMovement,
+  rotateMovementType,
+  faceColors
 }: GetNewPiecesProps) {
   const newPieces = pieces.map((piece) => {
-    const { data: { type, colors: { firstColor, secondColor, thirdColor } }, rotate } = piece;
-      if(
-        firstColor.face !== faceColor && 
-        secondColor?.face !== faceColor && 
-        thirdColor?.face !== faceColor
-      ) return piece;
+    const { data: { type, colors, faces }, rotate } = piece;
+      if(!colors.includes(faceColor)) return piece;
 
       const isTop = movementType === "top";
       const accountValue = isTop ? rotate[rotateAxle] - 90 : rotate[rotateAxle] + 90;
@@ -24,30 +21,46 @@ export function getNewPieces({
         type === 'middle' ? middlePieces : centerPieces
       ;
       const pieceConfig = typePieceConfig.find((config) => {
-        const colors = [ firstColor.face, secondColor?.face, thirdColor?.face ].sort()
-          .filter((color) => color !== null && color !== undefined);
+        const colors = faces.sort();
         const configColors = config.colors.sort();
         const colorsEquals = JSON.stringify(colors) === JSON.stringify(configColors);
         
         if (!colorsEquals) return;
-        return config
+        return config;
       });
 
-      const isTopMovement = typeMovement === 'top';
-      const isBottomMovement = typeMovement === 'bottom';
-      const isRightMovement = typeMovement === 'right';
-      const isLeftMovement = typeMovement === 'left';
-      const isBackMovement = typeMovement === 'back';
-      const isFrontMovement = typeMovement === 'front';
-      const pieceColors = [ firstColor, secondColor, thirdColor ]
-        .map((colorInfo) => colorInfo?.color)
-        // .filter((color) => color !== null && color !== undefined)
-      ;
+      const isTopMovement = rotateMovementType === 'top';
+      const isBottomMovement = rotateMovementType === 'bottom';
+      const isRightMovement = rotateMovementType === 'right';
+      const isLeftMovement = rotateMovementType === 'left';
+      const isBackMovement = rotateMovementType === 'back';
+      const isFrontMovement = rotateMovementType === 'front';
+      const facePieces = pieces.filter((piece) => piece.data.faces.includes(faceColor));
+      const { 
+        frontFaceColor,
+        bottomFaceColor,
+        backFaceColor,
+        topFaceColor,
+        rightFaceColor,
+        leftFaceColor 
+      } = faceColors;
 
-      const newColors = [ firstColor, secondColor, thirdColor ]
-        .map((colorInfo) => {
-          return 
-        })
+      let newPieceFaces;
+
+      if (isRightMovement) {
+        if (type === 'corner') {
+          if (
+            faces.includes(frontFaceColor) && 
+            faces.includes(topFaceColor)
+          ) {
+            if (isTop) {
+              newPieceFaces = [ rightFaceColor, bottomFaceColor, frontFaceColor ]
+            } else {
+              newPieceFaces = [ rightFaceColor, topFaceColor, backFaceColor ]
+            }
+          }
+        }
+      }
 
       const newRotate = {
         ...rotate
@@ -55,11 +68,11 @@ export function getNewPieces({
 
       newRotate[rotateAxle] = accountValue
 
-      return { 
+      return {
         ...piece, 
         transformOrigin: pieceConfig ? pieceConfig.transformOrigin : piece.transformOrigin,
-        rotate: newRotate
-        // data: { colors: }
+        rotate: newRotate,
+        data: { ...piece.data, faces: newPieceFaces ?? faces }
       }
     })
   ;
@@ -96,19 +109,13 @@ export function getNewLayerPieces({
   bottomFaceColor,
 }: GetNewLayerPiecesProps) {
   const newThirdLayerPieces = pieces
-    .filter((piece) => 
-      piece.data.colors.firstColor.color === topFaceColor || 
-      piece.data.colors.secondColor?.color === topFaceColor || 
-      piece.data.colors.thirdColor?.color === topFaceColor)
+    .filter((piece) => piece.data.colors.includes(topFaceColor))
     .map((thirdLayerPiece) => { 
       return { ...thirdLayerPiece, data: { ...thirdLayerPiece.data, layer: "third" } } 
     })
   ;
   const newFirstLayerPieces = pieces
-    .filter((piece) => 
-      piece.data.colors.firstColor.color === bottomFaceColor || 
-      piece.data.colors.secondColor?.color === bottomFaceColor || 
-      piece.data.colors.thirdColor?.color === bottomFaceColor)
+    .filter((piece) => piece.data.colors.includes(bottomFaceColor))
     .map((firstLayerPiece) => {
       return { ...firstLayerPiece, data: { ...firstLayerPiece.data, layer: "first" } } 
     })

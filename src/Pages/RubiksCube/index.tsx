@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { ReactNode, useContext, useEffect } from "react";
-import "./styles.css";
 import classNames from "classnames";
 
 import { Context } from "../../Contexts/RubicksCubeContext/Context";
@@ -34,7 +33,7 @@ function RubicksCube() {
       lineHeight={piece.faces.lineHeight}
       translateZ={piece.faces.translate.z}
       pieceRadius={cube.pieceRadius}
-    >{pieceFaceType}</PieceFace>
+    />
   }
 
   function keydownListener(event: KeyboardEvent) {
@@ -167,12 +166,12 @@ function RubicksCube() {
             frontFaceColor={cube.frontFace.faceColor.hexadecimal}
             backFaceColor={cube.backFace.faceColor.hexadecimal}
             data-layer={piece.data.layer}
-            data-firstcolor={piece.data.colors.firstColor.color}
-            data-secondcolor={piece.data.colors.secondColor?.color}
-            data-thirdcolor={piece.data.colors.thirdColor?.color}
-            data-firstcolorface={piece.data.colors.firstColor.face}
-            data-secondcolorface={piece.data.colors.secondColor?.face}
-            data-thirdcolorface={piece.data.colors.thirdColor?.face}
+            data-firstcolor={piece.data.colors[0]}
+            data-secondcolor={piece.data.colors[1]}
+            data-thirdcolor={piece.data.colors[2]}
+            data-firstcolorface={piece.data.faces[0]}
+            data-secondcolorface={piece.data.faces[1]}
+            data-thirdcolorface={piece.data.faces[2]}
             data-piecetype={piece.data.type}
           >
             {renderPieceFace({ pieceFaceType: 'front', piece })}

@@ -742,21 +742,17 @@ const cube: Cube = {
         data: {
           layer: 'third',
           type: 'corner',
-          colors: { // Tentar separar as cores das faces para conseguir verificar melhor 
-            firstColor: {
-              color: "yellow",
-              face: "yellow"
-            },
-            secondColor: {
-              color: "green",
-              face: "green"
-            },
-            thirdColor: {
-              color: "red",
-              face: "red"
-            }
-          }
-        }
+          colors: [
+            "yellow",
+            "green", 
+            "red",
+          ],
+          faces: [
+            "yellow",
+            "green", 
+            "red",
+          ],
+        },
       },
       {
         id: 2,
@@ -781,16 +777,14 @@ const cube: Cube = {
         data: {
           layer: 'third',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "yellow",
-              face: "yellow"
-            },
-            secondColor: {
-              color: "red",
-              face: "red"
-            }
-          }
+          colors: [
+            "yellow",
+            "red",
+          ],
+          faces: [
+            "yellow",
+            "red",
+          ],
         }
       },
       {
@@ -816,20 +810,16 @@ const cube: Cube = {
         data: {
           layer: 'third',
           type: 'corner',
-          colors: {
-            firstColor: {
-              color: "yellow",
-              face: "yellow"
-            },
-            secondColor: {
-              color: "blue",
-              face: "blue"
-            },
-            thirdColor: {
-              color: "red",
-              face: "red"
-            }
-          }
+          colors: [
+            "yellow",
+            "blue",
+            "red",
+          ],
+          faces: [
+            "yellow",
+            "blue",
+            "red",
+          ],
         }
       },
       {
@@ -855,16 +845,14 @@ const cube: Cube = {
         data: {
           layer: 'third',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "green",
-              face: "green"
-            },
-            secondColor: {
-              color: "yellow",
-              face: "yellow"
-            }
-          }
+          colors: [
+            "green", 
+            "yellow",
+          ],
+          faces: [
+            "green", 
+            "yellow",
+          ],
         }
       },
       {
@@ -890,13 +878,13 @@ const cube: Cube = {
         data: {
           layer: 'third',
           type: 'center',
-          colors: {
-            firstColor: {
-              color: "yellow",
-              face: "yellow"
-            }
-          }
-        }
+          colors: [
+            "yellow",
+          ],
+          faces: [
+            "yellow",
+          ],
+        },
       },
       {
         id: 6,
@@ -921,16 +909,14 @@ const cube: Cube = {
         data: {
           layer: 'third',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "yellow",
-              face: "yellow"
-            },
-            secondColor: {
-              color: "blue",
-              face: "blue"
-            }
-          }
+          colors: [
+            "yellow",
+            "blue",
+          ],
+          faces: [
+            "yellow",
+            "blue",
+          ],
         }
       },
       {
@@ -956,20 +942,16 @@ const cube: Cube = {
         data: {
           layer: 'third',
           type: 'corner',
-          colors: {
-            firstColor: {
-              color: "yellow",
-              face: "yellow"
-            },
-            secondColor: {
-              color: "green",
-              face: "green"
-            },
-            thirdColor: {
-              color: "orange",
-              face: "orange"
-            }
-          }
+          colors: [
+            "yellow",
+            "green", 
+            "orange",
+          ],
+          faces: [
+            "yellow",
+            "green", 
+            "orange",
+          ],
         }
       },
       {
@@ -995,16 +977,14 @@ const cube: Cube = {
         data: {
           layer: 'third',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "yellow",
-              face: "yellow"
-            },
-            secondColor: {
-              color: "orange",
-              face: "orange"
-            }
-          }
+          colors: [
+            "yellow",
+            "orange",
+          ],
+          faces: [
+            "yellow",
+            "orange",
+          ],
         }
       },
       {
@@ -1030,20 +1010,16 @@ const cube: Cube = {
         data: {
           layer: 'third',
           type: 'corner',
-          colors: {
-            firstColor: {
-              color: "yellow",
-              face: "yellow"
-            },
-            secondColor: {
-              color: "blue",
-              face: "blue"
-            },
-            thirdColor: {
-              color: "orange",
-              face: "orange"
-            }
-          }
+          colors: [
+            "yellow",
+            "blue",
+            "orange",
+          ],
+          faces: [
+            "yellow",
+            "blue",
+            "orange",
+          ],
         }
       },
 
@@ -1072,16 +1048,14 @@ const cube: Cube = {
         data: {
           layer: 'second',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "red",
-              face: "red"
-            },
-            secondColor: {
-              color: "green",
-              face: "green"
-            }
-          }
+          colors: [
+            "red",
+            "green", 
+          ],
+          faces: [
+            "red",
+            "green", 
+          ],
         }
       },
       {
@@ -1107,12 +1081,12 @@ const cube: Cube = {
         data: {
           layer: 'second',
           type: 'center',
-          colors: {
-            firstColor: {
-              color: "red",
-              face: "red"
-            }
-          }
+          colors: [
+            "red",
+          ],
+          faces: [
+            "red",
+          ],
         }
       },
       {
@@ -1138,16 +1112,14 @@ const cube: Cube = {
         data: {
           layer: 'second',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "red",
-              face: "red"
-            },
-            secondColor: {
-              color: "blue",
-              face: "blue"
-            }
-          }
+          colors: [
+            "red",
+            "blue",
+          ],
+          faces: [
+            "red",
+            "blue",
+          ],
         }
       },
       {
@@ -1173,12 +1145,12 @@ const cube: Cube = {
         data: {
           layer: 'second',
           type: 'center',
-          colors: {
-            firstColor: {
-              color: "green",
-              face: "green"
-            }
-          }
+          colors: [
+            "green", 
+          ],
+          faces: [
+            "green", 
+          ],
         }
       },
       {
@@ -1204,12 +1176,12 @@ const cube: Cube = {
         data: {
           layer: 'second',
           type: 'center',
-          colors: {
-            firstColor: {
-              color: "blue",
-              face: "blue"
-            }
-          }
+          colors: [
+            "blue",
+          ],
+          faces: [
+            "blue",
+          ],
         }
       },
       {
@@ -1235,16 +1207,14 @@ const cube: Cube = {
         data: {
           layer: 'second',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "green",
-              face: "green"
-            },
-            secondColor: {
-              color: "orange",
-              face: "orange"
-            }
-          }
+          colors: [
+            "green", 
+            "orange",
+          ],
+          faces: [
+            "green", 
+            "orange",
+          ],
         }
       },
       {
@@ -1270,12 +1240,12 @@ const cube: Cube = {
         data: {
           layer: 'second',
           type: 'center',
-          colors: {
-            firstColor: {
-              color: "orange",
-              face: "orange"
-            }
-          }
+          colors: [
+            "orange",
+          ],
+          faces: [
+            "orange",
+          ],
         }
       },
       {
@@ -1301,16 +1271,14 @@ const cube: Cube = {
         data: {
           layer: 'second',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "orange",
-              face: "orange"
-            },
-            secondColor: {
-              color: "blue",
-              face: "blue"
-            }
-          }
+          colors: [
+            "orange",
+            "blue",
+          ],
+          faces: [
+            "orange",
+            "blue",
+          ],
         }
       },
 
@@ -1340,20 +1308,16 @@ const cube: Cube = {
         data: {
           layer: 'first',
           type: 'corner',
-          colors: {
-            firstColor: {
-              color: "red",
-              face: "red"
-            },
-            secondColor: {
-              color: "white",
-              face: "white"
-            },
-            thirdColor: {
-              color: "green",
-              face: "green"
-            }
-          }
+          colors: [
+            "red",
+            "white",
+            "green", 
+          ],
+          faces: [
+            "red",
+            "white",
+            "green", 
+          ],
         }
       },
       {
@@ -1379,16 +1343,14 @@ const cube: Cube = {
         data: {
           layer: 'first',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "red",
-              face: "red"
-            },
-            secondColor: {
-              color: "white",
-              face: "white"
-            }
-          }
+          colors: [
+            "red",
+            "white",
+          ],
+          faces: [
+            "red",
+            "white",
+          ],
         }
       },
       {
@@ -1414,20 +1376,16 @@ const cube: Cube = {
         data: {
           layer: 'first',
           type: 'corner',
-          colors: {
-            firstColor: {
-              color: "red",
-              face: "red"
-            },
-            secondColor: {
-              color: "white",
-              face: "white"
-            },
-            thirdColor: {
-              color: "blue",
-              face: "blue"
-            }
-          }
+          colors: [
+            "red",
+            "white",
+            "blue",
+          ],
+          faces: [
+            "red",
+            "white",
+            "blue",
+          ],
         }
       },
       {
@@ -1453,16 +1411,14 @@ const cube: Cube = {
         data: {
           layer: 'first',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "green",
-              face: "green"
-            },
-            secondColor: {
-              color: "white",
-              face: "white"
-            }
-          }
+          colors: [
+            "green", 
+            "white",
+          ],
+          faces: [
+            "green", 
+            "white",
+          ],
         }
       },
       {
@@ -1488,12 +1444,12 @@ const cube: Cube = {
         data: {
           layer: 'first',
           type: 'center',
-          colors: {
-            firstColor: {
-              color: "white",
-              face: "white"
-            }
-          }
+          colors: [
+            "white",
+          ],
+          faces: [
+            "white",
+          ],
         }
       },
       {
@@ -1519,16 +1475,14 @@ const cube: Cube = {
         data: {
           layer: 'first',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "blue",
-              face: "blue"
-            },
-            secondColor: {
-              color: "white",
-              face: "white"
-            }
-          }
+          colors: [
+            "blue",
+            "white",
+          ],
+          faces: [
+            "blue",
+            "white",
+          ],
         }
       },
       {
@@ -1554,20 +1508,16 @@ const cube: Cube = {
         data: {
           layer: 'first',
           type: 'corner',
-          colors: {
-            firstColor: {
-              color: "orange",
-              face: "orange"
-            },
-            secondColor: {
-              color: "white",
-              face: "white"
-            },
-            thirdColor: {
-              color: "green",
-              face: "green"
-            }
-          }
+          colors: [
+            "orange",
+            "white",
+            "green", 
+          ],
+          faces: [
+            "orange",
+            "white",
+            "green", 
+          ],
         }
       },
       {
@@ -1593,16 +1543,14 @@ const cube: Cube = {
         data: {
           layer: 'first',
           type: 'middle',
-          colors: {
-            firstColor: {
-              color: "orange",
-              face: "orange"
-            },
-            secondColor: {
-              color: "white",
-              face: "white"
-            }
-          }
+          colors: [
+            "orange",
+            "white",
+          ],
+          faces: [
+            "orange",
+            "white",
+          ],
         }
       },
       {
@@ -1628,20 +1576,16 @@ const cube: Cube = {
         data: {
           layer: 'first',
           type: 'corner',
-          colors: {
-            firstColor: {
-              color: "blue",
-              face: "blue"
-            },
-            secondColor: {
-              color: "white",
-              face: "white"
-            },
-            thirdColor: {
-              color: "orange",
-              face: "orange"
-            }
-          }
+          colors: [
+            "blue",
+            "white",
+            "orange",
+          ],
+          faces: [
+            "blue",
+            "white",
+            "orange",
+          ],
         }
       },
     ],

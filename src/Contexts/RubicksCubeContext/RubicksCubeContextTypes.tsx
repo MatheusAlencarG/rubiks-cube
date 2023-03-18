@@ -60,20 +60,8 @@ export type Piece = {
   data: {
     layer: string,
     type: string,
-    colors: {
-      firstColor: {
-        color: string,
-        face: string
-      },
-      secondColor?: {
-        color: string,
-        face: string
-      },
-      thirdColor?: {
-        color: string,
-        face: string
-      }
-    }
+    colors: string[];
+    faces: string[];
   }
 }
 
@@ -123,7 +111,15 @@ export interface GetNewPiecesProps {
   movementType: string;
   faceColor: string;
   rotateAxle: 'x' | 'y' | 'z';
-  typeMovement: string;
+  rotateMovementType: string;
+  faceColors:{
+    topFaceColor: string;
+    bottomFaceColor: string;
+    backFaceColor: string;
+    rightFaceColor: string;
+    frontFaceColor: string;
+    leftFaceColor: string;
+  }
 }
 
 export interface GetOldPiecesWithRotationProps {
