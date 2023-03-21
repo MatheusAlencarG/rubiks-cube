@@ -29,38 +29,43 @@ export function getNewPieces({
         return config;
       });
 
-      const isTopMovement = rotateMovementType === 'top';
-      const isBottomMovement = rotateMovementType === 'bottom';
-      const isRightMovement = rotateMovementType === 'right';
-      const isLeftMovement = rotateMovementType === 'left';
-      const isBackMovement = rotateMovementType === 'back';
-      const isFrontMovement = rotateMovementType === 'front';
-      const facePieces = pieces.filter((piece) => piece.data.faces.includes(faceColor));
-      const { 
-        frontFaceColor,
-        bottomFaceColor,
-        backFaceColor,
-        topFaceColor,
-        rightFaceColor,
-        leftFaceColor 
-      } = faceColors;
 
-      let newPieceFaces;
+      const colorsAndFaces = pieces.map((piece) => { return { colors: piece.data.colors, faces: piece.data.faces } });
 
-      if (isRightMovement) {
-        if (type === 'corner') {
-          if (
-            faces.includes(frontFaceColor) && 
-            faces.includes(topFaceColor)
-          ) {
-            if (isTop) {
-              newPieceFaces = [ rightFaceColor, bottomFaceColor, frontFaceColor ]
-            } else {
-              newPieceFaces = [ rightFaceColor, topFaceColor, backFaceColor ]
-            }
-          }
-        }
-      }
+
+
+      // const isTopMovement = rotateMovementType === 'top';
+      // const isBottomMovement = rotateMovementType === 'bottom';
+      // const isRightMovement = rotateMovementType === 'right';
+      // const isLeftMovement = rotateMovementType === 'left';
+      // const isBackMovement = rotateMovementType === 'back';
+      // const isFrontMovement = rotateMovementType === 'front';
+      // const facePieces = pieces.filter((piece) => piece.data.faces.includes(faceColor));
+      // const { 
+      //   frontFaceColor,
+      //   bottomFaceColor,
+      //   backFaceColor,
+      //   topFaceColor,
+      //   rightFaceColor,
+      //   leftFaceColor 
+      // } = faceColors;
+
+      // let newPieceFaces;
+
+      // if (isRightMovement) {
+      //   if (type === 'corner') {
+      //     if (
+      //       faces.includes(frontFaceColor) && 
+      //       faces.includes(topFaceColor)
+      //     ) {
+      //       if (isTop) {
+      //         newPieceFaces = [ rightFaceColor, bottomFaceColor, frontFaceColor ]
+      //       } else {
+      //         newPieceFaces = [ rightFaceColor, topFaceColor, backFaceColor ]
+      //       }
+      //     }
+      //   }
+      // }
 
       const newRotate = {
         ...rotate

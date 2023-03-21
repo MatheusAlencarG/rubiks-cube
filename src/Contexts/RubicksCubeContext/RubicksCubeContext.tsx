@@ -22,9 +22,6 @@ function RubicksCubeContext({ children }: RubicksCubeContextProps) {
       rotate: currentRotate 
     } 
   } = rubicksCubeState;
-  // const faceColors = [ topFace, bottomFace, backFace, rightFace, frontFace, leftFace ]
-  //   .map((face) => face.color)
-  // ;
   const faceColors = {
     topFaceColor: topFace.color,
     bottomFaceColor: bottomFace.color,
