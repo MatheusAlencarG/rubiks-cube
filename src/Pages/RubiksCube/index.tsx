@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { Context } from "../../Contexts/RubicksCubeContext/Context";
 import { RenderPieceFaceProps } from "./RubiksCubeTypes";
-import { Cube, Piece, PieceFace, CubeContainer } from "./styles";
+import { Cube, PieceContainer, PieceFace, CubeContainer } from "./styles";
 
 var keyPressed: any = {};
 
@@ -38,7 +38,6 @@ function RubicksCube() {
 
   function keydownListener(event: KeyboardEvent) {
     keyPressed[event.key] = true;
-    console.log('keyPressed', keyPressed, event.key);
 
     switch (true) {
       case keyPressed['ArrowLeft']:
@@ -146,25 +145,28 @@ function RubicksCube() {
         data-leftface={cube.leftFace.color} 
       >
         {cube.pieces.map((piece, index) => (
-          <Piece
+          <PieceContainer
             key={index}
             widthCustom={piece.width}
             heightCustom={piece.height}
             transformOriginX={piece.transformOrigin.x}
             transformOriginY={piece.transformOrigin.y}
             transformOriginZ={piece.transformOrigin.z}
-            translateX={piece.translate.x}
-            translateY={piece.translate.y}
-            translateZ={piece.translate.z}
-            rotateX={piece.rotate.x}
-            rotateY={piece.rotate.y}
-            rotateZ={piece.rotate.z}
             topFaceColor={cube.topFace.faceColor.hexadecimal}
             bottomFaceColor={cube.bottomFace.faceColor.hexadecimal}
             leftFaceColor={cube.leftFace.faceColor.hexadecimal}
             rightFaceColor={cube.rightFace.faceColor.hexadecimal}
             frontFaceColor={cube.frontFace.faceColor.hexadecimal}
             backFaceColor={cube.backFace.faceColor.hexadecimal}
+            translateX={piece.translate.x}
+            translateY={piece.translate.y}
+            translateZ={piece.translate.z}
+            faceRotateX={piece.faceRotate.x}
+            faceRotateY={piece.faceRotate.y}
+            faceRotateZ={piece.faceRotate.z}
+            pieceRotateX={piece.pieceRotate.x}
+            pieceRotateY={piece.pieceRotate.y}
+            pieceRotateZ={piece.pieceRotate.z}
             data-layer={piece.data.layer}
             data-firstcolor={piece.data.colors[0]}
             data-secondcolor={piece.data.colors[1]}
@@ -174,13 +176,15 @@ function RubicksCube() {
             data-thirdcolorface={piece.data.faces[2]}
             data-piecetype={piece.data.type}
           >
-            {renderPieceFace({ pieceFaceType: 'front', piece })}
-            {renderPieceFace({ pieceFaceType: 'back', piece })}
-            {renderPieceFace({ pieceFaceType: 'right', piece })}
-            {renderPieceFace({ pieceFaceType: 'left', piece })}
-            {renderPieceFace({ pieceFaceType: 'top', piece })}
-            {renderPieceFace({ pieceFaceType: 'bottom', piece })}
-          </Piece>
+            <div className="piece">
+              {renderPieceFace({ pieceFaceType: 'front', piece })}
+              {renderPieceFace({ pieceFaceType: 'back', piece })}
+              {renderPieceFace({ pieceFaceType: 'right', piece })}
+              {renderPieceFace({ pieceFaceType: 'left', piece })}
+              {renderPieceFace({ pieceFaceType: 'top', piece })}
+              {renderPieceFace({ pieceFaceType: 'bottom', piece })}
+            </div>
+          </PieceContainer>
         ))}
       </Cube>
     </CubeContainer>

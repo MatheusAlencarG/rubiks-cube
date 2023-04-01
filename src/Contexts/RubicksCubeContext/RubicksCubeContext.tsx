@@ -22,14 +22,6 @@ function RubicksCubeContext({ children }: RubicksCubeContextProps) {
       rotate: currentRotate 
     } 
   } = rubicksCubeState;
-  const faceColors = {
-    topFaceColor: topFace.color,
-    bottomFaceColor: bottomFace.color,
-    backFaceColor: backFace.color,
-    rightFaceColor: rightFace.color,
-    frontFaceColor: frontFace.color,
-    leftFaceColor: leftFace.color,
-  }
 
   function horizontalCubeMovement(movementType: string) {
     const isLeft = movementType === "left";
@@ -132,10 +124,9 @@ function RubicksCubeContext({ children }: RubicksCubeContextProps) {
       faceColor: color,
       rotateAxle,
       rotateMovementType: 'right',
-      faceColors,
     });
 
-    setPieceMovement(newPieces);
+    setPieceMovement(newPieces, 'green', movementType, rotateAxle);
 
   }
 
@@ -151,10 +142,9 @@ function RubicksCubeContext({ children }: RubicksCubeContextProps) {
       faceColor: color,
       rotateAxle,
       rotateMovementType: 'left',
-      faceColors,
     });
 
-    setPieceMovement(newPieces);
+    setPieceMovement(newPieces, 'blue', movementType, rotateAxle);
 
   }
 
@@ -170,10 +160,9 @@ function RubicksCubeContext({ children }: RubicksCubeContextProps) {
       faceColor: color,
       rotateAxle,
       rotateMovementType: 'top',
-      faceColors,
     });
 
-    setPieceMovement(newPieces);
+    setPieceMovement(newPieces, 'yellow', movementType, rotateAxle);
 
   }
 
@@ -189,10 +178,9 @@ function RubicksCubeContext({ children }: RubicksCubeContextProps) {
       faceColor: color,
       rotateAxle,
       rotateMovementType: 'bottom',
-      faceColors,
     });
 
-        setPieceMovement(newPieces);
+        setPieceMovement(newPieces, 'white', movementType, rotateAxle);
 
   }
 
@@ -208,10 +196,9 @@ function RubicksCubeContext({ children }: RubicksCubeContextProps) {
       faceColor: color,
       rotateAxle,
       rotateMovementType: 'front',
-      faceColors,
     });
 
-    setPieceMovement(newPieces);
+    setPieceMovement(newPieces, 'red', movementType, rotateAxle);
   }
 
   function backPiecesMovement(movementType: string) {
@@ -226,31 +213,33 @@ function RubicksCubeContext({ children }: RubicksCubeContextProps) {
       faceColor: color,
       rotateAxle,
       rotateMovementType: 'back',
-      faceColors,
     });
 
-    setPieceMovement(newPieces);
+    setPieceMovement(newPieces, 'orange', movementType, rotateAxle);
   }
 
-  function setPieceMovement(newPieces: Piece[]) {
-    // if(!mustSetPieceMovement) return;
+  function setPieceMovement(newPieces: Piece[], movementTypeColor: string, movementType: string, rotateAxle: 'x' | 'y' | 'z') {
+    if(!mustSetPieceMovement) return;
 
-    // setMustSetPieceMovement(false);
+    setMustSetPieceMovement(false);
 
     setRubicksCubeState({ cube: { ...rubicksCubeState.cube, pieces: newPieces } });
 
-    // setTimeout(() => {
-    //   const oldPieces = INITIAL_STATE.rubicksCubeState.cube.pieces;
+    setTimeout(() => {
+      const oldPieces = INITIAL_STATE.rubicksCubeState.cube.pieces;
 
-    //   const oldPiecesWithRotation = getOldPiecesWithRotation({
-    //     oldPieces,
-    //     newPieces,
-    //   });
+      const oldPiecesWithRotation = getOldPiecesWithRotation({
+        oldPieces,
+        newPieces,
+        movementTypeColor,
+        rotateAxle,
+        isTop: movementType === 'top'
+      });
 
-    //   setRubicksCubeState({ cube: { ...rubicksCubeState.cube, pieces: oldPiecesWithRotation } });
+      setRubicksCubeState({ cube: { ...rubicksCubeState.cube, pieces: oldPiecesWithRotation } });
 
-    //   setMustSetPieceMovement(true);
-    // }, 500);
+      setMustSetPieceMovement(true);
+    }, 500);
   }
 
   /*

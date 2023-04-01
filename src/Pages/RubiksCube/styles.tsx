@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { CubeProps, PieceProps, PieceFaceProps } from './RubiksCubeTypes';
+import { CubeProps, PieceFaceProps, PieceContainerProps } from './RubiksCubeTypes';
 
 const CubeContainer = styled.div`
   perspective: 3000px;
@@ -31,7 +31,7 @@ const Cube = styled.div<CubeProps>`
   user-select: none;
 `;
 
-const Piece = styled.div<PieceProps>`
+const PieceContainer = styled.div<PieceContainerProps>`
   position: absolute;
   width: ${props => {return props.widthCustom + 'px'}};
   height: ${props => {return props.heightCustom + 'px'}};
@@ -40,77 +40,94 @@ const Piece = styled.div<PieceProps>`
   background-color: black;
   transform-origin: ${props => {
     return `
-      ${props.transformOriginX}px 
-      ${props.transformOriginY}px 
+      ${props.transformOriginX}px
+      ${props.transformOriginY}px
       ${props.transformOriginZ}px
     `
   }};
   transform: ${props => {
     return `
-      translateX(${props.translateX}px) 
-      translateY(${props.translateY}px) 
+      translateX(${props.translateX}px)
+      translateY(${props.translateY}px)
       translateZ(${props.translateZ + props.widthCustom}px)
-      rotateX(${props.rotateX}deg)
-      rotateY(${props.rotateY}deg)
-      rotateZ(${props.rotateZ}deg)
+      rotateX(${props.faceRotateX}deg)
+      rotateY(${props.faceRotateY}deg)
+      rotateZ(${props.faceRotateZ}deg)
     `
   }};
 
-  div {
+  .piece {
+    position: absolute;
+    width: ${props => {return props.widthCustom + 'px'}};
+    height: ${props => {return props.heightCustom + 'px'}};
+    transform-style: preserve-3d;
+    transition: .5s;
     background-color: black;
+    transform-origin: 40 40 40;
+    transform: ${props => {
+      return `
+        rotateX(${props.pieceRotateX}deg)
+        rotateY(${props.pieceRotateY}deg)
+        rotateZ(${props.pieceRotateZ}deg)
+      `
+    }};
+
+    div {
+      background-color: black;
+    }
   }
 
-  &[data-piecetype="corner"][data-firstcolor="yellow"] .top,
-  &[data-piecetype="corner"][data-secondcolor="yellow"] .top,
-  &[data-piecetype="corner"][data-thirdcolor="yellow"] .top,
-  &[data-piecetype="middle"][data-firstcolor="yellow"] .top,
-  &[data-piecetype="middle"][data-secondcolor="yellow"] .top,
-  &[data-piecetype="center"][data-firstcolor="yellow"] .top {
+  &[data-piecetype="corner"][data-firstcolor="yellow"] .piece .top,
+  &[data-piecetype="corner"][data-secondcolor="yellow"] .piece .top,
+  &[data-piecetype="corner"][data-thirdcolor="yellow"] .piece .top,
+  &[data-piecetype="middle"][data-firstcolor="yellow"] .piece .top,
+  &[data-piecetype="middle"][data-secondcolor="yellow"] .piece .top,
+  &[data-piecetype="center"][data-firstcolor="yellow"] .piece .top {
     background-color: ${props => {return props.topFaceColor}};
   }
 
-  &[data-piecetype="corner"][data-firstcolor="red"] .front,
-  &[data-piecetype="corner"][data-secondcolor="red"] .front,
-  &[data-piecetype="corner"][data-thirdcolor="red"] .front,
-  &[data-piecetype="middle"][data-firstcolor="red"] .front,
-  &[data-piecetype="middle"][data-secondcolor="red"] .front,
-  &[data-piecetype="center"][data-firstcolor="red"] .front {
+  &[data-piecetype="corner"][data-firstcolor="red"] .piece .front,
+  &[data-piecetype="corner"][data-secondcolor="red"] .piece .front,
+  &[data-piecetype="corner"][data-thirdcolor="red"] .piece .front,
+  &[data-piecetype="middle"][data-firstcolor="red"] .piece .front,
+  &[data-piecetype="middle"][data-secondcolor="red"] .piece .front,
+  &[data-piecetype="center"][data-firstcolor="red"] .piece .front {
     background-color: ${props => {return props.frontFaceColor}};
   }
 
-  &[data-piecetype="corner"][data-firstcolor="green"] .right,
-  &[data-piecetype="corner"][data-secondcolor="green"] .right,
-  &[data-piecetype="corner"][data-thirdcolor="green"] .right,
-  &[data-piecetype="middle"][data-firstcolor="green"] .right,
-  &[data-piecetype="middle"][data-secondcolor="green"] .right,
-  &[data-piecetype="center"][data-firstcolor="green"] .right {
+  &[data-piecetype="corner"][data-firstcolor="green"] .piece .right,
+  &[data-piecetype="corner"][data-secondcolor="green"] .piece .right,
+  &[data-piecetype="corner"][data-thirdcolor="green"] .piece .right,
+  &[data-piecetype="middle"][data-firstcolor="green"] .piece .right,
+  &[data-piecetype="middle"][data-secondcolor="green"] .piece .right,
+  &[data-piecetype="center"][data-firstcolor="green"] .piece .right {
     background-color: ${props => {return props.rightFaceColor}};
   }
 
-  &[data-piecetype="corner"][data-firstcolor="white"] .bottom,
-  &[data-piecetype="corner"][data-secondcolor="white"] .bottom,
-  &[data-piecetype="corner"][data-thirdcolor="white"] .bottom,
-  &[data-piecetype="middle"][data-firstcolor="white"] .bottom,
-  &[data-piecetype="middle"][data-secondcolor="white"] .bottom,
-  &[data-piecetype="center"][data-firstcolor="white"] .bottom {
+  &[data-piecetype="corner"][data-firstcolor="white"] .piece .bottom,
+  &[data-piecetype="corner"][data-secondcolor="white"] .piece .bottom,
+  &[data-piecetype="corner"][data-thirdcolor="white"] .piece .bottom,
+  &[data-piecetype="middle"][data-firstcolor="white"] .piece .bottom,
+  &[data-piecetype="middle"][data-secondcolor="white"] .piece .bottom,
+  &[data-piecetype="center"][data-firstcolor="white"] .piece .bottom {
     background-color: ${props => {return props.bottomFaceColor}};
   }
 
-  &[data-piecetype="corner"][data-firstcolor="orange"] .back,
-  &[data-piecetype="corner"][data-secondcolor="orange"] .back,
-  &[data-piecetype="corner"][data-thirdcolor="orange"] .back,
-  &[data-piecetype="middle"][data-firstcolor="orange"] .back,
-  &[data-piecetype="middle"][data-secondcolor="orange"] .back,
-  &[data-piecetype="center"][data-firstcolor="orange"] .back {
+  &[data-piecetype="corner"][data-firstcolor="orange"] .piece .back,
+  &[data-piecetype="corner"][data-secondcolor="orange"] .piece .back,
+  &[data-piecetype="corner"][data-thirdcolor="orange"] .piece .back,
+  &[data-piecetype="middle"][data-firstcolor="orange"] .piece .back,
+  &[data-piecetype="middle"][data-secondcolor="orange"] .piece .back,
+  &[data-piecetype="center"][data-firstcolor="orange"] .piece .back {
     background-color: ${props => {return props.backFaceColor}};
   }
 
-  &[data-piecetype="corner"][data-firstcolor="blue"] .left,
-  &[data-piecetype="corner"][data-secondcolor="blue"] .left,
-  &[data-piecetype="corner"][data-thirdcolor="blue"] .left,
-  &[data-piecetype="middle"][data-firstcolor="blue"] .left,
-  &[data-piecetype="middle"][data-secondcolor="blue"] .left,
-  &[data-piecetype="center"][data-firstcolor="blue"] .left {
+  &[data-piecetype="corner"][data-firstcolor="blue"] .piece .left,
+  &[data-piecetype="corner"][data-secondcolor="blue"] .piece .left,
+  &[data-piecetype="corner"][data-thirdcolor="blue"] .piece .left,
+  &[data-piecetype="middle"][data-firstcolor="blue"] .piece .left,
+  &[data-piecetype="middle"][data-secondcolor="blue"] .piece .left,
+  &[data-piecetype="center"][data-firstcolor="blue"] .piece .left {
     background-color: ${props => {return props.leftFaceColor}};
   }
 `;
@@ -151,7 +168,7 @@ const PieceFace = styled.div<PieceFaceProps>`
 
 export {
   Cube,
-  Piece,
   PieceFace,
-  CubeContainer
+  CubeContainer,
+  PieceContainer
 }

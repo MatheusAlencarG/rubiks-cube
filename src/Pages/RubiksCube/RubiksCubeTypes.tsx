@@ -8,26 +8,6 @@ export type CubeProps = {
   rotateZ: number;
 }
 
-export type PieceProps = {
-  widthCustom: number;
-  heightCustom: number;
-  transformOriginX: number;
-  transformOriginY: number;
-  transformOriginZ: number;
-  translateX: number;
-  translateY: number;
-  translateZ: number;
-  rotateX: number;
-  rotateY: number;
-  rotateZ: number;
-  topFaceColor: string;
-  bottomFaceColor: string;
-  leftFaceColor: string;
-  rightFaceColor: string;
-  frontFaceColor: string;
-  backFaceColor: string;
-}
-
 export type PieceFaceProps = {
   widthCustom: number;
   heightCustom: number;
@@ -41,4 +21,27 @@ export type PieceFaceProps = {
 export type RenderPieceFaceProps = {
   pieceFaceType: string;
   piece: Piece;
+}
+
+export type PieceContainerProps = {
+  widthCustom: number;
+  heightCustom: number;
+  transformOriginX: number;
+  transformOriginY: number;
+  transformOriginZ: number;
+  translateX: number;
+  translateY: number;
+  translateZ: number;
+  faceRotateX: number;
+  faceRotateY: number;
+  faceRotateZ: number;
+  pieceRotateX: number;
+  pieceRotateY: number;
+  pieceRotateZ: number;
+  topFaceColor: string;
+  bottomFaceColor: string;
+  leftFaceColor: string;
+  rightFaceColor: string;
+  frontFaceColor: string;
+  backFaceColor: string;
 }

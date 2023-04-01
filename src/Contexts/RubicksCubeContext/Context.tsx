@@ -733,7 +733,12 @@ const cube: Cube = {
           y: 0,
           z: 0
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -768,7 +773,12 @@ const cube: Cube = {
           y: 0,
           z: 0
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -801,7 +811,12 @@ const cube: Cube = {
           y: 0,
           z: 0
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -836,7 +851,12 @@ const cube: Cube = {
           y: 0,
           z: -80
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -869,7 +889,12 @@ const cube: Cube = {
           y: 0,
           z: -80
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -900,7 +925,12 @@ const cube: Cube = {
           y: 0,
           z: -80
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -933,7 +963,12 @@ const cube: Cube = {
           y: 0,
           z: -160
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -968,7 +1003,12 @@ const cube: Cube = {
           y: 0,
           z: -160
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1001,7 +1041,12 @@ const cube: Cube = {
           y: 0,
           z: -160
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1039,7 +1084,12 @@ const cube: Cube = {
           y: 80,
           z: 0
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1072,7 +1122,12 @@ const cube: Cube = {
           y: 80,
           z: 0
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1103,7 +1158,12 @@ const cube: Cube = {
           y: 80,
           z: 0
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1136,7 +1196,12 @@ const cube: Cube = {
           y: 80,
           z: -80
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1167,7 +1232,12 @@ const cube: Cube = {
           y: 80,
           z: -80
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1198,7 +1268,12 @@ const cube: Cube = {
           y: 80,
           z: -160
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1231,7 +1306,12 @@ const cube: Cube = {
           y: 80,
           z: -160
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1262,7 +1342,12 @@ const cube: Cube = {
           y: 80,
           z: -160
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1299,7 +1384,12 @@ const cube: Cube = {
           y: 160,
           z: 0
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1334,7 +1424,12 @@ const cube: Cube = {
           y: 160,
           z: 0
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1367,7 +1462,12 @@ const cube: Cube = {
           y: 160,
           z: 0
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1402,7 +1502,12 @@ const cube: Cube = {
           y: 160,
           z: -80
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1435,7 +1540,12 @@ const cube: Cube = {
           y: 160,
           z: -80
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1466,7 +1576,12 @@ const cube: Cube = {
           y: 160,
           z: -80
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1499,7 +1614,12 @@ const cube: Cube = {
           y: 160,
           z: -160
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1534,7 +1654,12 @@ const cube: Cube = {
           y: 160,
           z: -160
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0
@@ -1567,7 +1692,12 @@ const cube: Cube = {
           y: 160,
           z: -160
         },
-        rotate: {
+        faceRotate: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        pieceRotate: {
           x: 0,
           y: 0,
           z: 0

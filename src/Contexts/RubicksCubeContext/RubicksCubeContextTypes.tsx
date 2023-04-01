@@ -55,7 +55,8 @@ export type Piece = {
   height: number;
   transformOrigin: ThreeDType;
   translate: ThreeDType;
-  rotate: ThreeDType;
+  faceRotate: ThreeDType;
+  pieceRotate: ThreeDType;
   faces: FacePiece;
   data: {
     layer: string,
@@ -63,6 +64,26 @@ export type Piece = {
     colors: string[];
     faces: string[];
   }
+}
+
+type teste = {
+  translate: Piece;
+  rotate: {
+      x: number;
+      y: number;
+      z: number;
+  };
+  data: {
+      layer: string;
+      faces: string[];
+      type: string;
+      colors: string[];
+  };
+  id: number;
+  width: number;
+  height: number;
+  transformOrigin: ThreeDType;
+  faces: FacePiece;
 }
 
 export type ThreeDType = {
@@ -112,17 +133,32 @@ export interface GetNewPiecesProps {
   faceColor: string;
   rotateAxle: 'x' | 'y' | 'z';
   rotateMovementType: string;
-  faceColors:{
-    topFaceColor: string;
-    bottomFaceColor: string;
-    backFaceColor: string;
-    rightFaceColor: string;
-    frontFaceColor: string;
-    leftFaceColor: string;
-  }
+}
+
+interface FaceColors {
+  topFaceColor: string;
+  bottomFaceColor: string;
+  backFaceColor: string;
+  rightFaceColor: string;
+  frontFaceColor: string;
+  leftFaceColor: string;
 }
 
 export interface GetOldPiecesWithRotationProps {
   oldPieces: Piece[];
   newPieces: Piece[];
+  movementTypeColor: string;
+  isTop: boolean;
+  rotateAxle: 'x' | 'y' | 'z';
+}
+
+export interface GetNewFacePieces {
+  isTopMovement: boolean;
+  isBottomMovement: boolean;
+  isRightMovement: boolean;
+  isLeftMovement: boolean;
+  isBackMovement: boolean;
+  isFrontMovement: boolean;
+  pieces: Piece[];
+  isTop: boolean;
 }
