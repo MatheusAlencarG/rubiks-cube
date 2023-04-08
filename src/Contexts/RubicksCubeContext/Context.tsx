@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Cube, FacePiece, Initial_State } from "./RubicksCubeContextTypes";
+import { Cube, FacePiece, Initial_State } from "../../types/index";
 
 const facePiece: FacePiece = {
   width: 80,

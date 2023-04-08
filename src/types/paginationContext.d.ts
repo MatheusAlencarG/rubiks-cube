@@ -1,16 +1,16 @@
 import { ReactNode } from "react";
 
-export type PageSTate = {
+export interface PageSTate {
   currentPageIndex: number;
   listOfPages: string[];
   nextPage: string;
   prevPage: string
 }
 
-export type ChangePageStateProps = {
+export interface ChangePageStateProps {
   newcurrentPageIndex: number;
 }
 
-export type PaginationContextProps = {
+export interface PaginationContextProps {
   children: ReactNode;
 }

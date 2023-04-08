@@ -3,7 +3,7 @@ import React, { ReactNode, useContext, useEffect } from "react";
 import classNames from "classnames";
 
 import { Context } from "../../Contexts/RubicksCubeContext/Context";
-import { RenderPieceFaceProps } from "./RubiksCubeTypes";
+import { RenderPieceFaceProps } from "../../types/index";
 import { Cube, PieceContainer, PieceFace, CubeContainer } from "./styles";
 
 var keyPressed: any = {};

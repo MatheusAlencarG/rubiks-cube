@@ -4,26 +4,38 @@
   justify-content: space-evenly;
   padding: 20px 35px;
   width: calc(100% - 70px);
+  height: 100%;
 }
 
 .tutorialPartsDescription h2 {
   margin: 0;
+  margin-bottom: 25px;
   text-align: center;
   font-weight: 500;
+}
+
+.tutorialPartsContainer > p {
+  margin: 0;
+  text-align: center;
 }
 
 .tutorialPartsDescription .description {
   text-align: center;
 }
 
-.cubeParts {
-  display: flex;
-  overflow-x: auto;
-  gap: 50px;
-  width: calc(9 * 200px);
+.partContainer {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
 }
 
-.partContainer {
+.tutorialPartsContainer .partContainer.swiper-slide-active .partBackground {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+.tutorialPartsContainer .partBackground {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,19 +44,32 @@
   background: var(--black);
   border: 2px var(--primary-color) solid;
   border-radius: 16px;
-  width: 200px;
+  width: 70%;
+  height: 174px;
+  transition: .6s;
+  opacity: .5;
 }
 
-.partContainer h3 {
+.tutorialPartsContainer .partContainer h3 {
+  margin: 15px 0;
   color: var(--primary-color);
 }
 
-.partContainer img {
+.tutorialPartsContainer .partContainer img {
   width: 120px;
 }
 
-.partDescription {
+.tutorialPartsContainer .partDescription {
+  display: flex;
+  opacity: 0;
+  align-items: center;
   color: var(--white);
   padding: 5px;
   font-size: 13px;
+  height: 61px;
+  margin: 0;
+}
+
+.tutorialPartsContainer .partContainer.swiper-slide-active .partDescription {
+  opacity: 1;
 }

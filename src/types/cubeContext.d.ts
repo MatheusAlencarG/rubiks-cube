@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 
-export type RubicksCubeContextProps = {
+export interface RubicksCubeContextProps {
   children: ReactNode
 }
 
@@ -49,7 +49,7 @@ export interface FacePieces {
   colors: string[];
 }
 
-export type Piece = {
+export interface Piece {
   id: number;
   width: number;
   height: number;
@@ -66,27 +66,7 @@ export type Piece = {
   }
 }
 
-type teste = {
-  translate: Piece;
-  rotate: {
-      x: number;
-      y: number;
-      z: number;
-  };
-  data: {
-      layer: string;
-      faces: string[];
-      type: string;
-      colors: string[];
-  };
-  id: number;
-  width: number;
-  height: number;
-  transformOrigin: ThreeDType;
-  faces: FacePiece;
-}
-
-export type ThreeDType = {
+export interface ThreeDType {
   x: number;
   y: number;
   z: number;
@@ -103,7 +83,7 @@ export interface Face {
   rotate: ThreeDType;
 }
 
-export type SetInfoCubeProps = {
+export interface SetInfoCubeProps {
   cube: {
     faceColor: {
       topFaceColor: string;
@@ -133,15 +113,6 @@ export interface GetNewPiecesProps {
   faceColor: string;
   rotateAxle: 'x' | 'y' | 'z';
   rotateMovementType: string;
-}
-
-interface FaceColors {
-  topFaceColor: string;
-  bottomFaceColor: string;
-  backFaceColor: string;
-  rightFaceColor: string;
-  frontFaceColor: string;
-  leftFaceColor: string;
 }
 
 export interface GetOldPiecesWithRotationProps {

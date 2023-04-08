@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { Context, INITIAL_STATE } from './Context';
-import { ChangePageStateProps, PaginationContextProps, PageSTate } from './PaginationContextTypes';
+import { ChangePageStateProps, PaginationContextProps, PageSTate } from '../../types/index';
 
 function PaginationContext({ children }: PaginationContextProps) {
   const location = useLocation();

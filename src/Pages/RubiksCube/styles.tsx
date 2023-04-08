@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { CubeProps, PieceFaceProps, PieceContainerProps } from './RubiksCubeTypes';
+import { CubeProps, PieceFaceProps, PieceContainerProps } from '../../types/index';
 
 const CubeContainer = styled.div`
   perspective: 3000px;

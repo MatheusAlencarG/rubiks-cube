@@ -1,4 +1,4 @@
-import { GetNewFacePieces, GetNewLayerPiecesProps, GetNewPiecesProps, GetOldPiecesWithRotationProps } from "./RubicksCubeContextTypes";
+import { GetNewFacePieces, GetNewLayerPiecesProps, GetNewPiecesProps, GetOldPiecesWithRotationProps } from "../../types/index";
 
 export function getNewPieces({
   pieces,

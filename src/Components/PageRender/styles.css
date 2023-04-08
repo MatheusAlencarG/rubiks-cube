@@ -14,13 +14,25 @@
 
 .pageContainer {
   width: 70vw;
-  max-height: 90vh;
-  min-height: 45vh;
+  height: 76vh;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   background-color: var(--white);
   border: 2px solid var(--primary-color);
   border-radius: 15px;
   overflow: hidden;
+}
+
+@media (max-height: 1100px) {
+  .pageContainer {
+    height: 100%;
+    min-height: 550px;
+  }
+
+  .pageRender {
+    height: auto;
+    width: auto;
+  }
 }

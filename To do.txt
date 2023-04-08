@@ -1,21 +1,22 @@
-- Colocar os comandos e posições das faces na página /rubicsCube
-
-- Colocar as informações de Cores, posição(Camada, face de cada cor) e de qual peça é na página /rubicsCube
+- Atualizar os comandos de acordo com o que deu para fazer do cubo na página "/tutorial"
 
 - Estilizar melhor a parte dos vídeos
 
-- Arrumar bugs de estilização em telas menores nas páginas de /tutorial/step
+- Arrumar o bug de combos de movimentos na página "/rubicksCube"
 
-- Estilizar as barras de rolagem do projeto
-
-- Fazer o carrossel em /tutorial/parts
-
-
+- Fazer o menu de configuraçoes, configs disponíveis:
+  1- Tema escuro/claro
+  2- Tamanhos e estilizaçoes do cubo
 
 
-- comandos surge
 
-npm rum build
+=============================================
+
+
+
+comandos surge
+
+npm run build
 
 cp index.html 200.html
 

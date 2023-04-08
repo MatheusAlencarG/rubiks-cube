@@ -7,11 +7,7 @@ import Footer from "../Footer";
 import PaginationContext from "../../Contexts/PaginationContext/PaginationContext";
 import RubicksCubeContext from "../../Contexts/RubicksCubeContext/RubicksCubeContext";
 
-type PageRenderProps = {
-  page: React.ReactElement;
-}
-
-function PageRender({ page }: PageRenderProps) {
+function PageRender({ page }: { page: React.ReactElement }) {
   const params = useParams();
   
   const clonePage = React.cloneElement(

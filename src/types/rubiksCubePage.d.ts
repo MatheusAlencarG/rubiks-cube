@@ -1,6 +1,6 @@
-import { Piece } from "../../Contexts/RubicksCubeContext/RubicksCubeContextTypes";
+import { Piece } from "./index";
 
-export type CubeProps = {
+export interface CubeProps {
   widthCustom: number;
   heightCustom: number;
   rotateX: number;
@@ -8,7 +8,7 @@ export type CubeProps = {
   rotateZ: number;
 }
 
-export type PieceFaceProps = {
+export interface PieceFaceProps {
   widthCustom: number;
   heightCustom: number;
   lineHeight: number;
@@ -18,12 +18,12 @@ export type PieceFaceProps = {
   pieceRadius: number;
 }
 
-export type RenderPieceFaceProps = {
+export interface RenderPieceFaceProps {
   pieceFaceType: string;
   piece: Piece;
 }
 
-export type PieceContainerProps = {
+export interface PieceContainerProps {
   widthCustom: number;
   heightCustom: number;
   transformOriginX: number;

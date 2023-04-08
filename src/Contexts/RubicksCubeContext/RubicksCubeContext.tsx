@@ -2,10 +2,8 @@
 import React, { useState } from "react";
 
 import { Context, INITIAL_STATE } from "./Context";
-import { getNewFaceColor, getNewLayerPieces, getNewPieces, getOldPiecesWithRotation } from "./helpers";
-import { FaceContent, Piece, RubicksCubeContextProps } from "./RubicksCubeContextTypes";
-
-import { SetInfoCubeProps } from "./RubicksCubeContextTypes"; 
+import { getNewFaceColor, getNewLayerPieces, getNewPieces, getOldPiecesWithRotation } from "./functions";
+import { Piece, RubicksCubeContextProps, SetInfoCubeProps } from "../../types/index";
 
 function RubicksCubeContext({ children }: RubicksCubeContextProps) {
   const [ rubicksCubeState, setRubicksCubeState ] = useState(INITIAL_STATE.rubicksCubeState);

@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { ChangePageStateProps } from "./PaginationContextTypes";
+import { ChangePageStateProps } from "../../types/index";
 
 export const INITIAL_STATE = {
   pageState: {
