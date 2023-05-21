@@ -1,7 +1,7 @@
 import { 
   Cube, 
   FacePiece, 
-  Initial_State, 
+  Initial_State_Cube, 
   FaceContent, 
   Piece, 
   RubicksCubeContextProps,
@@ -35,10 +35,17 @@ import {
   TutorialStepProps,
 } from "./TutorialStepPage";
 
+import {
+  Initial_State_Language,
+  GeneralConfigContextProps,
+  Context_Language,
+  CurrentLanguageValues
+} from "./GeneralConfigContext";
+
 export {
   Cube, 
   FacePiece, 
-  Initial_State,
+  Initial_State_Cube,
   FaceContent, 
   Piece, 
   RubicksCubeContextProps,
@@ -58,4 +65,8 @@ export {
   PaginationContextProps,
   SwiperParams,
   TutorialStepProps,
+  Initial_State_Language,
+  GeneralConfigContextProps,
+  Context_Language,
+  CurrentLanguageValues
 }

@@ -1,0 +1,121 @@
+.generalConfigIcon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  cursor: pointer;
+}
+
+.generalConfigPopup {
+  display: none;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.generalConfigContainer {
+  position: relative;
+  width: 50%;
+  height: 50%;
+  background-color: var(--black);
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;
+  color: var(--white);
+  text-align: center;
+  overflow: auto;
+}
+
+.generalConfigPopup.active {
+  display: flex;
+}
+
+.generalConfigClose {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  cursor: pointer;
+}
+
+.generalConfigContainer h3 {
+  text-transform: capitalize;
+}
+
+.generalConfigContent {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 20px;
+}
+
+.languageConfig {
+  width: 80%;
+  border: 2px solid var(--primary-color);
+  border-radius: 15px;
+  text-transform: capitalize;
+}
+
+.languageConfigTitle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  color: black;
+  font-weight: 700;
+  gap: 10px;
+  margin: 0;
+  cursor: pointer;
+  background: var(--primary-color);
+  border-radius: 10px;
+}
+
+.iconConfig {
+  width: 45px;
+}
+
+.configArrow {
+  width: 35px;
+  position: absolute;
+  top: calc(50% - calc(35px / 2));
+  right: 0;
+  transform: rotate(90deg);
+  transition: .5s;
+  cursor: pointer;
+}
+
+.configArrow.active {
+  transform: rotate(270deg);
+}
+
+.languageConfigContent {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0;
+  height: 0;
+  overflow: hidden;
+  transition: .8s;
+}
+
+.languageConfigContent.active {
+  padding: 15px;
+  height: fit-content;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 660px) {
+  .generalConfigContainer {
+    width: 80%;
+    height: 80%;
+  }
+}

@@ -6,20 +6,24 @@ import MainTutorial from './Pages/Tutorial/MainTutorial';
 import RubicksCube from './Pages/RubiksCube';
 import TutorialParts from './Pages/Tutorial/TutorialParts';
 import TutorialStep from './Pages/Tutorial/TutorialStep';
-import PageNotFound from './Pages/PageNotFound'
+import PageNotFound from './Pages/PageNotFound';
+
+import GeneralConfigContext from "./Contexts/GeneralConfigContext/GeneralConfigContext";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<PageRender page={<MainTutorial />} />} />
-        <Route path="/tutorial" element={<PageRender page={<MainTutorial />} />} />
-        <Route path="/tutorial/parts" element={<PageRender page={<TutorialParts />} />} />
-        <Route path="/tutorial/step/:id" element={<PageRender page={<TutorialStep />} />} />
-        <Route path="*" element={<PageNotFound />}></Route>
-        <Route path="/rubicksCube" element={<PageRender page={<RubicksCube />} />} />
-      </Routes>
-    </Router>
+    <GeneralConfigContext>
+      <Router>
+        <Routes>
+          <Route path="/" element={<PageRender page={<MainTutorial />} />} />
+          <Route path="/tutorial" element={<PageRender page={<MainTutorial />} />} />
+          <Route path="/tutorial/parts" element={<PageRender page={<TutorialParts />} />} />
+          <Route path="/tutorial/step/:id" element={<PageRender page={<TutorialStep />} />} />
+          <Route path="*" element={<PageNotFound />}></Route>
+          <Route path="/rubicksCube" element={<PageRender page={<RubicksCube />} />} />
+        </Routes>
+      </Router>
+    </GeneralConfigContext>
   );
 }
 

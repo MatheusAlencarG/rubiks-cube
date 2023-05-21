@@ -4,7 +4,7 @@ export interface RubicksCubeContextProps {
   children: ReactNode
 }
 
-export interface Initial_State {
+export interface Initial_State_Cube {
   rubicksCubeState: Cube;
   horizontalCubeMovement: (movementType: string) => void;
   verticalCubeMovement: (movementType: string) => void;

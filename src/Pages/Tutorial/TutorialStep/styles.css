@@ -1,10 +1,13 @@
 .tutorialStepContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
   padding: 20px 35px;
   width: calc(100% - 70px);
-  height: 73%;
+  overflow: auto;
+}
+
+@media (max-height: 800px) {
+  .tutorialStepContainer {
+    padding: 20px 0;
+  }
 }
 
 @media (max-height: 1100px) {
@@ -25,6 +28,7 @@
 
 .tutorialStepContainer .swiper-container {
   height: 500px;
+  min-height: 500px;
   background: var(--black);
   border: var(--primary-color) 2px solid;
   border-radius: 16px;
@@ -68,6 +72,7 @@
 
 .tutorialStepContainer .swiper-slide-active p {
   height: auto;
+  overflow: auto;
 }
 
 .tutorialStepContainer .swiper-slide-active .partBackground {
@@ -102,4 +107,94 @@
 .swiper-wrapper {
   display: flex;
   align-items: center;
+}
+
+.videoContentMain {
+  width: 100%;
+  background: var(--black);
+  border-radius: 15px;
+  border: 2px solid var(--primary-color);
+  margin-top: 20px;
+}
+
+.videoContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  border-radius: 15px;
+  height: 0;
+  overflow: hidden;
+  padding: 0;
+  transition: .5s;
+}
+
+.videoContent.active {
+  padding: 20px 0;
+  height: auto;
+}
+
+.videosContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.videosTitle {
+  color: var(--primary-color);
+  text-align: center;
+  border-radius: 15px;
+  padding: 15px 0;
+  position: relative;
+  cursor: pointer;
+  margin: 0;
+}
+
+.videoArrow {
+  width: 30px;
+  position: absolute;
+  top: calc(50% - 15px);
+  right: 10px;
+  transform: rotate(90deg);
+  transition: .5s;
+}
+
+.videoArrow.active {
+  transform: rotate(270deg);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 660px) {
+  .tutorialStepContainer {
+    padding: 20px 20px;
+    width: calc(100% - 40px);
+  }
+  
+  .tutorialStepContainer .swiper-container {
+    width: calc(100% - 44px);
+  }
+
+  .tutorialStepContainer .swiper-slide-active .partBackground {
+    width: calc(100% - 20px);
+  }
+
+  .tutorialStepContainer .partBackground {
+    padding: 10px;
+    width: 83%;
+  }
+
+  .tutorialStepContainer .swiper-slide-active p {
+    text-align: center;
+  }
+
+  .videosTitle {
+    padding-right: 30px;
+  }
+  
+  .videoContent iframe {
+    width: 90%;
+    height: auto;
+  }
 }

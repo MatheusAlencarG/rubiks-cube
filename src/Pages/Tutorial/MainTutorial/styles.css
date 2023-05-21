@@ -53,3 +53,16 @@
 .movementCommands .top {
   transform: rotate(270deg);
 }
+
+
+/* MOBILE */
+
+@media (max-width: 660px) {
+  .tutorialContent {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
+    align-items: center;
+  }
+}

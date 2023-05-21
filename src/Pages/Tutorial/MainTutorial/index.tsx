@@ -1,47 +1,65 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./styles.css";
 
+import { Context } from "../../../Contexts/GeneralConfigContext/Context";
+
 function MainTutorial() {
+  const { currentLanguage, allLanguages } = useContext(Context).language;
+  const {
+    title,
+    commandA,
+    commandD,
+    commandE,
+    commandQ,
+    commandS,
+    commandW,
+    commandArrowDown,
+    commandArrowLeft,
+    commandArrowRight,
+    commandArrowUp,
+    description
+  } = allLanguages[currentLanguage].tutorialPage;
+
   return(
     <div className="tutorialContainer">
-      <h2>Game Commands</h2>
+      <h2>{title}</h2>
       <div className="tutorialContent">
         <div>
           <div>
-            <b>W</b> = Front face movement<br />
+            <b>W</b> = {commandW}<br />
           </div>
           <div>
-            <b>A</b> = Left face movement<br />
+            <b>A</b> = {commandA}<br />
           </div>
           <div>
-            <b>S</b> = Back face movement<br />
+            <b>S</b> = {commandS}<br />
           </div>
           <div>
-            <b>D</b> = Rigth face movement<br />
+            <b>D</b> = {commandD}<br />
           </div>
           <div>
-            <b>Q</b> = Top face movement<br />
+            <b>Q</b> = {commandQ}<br />
           </div>
           <div>
-            <b>E</b> = Botton face movement<br />
+            <b>E</b> = {commandE}<br />
           </div>
         </div>
         <div className="movementCommands">
           <div className="movementCommandsContainer">
-            <img className="bottom" src="/images/arrow.svg" alt="Botton Arrow" /> = Cube bottom movement<br />
+            <img className="bottom" src="/images/arrow.svg" alt="Botton Arrow" /> = {commandArrowDown}<br />
           </div>
           <div className="movementCommandsContainer">
-            <img className="left" src="/images/arrow.svg" alt="Left Arrow" /> = Cube left movement<br />
+            <img className="left" src="/images/arrow.svg" alt="Left Arrow" /> = {commandArrowLeft}<br />
           </div>
           <div className="movementCommandsContainer">
-            <img className="top" src="/images/arrow.svg" alt="Top Arrow" /> = Cube top movement<br />
+            <img className="top" src="/images/arrow.svg" alt="Top Arrow" /> = {commandArrowUp}<br />
           </div>
           <div className="movementCommandsContainer">
-            <img className="rigth" src="/images/arrow.svg" alt="Rigth Arrow" /> = Cube rigth movement<br />
+            <img className="rigth" src="/images/arrow.svg" alt="Rigth Arrow" /> = {commandArrowRight}<br />
           </div>
         </div>
       </div>
-      <p className="tutorialDescription">Next tutorial step, we have a explanation of parts positions, and step by step to finish a cube 3X3.</p>
+      <p className="tutorialDescription">{description}</p>
     </div>
   );
 }

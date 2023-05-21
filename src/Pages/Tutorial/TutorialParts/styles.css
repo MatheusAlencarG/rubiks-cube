@@ -73,3 +73,12 @@
 .tutorialPartsContainer .partContainer.swiper-slide-active .partDescription {
   opacity: 1;
 }
+
+
+/* MOBILE */
+
+@media (max-width: 660px) {
+  .tutorialPartsContainer .partBackground {
+    width: 80%;
+  }
+}

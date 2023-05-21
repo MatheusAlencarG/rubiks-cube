@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Cube, FacePiece, Initial_State } from "../../types/index";
+import { Cube, FacePiece, Initial_State_Cube } from "../../types/index";
 
 const facePiece: FacePiece = {
   width: 80,
@@ -1722,7 +1722,7 @@ const cube: Cube = {
   }
 }
 
-export const INITIAL_STATE: Initial_State = {
+export const INITIAL_STATE: Initial_State_Cube = {
   rubicksCubeState: cube,
   horizontalCubeMovement: (movementType: string) => {},
   verticalCubeMovement: (movementType: string) => {},

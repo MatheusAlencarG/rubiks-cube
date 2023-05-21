@@ -3,15 +3,19 @@ import "./styles.css";
 
 import { Link, useLocation } from "react-router-dom";
 import { Context } from "../../Contexts/PaginationContext/Context";
+import { Context as GeneralConfigContext } from "../../Contexts/GeneralConfigContext/Context";
 
 function Header() {
   const { pageState } = useContext(Context);
+  const { allLanguages, currentLanguage } = useContext(GeneralConfigContext).language;
   const [ tutorialLink, setTutorialLink ] = useState<string>();
   const tutorialRef = useRef<HTMLDivElement>(null);
   const rubickRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const { tabOne, tabTwo } = allLanguages[currentLanguage].global;
+
   
-  function detectPage(): void {
+  function detectPage() {
     const tutorialParent = tutorialRef.current?.parentNode as Element;
     const rubickParent = rubickRef.current?.parentNode as Element;
     const pathName = window.location.pathname;
@@ -36,13 +40,13 @@ function Header() {
           className="headerLinkContainer tutorial active" 
           to={tutorialLink ?? '/tutorial'} 
         >
-          <div ref={tutorialRef}>Tutorial</div>
+          <div ref={tutorialRef}>{tabOne}</div>
         </Link>
         <Link 
           className="headerLinkContainer rubick" 
           to="/rubicksCube"
         >
-          <div ref={rubickRef}>Rubicks Cube</div>
+          <div ref={rubickRef}>{tabTwo}</div>
         </Link>
     </div>
   );

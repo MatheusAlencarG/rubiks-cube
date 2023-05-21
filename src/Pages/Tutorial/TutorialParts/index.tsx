@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import './styles.css';
 
 import 'swiper/swiper.css';
@@ -7,13 +7,16 @@ import Swiper from 'react-id-swiper';
 import data from './content.json';
 import { SwiperParams } from '../../../types/index';
 
+import { Context } from "../../../Contexts/GeneralConfigContext/Context";
+
 function TutorialParts() {
-  const content = data.content;
+  const { currentLanguage, allLanguages } = useContext(Context).language;
+  const content = data.content[currentLanguage];
   const swiperParams: SwiperParams = {
     effect: 'coverflow',
     grabCursor: true,
     centeredSlides: true,
-    slidesPerView: 3,
+    slidesPerView: window.innerWidth <= 600 ? 1 : window.innerWidth <= 900 ? 2 : 3,
     coverflowEffect: {
       rotate: 50,
       stretch: 0,
@@ -23,6 +26,7 @@ function TutorialParts() {
     },
     activeSlideKey: '0'
   }
+  const { description } = allLanguages[currentLanguage].tutorialParts;
 
   return(
     <div className="tutorialPartsContainer">
@@ -41,9 +45,7 @@ function TutorialParts() {
           </div>
         ))}
       </Swiper>
-      <p>
-        Keep all this in mind, we will use everything to the next page, you will find a step by step to finish a cube
-      </p>
+      <p>{description}</p>
     </div>
   );
 }

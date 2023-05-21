@@ -5,11 +5,14 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  position: relative;
 }
 
 .pageRender .projectTitle {
   color: var(--white);
   font-weight: 400;
+  text-transform: capitalize;
+  text-align: center;
 }
 
 .pageContainer {
@@ -25,14 +28,34 @@
   overflow: hidden;
 }
 
+@media (max-height: 800px) {
+  .pageContainer {
+    width: 90vw;
+  }
+}
+
 @media (max-height: 1100px) {
   .pageContainer {
     height: 100%;
     min-height: 550px;
+    margin-bottom: 30px;
   }
 
   .pageRender {
     height: auto;
     width: auto;
+  }
+}
+
+
+/* MOBILE */
+
+@media (max-width: 660px) {
+  .pageRender .projectTitle {
+    margin-top: 55px;
+  }
+
+  .pageContainer {
+    width: 90vw;
   }
 }

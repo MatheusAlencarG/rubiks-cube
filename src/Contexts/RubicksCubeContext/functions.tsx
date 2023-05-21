@@ -47,8 +47,6 @@ export function getNewPieces({
 
     newRotate[rotateAxle] = accountValue
     
-    console.log('newRotate', newRotate);
-
     return {
       ...piece, 
       transformOrigin: pieceConfig ? pieceConfig.transformOrigin : piece.transformOrigin,
@@ -156,7 +154,6 @@ function getNewFacePieces({
               _piece.data.type === 'middle' &&
               _piece.data.faces.includes('green')
             )?.data.faces;
-            console.log('facePiece', facePiece, newPositionColors);
 
             return { ...facePiece, faces: newPositionColors }
           } else if (faces.includes('green')) {
@@ -806,8 +803,6 @@ function getNewFacePieces({
     })
   ;
 
-  console.log('newFacePieces', newFacePieces);
-
   return newFacePieces;
 }
 
@@ -926,9 +921,6 @@ export function getOldPiecesWithRotation({
 
     return mergedPiece[0]
   });
-
-  console.log('newPiecesPosition', newPiecesPosition);
-  
 
   return newPiecesPosition;
 }
