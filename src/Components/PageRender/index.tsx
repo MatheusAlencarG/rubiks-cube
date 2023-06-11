@@ -6,8 +6,8 @@ import Header from "../Header";
 import Footer from "../Footer";
 import GeneralConfigs from "../GeneralConfigs";
 import PaginationContext from "../../Contexts/PaginationContext/PaginationContext";
-import RubicksCubeContext from "../../Contexts/RubicksCubeContext/RubicksCubeContext";
 import { Context } from "../../Contexts/GeneralConfigContext/Context";
+import RubicksCube3x3Context from "../../Contexts/RubicksCubeContext/RubicksCube3x3Context";
 
 function PageRender({ page }: { page: React.ReactElement }) {
   const params = useParams();
@@ -27,13 +27,13 @@ function PageRender({ page }: { page: React.ReactElement }) {
         <GeneralConfigs />
         <h1 className="projectTitle">{projectTitle}</h1>
         <div className="pageContainer">
-          <PaginationContext>
-            <RubicksCubeContext>
+          <RubicksCube3x3Context>
+            <PaginationContext>
               <Header />
               {clonePage}
               <Footer />
-            </RubicksCubeContext>
-          </PaginationContext>
+            </PaginationContext>
+          </RubicksCube3x3Context>
         </div>
       </div>
   );

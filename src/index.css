@@ -53,7 +53,7 @@ code {
 
 :root {
   --black: #151513;
-  --white: #ffffff;
+  --white: #f5f5f5;
   --primary-color: #D7FA19;
   --desktop: "min-width: 661px";
   --mobile: "max-width: 660px"

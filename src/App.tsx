@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import PageRender from './Components/PageRender';
 import MainTutorial from './Pages/Tutorial/MainTutorial';
-import RubicksCube from './Pages/RubiksCube';
+import RubicksCube from './Pages/RubiksCube3x3';
 import TutorialParts from './Pages/Tutorial/TutorialParts';
 import TutorialStep from './Pages/Tutorial/TutorialStep';
 import PageNotFound from './Pages/PageNotFound';
