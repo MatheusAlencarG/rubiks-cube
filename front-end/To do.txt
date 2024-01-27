@@ -1,22 +1,20 @@
-- Atualizar os comandos de acordo com o que deu para fazer do cubo na página "/tutorial" --> Fazer depois de arrumar os bugs do cubo
+- Atualizar os comandos de acordo com o que deu para fazer do cubo na página "/tutorial"
 
 - Arrumar erros de ortografia no inglês --> Fazer por ultimo
 
-- Alterar o projeto inteiro para ??? de estilos (Perguntar para o Thiago)
-
 - Fazer o menu de configuraçoes, configs disponíveis:
   1- Tema escuro/claro/custom --> Preguiça de fazer kkk
-  2- Tamanhos e estilizaçoes do cubo --> Fazer depois de arrumar os bugs do cubo
+  2- Tamanhos e estilizaçoes do cubo
   3- Config dos comandos do teclado
   4- Modo dicas ON/OFF
 
 - Estudar cypress para fazer testes unitários
 
-- Login nao obrigatório, servirá apenas para 
+- Login nao obrigatório, servirá apenas para guardar o progresso do cubo e configs
 
 - Fazer backend com login, config do cubo e comandos
 
-- Trocas o style dos tabs no header e deixar o texto maior/pesado para enfatizar
+- Trocar o style dos tabs no header e deixar o texto maior/pesado para enfatizar
 
 - Arrumar texto sobrepondo box em /tutorial/parts
 
