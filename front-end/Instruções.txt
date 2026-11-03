@@ -1,35 +1,33 @@
+To do:
+
 - Atualizar os comandos de acordo com o que deu para fazer do cubo na página "/tutorial"
 
-- Arrumar erros de ortografia no inglês --> Fazer por ultimo
+- Arrumar erros de ortografia no inglês
 
 - Fazer o menu de configuraçoes, configs disponíveis:
-  1- Tema escuro/claro/custom --> Preguiça de fazer kkk
+  1- Tema escuro/claro/custom
   2- Tamanhos e estilizaçoes do cubo
   3- Config dos comandos do teclado
   4- Modo dicas ON/OFF
 
-- Estudar cypress para fazer testes unitários
-
 - Login nao obrigatório, servirá apenas para guardar o progresso do cubo e configs
 
-- Fazer backend com login, config do cubo e comandos
+- Fazer backend com strapi com login, config do cubo e comandos
 
 - Trocar o style dos tabs no header e deixar o texto maior/pesado para enfatizar
 
 - Arrumar texto sobrepondo box em /tutorial/parts
 
+
+
 =============================================
 
 
-comandos surge
+Subida do projeto:
 
-npm run build
+Front: Vercel
 
-cp index.html 200.html
-
-npx surge
-
-rubicks-cube-alencar.surge.sh
+Strapi + MySQL: uma VM Oracle Always Free.
 
 
 =============================================

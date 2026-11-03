@@ -1,0 +1,409 @@
+Project rubiks_cube {
+  database_type: 'MySQL'
+
+  Note: '''
+    Modelo lógico para Strapi 5 com MySQL.
+    O Strapi gerencia tabelas, relações, componentes e mídias.
+    Não executar diretamente o SQL exportado pelo dbdiagram.
+  '''
+}
+
+Enum cube_type {
+  "3x3"
+}
+
+Enum supported_locale {
+  "pt-BR"
+  "en-US"
+}
+
+Enum tutorial_kind {
+  overview
+  parts
+  step
+}
+
+// ------------------------------------
+// Recursos nativos do Strapi
+// ------------------------------------
+
+Table users {
+  id integer [pk]
+  username varchar [not null, unique]
+  email varchar [not null, unique]
+
+  first_name varchar(80)
+  last_name varchar(80)
+  avatar_id integer
+  role_id integer [not null]
+
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  Note: '''
+    Representa plugin::users-permissions.user.
+
+    Estender o usuário nativo do Strapi.
+    Credenciais e campos internos de autenticação foram omitidos.
+
+    Não armazenar is_logged.
+    O papel do usuário substitui perfil_access.
+    Usuários do aplicativo são separados dos administradores do painel.
+  '''
+}
+
+Table roles {
+  id integer [pk]
+  name varchar [not null]
+  type varchar [not null, unique]
+
+  Note: 'Papéis nativos do Users & Permissions.'
+}
+
+Table media_files {
+  id integer [pk]
+  name varchar [not null]
+  url text [not null]
+  mime varchar [not null]
+
+  Note: 'Representação simplificada dos arquivos da Media Library.'
+}
+
+// ------------------------------------
+// Preferências do usuário
+// ------------------------------------
+
+Table user_settings {
+  id integer [pk]
+  document_id varchar [not null, unique]
+
+  active_preset_id integer
+
+  user_id integer [not null, unique]
+
+  language supported_locale [not null, default: 'pt-BR']
+
+  theme_primary_color varchar(7) [not null, default: '#111827']
+  theme_secondary_color varchar(7) [not null, default: '#f9fafb']
+
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  Note: '''
+    Collection type com no máximo uma configuração por usuário.
+    Não é um Single Type global do Strapi.
+
+    active_preset_id substitui is_active nos presets.
+    O preset selecionado deve pertencer ao mesmo usuário.
+    Validar cores no formato hexadecimal #RRGGBB.
+  '''
+}
+
+// ------------------------------------
+// Aparência do cubo
+// ------------------------------------
+
+Table cube_appearances {
+  id integer [pk]
+
+  front_color varchar(7) [not null, default: '#ff0000']
+  back_color varchar(7) [not null, default: '#ffa500']
+  left_color varchar(7) [not null, default: '#0000ff']
+  right_color varchar(7) [not null, default: '#008000']
+  top_color varchar(7) [not null, default: '#ffff00']
+  bottom_color varchar(7) [not null, default: '#ffffff']
+
+  width_px integer [not null, default: 240]
+  piece_radius_px float [not null, default: 20]
+  transition_ms integer [not null, default: 0]
+
+  initial_rotation_x float [not null, default: -45]
+  initial_rotation_y float [not null, default: -45]
+  initial_rotation_z float [not null, default: 0]
+
+  checks {
+    `width_px > 0`
+    `piece_radius_px >= 0`
+    `transition_ms >= 0`
+  }
+
+  Note: '''
+    Componente não repetível cube.appearance no Strapi.
+
+    Cada preset, tentativa ou partida possui sua própria instância.
+    Ao criar um snapshot, copiar os valores sem reutilizar o ID.
+
+    Rotações em graus; dimensões em pixels; animação em milissegundos.
+    Validar cores no formato #RRGGBB.
+    A rotação visual não representa o estado lógico das peças.
+  '''
+}
+
+Table cube_presets {
+  id integer [pk]
+  document_id varchar [not null, unique]
+  user_id integer [not null]
+
+  name varchar(80) [not null]
+  cube_type cube_type [not null, default: '3x3']
+  appearance_id integer [not null, unique]
+
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    user_id
+  }
+
+  Note: '''
+    Configurações visuais reutilizáveis do usuário.
+    Inicialmente, somente 3x3, conforme o motor atual do projeto.
+
+    Sem Draft & Publish.
+  '''
+}
+
+// ------------------------------------
+// Histórico de tentativas concluídas
+// ------------------------------------
+
+Table solve_attempts {
+  id integer [pk]
+  document_id varchar [not null, unique]
+  user_id integer [not null]
+
+  preset_id integer
+  appearance_snapshot_id integer [not null, unique]
+
+  cube_type cube_type [not null, default: '3x3']
+  duration_ms integer [not null]
+  completed_at datetime [not null]
+
+  engine_version varchar(64) [not null]
+
+  initial_state json [not null]
+  scramble json
+  moves json [not null]
+
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    (user_id, completed_at)
+    (user_id, duration_ms)
+  }
+
+  checks {
+    `duration_ms > 0`
+  }
+
+  Note: '''
+    Um usuário pode possuir várias tentativas.
+
+    duration_ms guarda duração: 15432 = 15,432 segundos.
+    completed_at guarda quando a tentativa terminou.
+
+    initial_state: estado lógico inicial versionado.
+    scramble: lista de movimentos de embaralhamento, quando conhecida.
+    moves: lista ordenada de objetos {move, atMs}.
+
+    Exemplo de moves:
+    [{"move":"R","atMs":250},{"move":"U'","atMs":610}]
+
+    Usar movimentos canônicos, não teclas do teclado.
+    atMs deve ser não negativo, não decrescente e <= duration_ms.
+
+    O snapshot é uma cópia independente da aparência original.
+    Alterar ou excluir o preset não deve alterar o histórico.
+    Excluir o preset deve apenas remover a referência preset_id.
+
+    Dados históricos e snapshots devem ser imutáveis após criação.
+    Validar o replay no motor antes de considerar o resultado verificado.
+    Sem Draft & Publish.
+  '''
+}
+
+// ------------------------------------
+// Partidas para retomar posteriormente
+// ------------------------------------
+
+Table saved_games {
+  id integer [pk]
+  document_id varchar [not null, unique]
+  preset_id integer
+
+  user_id integer [not null]
+  appearance_snapshot_id integer [not null, unique]
+
+  name varchar(80) [not null]
+  cube_type cube_type [not null, default: '3x3']
+
+  elapsed_ms integer [not null, default: 0]
+  engine_version varchar(64) [not null]
+
+  initial_state json [not null]
+  cube_state json [not null]
+  scramble json
+  moves json [not null]
+
+  view_rotation_x float [not null, default: 0]
+  view_rotation_y float [not null, default: 0]
+  view_rotation_z float [not null, default: 0]
+
+  saved_at datetime [not null]
+  created_at datetime [not null]
+  updated_at datetime [not null]
+
+  indexes {
+    (user_id, saved_at)
+  }
+
+  checks {
+    `elapsed_ms >= 0`
+  }
+
+  Note: '''
+    Estado persistido de uma partida em andamento.
+
+    initial_state e cube_state devem usar um formato versionado
+    que represente posição e orientação das peças.
+
+    Exemplo de representação para 3x3:
+    {version: 1, cubeType: "3x3", facelets: "...54 posições..."}
+
+    Definir ordem fixa das faces e das posições no contrato do motor.
+    Validar estrutura e validade física do estado.
+
+    cube_state deve corresponder à aplicação de moves em initial_state.
+    Tempos dos movimentos devem ser <= elapsed_ms.
+
+    view_rotation guarda somente a orientação visual.
+    Não persistir classes CSS das peças.
+
+    Sem Draft & Publish.
+  '''
+}
+
+// ------------------------------------
+// Conteúdo educativo
+// ------------------------------------
+
+Table tutorials {
+  id integer [pk]
+  document_id varchar [not null]
+  locale supported_locale [not null]
+
+  slug varchar(180) [not null]
+  title varchar(180) [not null]
+  description text [not null]
+
+  cube_type cube_type [not null, default: '3x3']
+  kind tutorial_kind [not null]
+
+  display_order integer [not null, default: 0]
+  step_number integer
+
+  created_at datetime [not null]
+  updated_at datetime [not null]
+  published_at datetime
+
+  indexes {
+    (document_id, locale) [unique]
+    (locale, kind, display_order)
+  }
+
+  checks {
+    `display_order >= 0`
+    `(kind = 'step' AND step_number >= 1 AND step_number IS NOT NULL) OR (kind <> 'step' AND step_number IS NULL)`
+  }
+
+  Note: '''
+    Collection type com i18n e Draft & Publish.
+
+    overview: apresentação e instruções gerais.
+    parts: nomes e posições das peças.
+    step: etapa de resolução.
+
+    Localizar título, slug, descrição, partes e vídeos.
+    Compartilhar tipo do cubo, categoria e ordem entre traduções.
+
+    locale e published_at são atributos nativos do Strapi.
+
+    A tabela representa uma versão lógica por idioma.
+    As versões físicas de rascunho/publicação foram omitidas;
+    não criar o índice lógico acima manualmente no banco do Strapi.
+  '''
+}
+
+Table tutorial_parts {
+  id integer [pk]
+  tutorial_id integer [not null]
+
+  position integer [not null]
+  title varchar(180) [not null]
+  description text [not null]
+
+  image_id integer [not null]
+  image_alt varchar(180) [not null]
+
+  indexes {
+    (tutorial_id, position) [unique]
+  }
+
+  Note: '''
+    Componente repetível tutorial.part.
+
+    Cada tradução possui seus próprios componentes.
+    position representa a ordem do array mantida pelo Strapi;
+    não exige atributo manual no componente.
+
+    Imagens são campos de mídia, não caminhos fixos do frontend.
+  '''
+}
+
+Table tutorial_videos {
+  id integer [pk]
+  tutorial_id integer [not null]
+
+  position integer [not null]
+  title varchar(180) [not null]
+  embed_url varchar(2048) [not null]
+
+  indexes {
+    (tutorial_id, position) [unique]
+  }
+
+  Note: '''
+    Componente repetível tutorial.video.
+
+    Substitui videoURLOne e videoURLTwo.
+    position representa a ordem do array mantida pelo Strapi.
+
+    Validar HTTPS e uma lista de domínios permitidos para embed.
+  '''
+}
+
+// ------------------------------------
+// Relacionamentos lógicos
+// ------------------------------------
+
+Ref: roles.id < users.role_id
+Ref: media_files.id < users.avatar_id
+
+Ref: users.id - user_settings.user_id
+Ref: users.id < cube_presets.user_id
+Ref: cube_presets.id < user_settings.active_preset_id
+
+Ref: cube_appearances.id - cube_presets.appearance_id
+
+Ref: users.id < solve_attempts.user_id
+Ref: cube_presets.id < solve_attempts.preset_id
+Ref: cube_appearances.id - solve_attempts.appearance_snapshot_id
+
+Ref: users.id < saved_games.user_id
+Ref: cube_presets.id < saved_games.preset_id
+Ref: cube_appearances.id - saved_games.appearance_snapshot_id
+
+Ref: tutorials.id < tutorial_parts.tutorial_id
+Ref: tutorials.id < tutorial_videos.tutorial_id
+Ref: media_files.id < tutorial_parts.image_id
