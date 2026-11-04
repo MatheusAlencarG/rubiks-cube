@@ -1,93 +1,48 @@
 .generalConfigIcon {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 40px;
-  cursor: pointer;
+  @apply absolute right-[15px] top-[15px] w-[40px] cursor-pointer;
 }
 
 .generalConfigPopup {
-  display: none;
-  height: 100vh;
-  width: 100vw;
-  position: fixed;
-  top: 0;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
-  background-color: rgba(0, 0, 0, 0.5);
+  @apply fixed top-0 z-[2] hidden h-screen w-screen items-center justify-center bg-black/50;
 }
 
 .generalConfigContainer {
-  position: relative;
-  width: 50%;
-  height: 50%;
-  background-color: var(--black);
-  border: 2px solid var(--primary-color);
-  border-radius: 10px;
-  color: var(--white);
-  text-align: center;
-  overflow: auto;
+  @apply relative h-1/2 w-1/2 overflow-auto rounded-[10px] border-2 border-solid border-accent bg-canvas text-center text-surface;
 }
 
 .generalConfigPopup.active {
-  display: flex;
+  @apply flex;
 }
 
 .generalConfigClose {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 30px;
-  cursor: pointer;
+  @apply absolute right-[10px] top-[10px] w-[30px] cursor-pointer;
 }
 
 .generalConfigContainer h3 {
-  text-transform: capitalize;
+  @apply capitalize;
 }
 
 .generalConfigContent {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 20px;
-  padding-bottom: 20px;
+  @apply flex flex-col items-center justify-between gap-[20px] pb-[20px];
 }
 
 .languageConfig {
-  width: 80%;
-  border: 2px solid var(--primary-color);
-  border-radius: 15px;
-  text-transform: capitalize;
+  @apply w-4/5 rounded-[15px] border-2 border-solid border-accent capitalize;
 }
 
 .languageConfigTitle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  color: black;
-  font-weight: 700;
-  gap: 10px;
-  margin: 0;
-  cursor: pointer;
-  background: var(--primary-color);
-  border-radius: 10px;
+  @apply relative m-0 flex cursor-pointer items-center justify-center gap-[10px] rounded-[10px] bg-accent font-bold text-black;
 }
 
 .iconConfig {
-  width: 45px;
+  @apply w-[45px];
 }
 
 .configArrow {
-  width: 35px;
-  position: absolute;
-  top: calc(50% - calc(35px / 2));
-  right: 0;
+  @apply absolute right-0 top-[calc(50%_-_calc(35px_/_2))] w-[35px];
   transform: rotate(90deg);
-  transition: .5s;
-  cursor: pointer;
+  transition: 0.5s;
+  @apply cursor-pointer;
 }
 
 .configArrow.active {
@@ -95,27 +50,18 @@
 }
 
 .languageConfigContent {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 0;
-  height: 0;
-  overflow: hidden;
-  transition: .8s;
+  @apply flex h-0 flex-wrap justify-center gap-[20px] overflow-hidden p-0;
+  transition: 0.8s;
 }
 
 .languageConfigContent.active {
-  padding: 15px;
-  height: fit-content;
+  @apply h-fit p-[15px];
 }
-
 
 /* MOBILE */
 
 @media (max-width: 660px) {
   .generalConfigContainer {
-    width: 80%;
-    height: 80%;
+    @apply h-4/5 w-4/5;
   }
 }

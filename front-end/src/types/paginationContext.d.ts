@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export interface PageSTate {
   currentPageIndex: number;
   listOfPages: string[];
   nextPage: string;
-  prevPage: string
+  prevPage: string;
 }
 
 export interface ChangePageStateProps {

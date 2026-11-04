@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+.strapi/
+.cache/
+.tmp/
+.strapi-updater.json
+public/uploads/
+package-lock.json
+diagram.dbml
+types/generated/

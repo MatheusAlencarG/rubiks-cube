@@ -1,4 +1,4 @@
-import { Piece } from "../Contexts/RubicksCube3x3Context/RucksCube3x3/Piece";
+import { Piece } from '../Contexts/RubicksCube3x3Context/RucksCube3x3/Piece';
 
 interface RubicksCube3x3Constructor {
   colors: Colors;
@@ -35,9 +35,12 @@ interface RubicksCube3x3RotateAxle {
   bottomFace: RotateAxleValues;
 }
 
-type RubicksCube3x3StylesKeys = 'width' | 'height' | 'rotateX' | 'rotateY' | 'rotateZ' | 'pieceRadius' | 'transition'
-type RubicksCube3x3ColorsKeys = 'frontColor' | 'backColor' | 'leftColor' | 'rightColor' | 'topColor' | 'bottomColor'
-type RubicksCube3x3RotateAxleKeys = 'frontFace' | 'backFace' | 'leftFace' | 'rightFace' | 'topFace' | 'bottomFace'
+type RubicksCube3x3StylesKeys =
+  'width' | 'height' | 'rotateX' | 'rotateY' | 'rotateZ' | 'pieceRadius' | 'transition';
+type RubicksCube3x3ColorsKeys =
+  'frontColor' | 'backColor' | 'leftColor' | 'rightColor' | 'topColor' | 'bottomColor';
+type RubicksCube3x3RotateAxleKeys =
+  'frontFace' | 'backFace' | 'leftFace' | 'rightFace' | 'topFace' | 'bottomFace';
 
 interface PieceConstructor {
   id: number;
@@ -116,14 +119,53 @@ interface SetPieceValueOnTimeoutProps {
   pieceRotateAxle: PieceStylesKeys;
 }
 
-type PieceStylesKeys = 'width' | 'height' | 'rotateX' | 'rotateY' | 'rotateZ' | 'transformOriginX' | 'transformOriginY' | 'transformOriginZ' | 'faceWidth' | 'faceHeight' | 'faceTranslateX' | 'faceTranslateY' | 'faceTranslateZ' | 'translateX' | 'translateY' | 'translateZ' | 'pieceRotateX' | 'pieceRotateY' | 'pieceRotateZ' | 'transition'
-type PieceDataKeys = 'layer' | 'type' | 'colors' | 'faces'
-type PieceClassKeys = 'frontClass' | 'backClass' | 'leftClass' | 'rightClass' | 'topClass' | 'bottomClass'
-type LinkedTransformOriginsKeys = 'frontX' | 'frontY' | 'frontZ' | 'backX' | 'backY' | 'backZ' | 'leftX' | 'leftY' | 'leftZ' | 'rightX' | 'rightY' | 'rightZ' | 'topX' | 'topY' | 'topZ' | 'bottomX' | 'bottomY' | 'bottomZ' 
+type PieceStylesKeys =
+  | 'width'
+  | 'height'
+  | 'rotateX'
+  | 'rotateY'
+  | 'rotateZ'
+  | 'transformOriginX'
+  | 'transformOriginY'
+  | 'transformOriginZ'
+  | 'faceWidth'
+  | 'faceHeight'
+  | 'faceTranslateX'
+  | 'faceTranslateY'
+  | 'faceTranslateZ'
+  | 'translateX'
+  | 'translateY'
+  | 'translateZ'
+  | 'pieceRotateX'
+  | 'pieceRotateY'
+  | 'pieceRotateZ'
+  | 'transition';
+type PieceDataKeys = 'layer' | 'type' | 'colors' | 'faces';
+type PieceClassKeys =
+  'frontClass' | 'backClass' | 'leftClass' | 'rightClass' | 'topClass' | 'bottomClass';
+type LinkedTransformOriginsKeys =
+  | 'frontX'
+  | 'frontY'
+  | 'frontZ'
+  | 'backX'
+  | 'backY'
+  | 'backZ'
+  | 'leftX'
+  | 'leftY'
+  | 'leftZ'
+  | 'rightX'
+  | 'rightY'
+  | 'rightZ'
+  | 'topX'
+  | 'topY'
+  | 'topZ'
+  | 'bottomX'
+  | 'bottomY'
+  | 'bottomZ';
 
-type PieceClassValues = 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom'
-type PieceColors = 'red' | 'blue' | 'yellow' | 'white' | 'orange' | 'green'
-type RotateAxleValues = 'x' | 'y' | 'z'
+type PieceClassValues = 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom';
+type PieceColors = 'red' | 'blue' | 'yellow' | 'white' | 'orange' | 'green';
+type RotateAxleValues = 'x' | 'y' | 'z';
 
 export {
   RubicksCube3x3Constructor,
@@ -146,4 +188,4 @@ export {
   LinkedTransformOriginsKeys,
   PieceClassValues,
   PieceColors,
-}
+};

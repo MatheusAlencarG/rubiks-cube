@@ -2,22 +2,23 @@
 
 Aplicação web para aprender a resolver um cubo mágico 3×3 e praticar com um cubo interativo no navegador. O projeto combina tutoriais com imagens e vídeos, explicações das peças e movimentos controlados pelo teclado, com conteúdo em português e inglês.
 
-A direção definida para a evolução do projeto é manter **React + TypeScript** no frontend, adotar **Tailwind CSS** para a interface e migrar o backend para **Strapi 5 + MySQL**.
+A interface utiliza **React + TypeScript + Tailwind CSS**, com o pipeline existente do Create React App. O backend utiliza **Strapi 5 + MySQL**, com autenticação, conteúdo traduzido e dados pessoais protegidos por proprietário.
 
 ## Estado atual
 
 | Área | Implementado | Próxima etapa |
 | --- | --- | --- |
-| Frontend | React 18, TypeScript e Create React App | Revisar o pipeline de build para integrar Tailwind CSS |
-| Interface | CSS, estilos dinâmicos e `classnames` | Migrar a estilização da interface para Tailwind |
-| Cubo | Simulação 3×3 e controles pelo teclado no navegador | Preservar o motor durante as migrações e definir o formato de persistência |
-| Tutoriais | Conteúdo local em JSON, imagens e vídeos incorporados | Gerenciar conteúdo e traduções pelo Strapi |
-| Backend | Servidor Fastify com a rota `GET /ping` | Substituir por Strapi 5 |
-| Banco de dados | Modelo lógico em DBML | Implementar os modelos no Strapi com MySQL |
-| Testes | Ferramentas do Create React App e Testing Library | Criar cobertura funcional e integrar Playwright |
+| Frontend | React 18, TypeScript, Create React App e Tailwind 3 | Evoluir a integração com o backend |
+| Interface | Utilitários Tailwind, estilos contextuais com `@apply` e transformações 3D dinâmicas | Preservar as convenções visuais nos novos componentes |
+| Cubo | Simulação 3×3 no navegador e contrato de estados/replays no backend | Adaptar o motor visual ao contrato de persistência |
+| Tutoriais | JSON local no React e importador para CMS, imagens e traduções | Conectar as telas à Content API do Strapi |
+| Backend | Strapi 5, Users & Permissions, API e validações de domínio | Integrar os novos recursos à interface |
+| Banco de dados | Modelos do DBML implementados no Strapi com MySQL | Configurar as credenciais do ambiente de uso |
+| Testes | Testing Library e Playwright no frontend; contratos e integração com MySQL real no backend | Ampliar a cobertura conforme novas funcionalidades |
+| Qualidade | Prettier, plugin Tailwind, ESLint, EditorConfig, Husky e workflow de CI | Manter as verificações nas próximas alterações |
 | Skills | Cinco skills locais em `.agents/skills` | Aplicar conforme a tarefa de desenvolvimento |
 
-Strapi, MySQL e Tailwind ainda não estão instalados ou integrados à aplicação. Os comandos abaixo executam a versão atual do projeto. O frontend usa conteúdo local e pode ser executado sem iniciar o backend.
+O backend Strapi está implementado e possui configuração MySQL, importação de conteúdo e testes de integração. O frontend continua usando conteúdo local nesta etapa e pode ser executado sem iniciar o backend. A integração das telas com a API será feita separadamente.
 
 ## Funcionalidades atuais
 
@@ -62,32 +63,40 @@ As versões abaixo correspondem às faixas declaradas nos arquivos `package.json
 
 | Tecnologia | Versão declarada | Papel no projeto |
 | --- | --- | --- |
-| React e React DOM | `^18.2.0` | Componentes, estado e renderização da interface |
-| TypeScript | Frontend `^4.9.5`; backend `^5.3.3` | Tipagem do frontend e do servidor atual |
+| React e React DOM | Frontend `^18.2.0`; painel Strapi `^18.3.1` | Componentes e renderização das interfaces |
+| TypeScript | Frontend `^4.9.5`; backend `^5.9.0` | Tipagem do frontend e da API |
 | Create React App / `react-scripts` | `5.0.1` | Desenvolvimento, build e execução dos testes do frontend |
-| React Router DOM | `^6.8.1` | Navegação da aplicação |
+| React Router DOM | Frontend `^6.8.1`; painel Strapi `^6.30.1` | Navegação das interfaces |
 | CSS e transformações 3D | Nativo do navegador | Layout, estilos e representação visual do cubo |
+| Tailwind CSS | `^3.4.17` | Classes utilitárias, cores do tema e estilos contextuais com `@apply` |
 | `classnames` | `^2.3.2` | Composição condicional de classes CSS |
 | Swiper e `react-id-swiper` | `^9.2.0` e `^4.0.0` | Carrosséis dos tutoriais |
-| Node.js | Sem versão fixada no repositório | Runtime do backend e das ferramentas de desenvolvimento |
-| Fastify | `^4.25.2` | Backend inicial com a rota `/ping` |
+| Node.js | Backend: versões 22 a 26 | Runtime da API e das ferramentas; workflows usam Node.js 22 |
+| Strapi e Users & Permissions | `5.60.0` | API, CMS, autenticação, papéis e mídia |
+| MySQL / `mysql2` | MySQL 8.0+; Compose 8.4; driver `^3.15.0` | Persistência do backend |
+| Zod | `^4.1.0` | Validação dos contratos e regras de domínio |
+| `cubejs` | `1.3.2` | Validação física dos estados e consistência dos replays |
+| `tsx` e Node Test Runner | `^4.20.0` e nativo do Node.js | Testes de contratos e integração MySQL |
 | Jest e Testing Library | Jest via `react-scripts`; React `^13.4.0`, jest-dom `^5.16.5`, user-event `^13.5.0` | Infraestrutura de testes e interação com componentes |
-| ESLint | Configuração `react-app` e `react-app/jest` | Análise estática integrada ao frontend |
+| ESLint | Frontend: `react-app` e `react-app/jest`; backend: ESLint 8 e typescript-eslint 8 | Análise estática do frontend e da API |
+| Prettier e plugin Tailwind | `^3.9.10` e `^0.6.14` | Formatação e ordenação automática das classes Tailwind |
+| `eslint-config-prettier` | `^9.1.2` | Compatibilidade entre lint e formatação |
+| Playwright | `^1.64.1` | Testes funcionais do build em desktop e celular |
+| EditorConfig | `.editorconfig` | Convenções de indentação, codificação e quebras de linha |
+| Husky e lint-staged | `^9.1.7` e `^16.4.0` | Verificação dos arquivos do frontend e backend preparados para commit |
+| GitHub Actions | Workflows em `.github/workflows` | Qualidade do frontend e backend; integração com MySQL descartável |
 | DBML / dbdiagram.io | Arquivo `back-end/diagram.dbml` | Documentação do modelo lógico dos dados |
 
-O frontend também declara `styled-components` (`^5.3.8`), `web-vitals` (`^2.1.4`), `global` (`^4.4.0`) e Yarn (`^1.22.21`), além dos pacotes de tipos `@types/*`. Estarem no manifesto não significa que estejam integrados às telas: a estilização atual utiliza arquivos CSS e estilos dinâmicos. Essas dependências devem ser revisadas durante a migração.
+O frontend também declara `styled-components` (`^5.3.8`), `web-vitals` (`^2.1.4`), `global` (`^4.4.0`) e Yarn (`^1.22.21`), além dos pacotes de tipos `@types/*`. Estarem no manifesto não significa que estejam integrados às telas. A interface usa Tailwind, com CSS específico para detalhes visuais e estilos dinâmicos do motor 3D; as dependências auxiliares permanecem para revisão separada.
 
 ### Stack planejada
 
 | Tecnologia | Uso previsto | Situação |
 | --- | --- | --- |
-| Tailwind CSS | Estilização da interface, responsividade e padronização visual | A integrar |
-| Strapi 5 | API, painel administrativo, conteúdo, mídia e autenticação | A implementar em substituição ao Fastify |
-| MySQL | Persistência dos dados gerenciados pelo Strapi | Modelagem proposta; sem conexão configurada |
-| i18n do Strapi | Gestão das traduções dos tutoriais | Planejado |
-| Playwright | Testes de navegação, integração e API | Skill disponível; ferramenta e suíte ainda não configuradas |
-| Prettier e EditorConfig | Formatação e convenções de edição | Skill de configuração disponível; setup ainda pendente |
 | Vercel | Hospedagem do frontend | Destino previsto; deploy ainda não configurado no repositório |
+| Hospedagem do Strapi e MySQL | Execução contínua e dados persistentes | Provedor ainda a definir |
+
+O backend usa i18n do Strapi com `pt-BR` e `en-US`, componentes para aparência e conteúdo dos tutoriais e papéis nativos de acesso. O antigo Fastify foi removido.
 
 ## Como rodar localmente
 
@@ -96,9 +105,10 @@ O frontend também declara `styled-components` (`^5.3.8`), `web-vitals` (`^2.1.4
 - Git para obter o repositório.
 - Node.js em uma versão LTS compatível com as dependências e npm disponível no terminal.
 - Um navegador atualizado.
-- Portas `3000` e `8080` disponíveis, caso execute frontend e backend juntos.
+- Portas `3000` e `1337` disponíveis, caso execute frontend e backend juntos.
+- MySQL 8.0+ para o backend, ou Docker para usar o Compose MySQL 8.4 fornecido.
 
-O repositório ainda não fixa uma versão de Node.js em `engines` ou em um arquivo de versão. A versão adotada deverá ser validada e registrada ao atualizar o pipeline de build.
+O backend declara suporte a Node.js 22 a 26 em `engines`; os workflows usam Node.js 22. O frontend mantém o pipeline do Create React App.
 
 Os exemplos usam npm e os arquivos `package-lock.json` existentes. O frontend também contém `yarn.lock`; para seguir estas instruções, use npm de forma consistente. Não há `package.json` na raiz: execute cada comando no diretório indicado.
 
@@ -116,22 +126,29 @@ Abra [http://localhost:3000](http://localhost:3000). O servidor de desenvolvimen
 
 Na versão atual, não é necessário configurar MySQL, Strapi ou variáveis de ambiente para visualizar o frontend.
 
-### Backend atual: Fastify
+### Backend: Strapi e MySQL
 
 Em outro terminal, a partir da raiz do repositório:
 
 ```sh
 cd back-end
 npm ci
-npm run build
-npm start
+npm run setup
 ```
 
-O build compila `index.ts` para `index.js`; o comando de inicialização executa esse JavaScript. Após alterar o TypeScript, refaça o build e reinicie o servidor.
+Configure `DATABASE_*` no `.env` gerado. O setup cria as chaves privadas e, em um `.env` existente, preenche somente chaves ausentes ou vazias, preservando os valores já definidos. Para usar o MySQL do Compose, execute `docker compose up -d mysql`; para usar MySQL já instalado, informe um banco e usuário exclusivos para o Strapi.
 
-Verifique [http://localhost:8080/ping](http://localhost:8080/ping). A resposta esperada é `pong`, seguida de uma quebra de linha.
+Depois que o banco estiver disponível:
 
-Esse servidor ainda não oferece autenticação, persistência, endpoints de tutoriais ou integração com o frontend. Os comandos específicos de desenvolvimento e produção do Strapi serão documentados quando a migração estiver implementada.
+```sh
+npm run develop
+```
+
+Abra [http://localhost:1337/admin](http://localhost:1337/admin) para criar o administrador. A API usa o prefixo `/api`; `GET /_health` responde `204` quando o servidor está pronto.
+
+Para importar os tutoriais, traduções e imagens atuais, execute `npm run seed` na pasta `back-end`, com o banco configurado. Em produção, use `npm run build` e `npm start`.
+
+Consulte o [guia completo do backend](back-end/README.md) para autenticação, endpoints, configuração, regras dos dados e contratos de replay.
 
 ### Build e testes
 
@@ -140,29 +157,71 @@ Esse servidor ainda não oferece autenticação, persistência, endpoints de tut
 | `front-end` | `npm start` | Executar o servidor de desenvolvimento |
 | `front-end` | `npm run build` | Gerar os arquivos estáticos em `front-end/build` |
 | `front-end` | `npm test` | Executar o Jest em modo interativo |
-| `front-end` | `npm test -- --watchAll=false` | Executar os testes sem o modo de observação |
-| `back-end` | `npm run build` | Compilar o TypeScript do servidor atual |
-| `back-end` | `npm start` | Iniciar o Fastify na porta `8080` |
+| `front-end` | `npm run test:ci` | Executar os testes unitários sem modo de observação |
+| `front-end` | `npm run preview` | Servir o build localmente em `http://127.0.0.1:4173` |
+| `front-end` | `npm run test:e2e` | Executar a suíte Playwright em desktop e celular |
+| `front-end` | `npm run format` | Formatar o frontend e ordenar classes Tailwind |
+| `front-end` | `npm run format:check` | Verificar a formatação sem alterar arquivos |
+| `front-end` | `npm run lint` | Verificar o código com ESLint, sem aceitar avisos |
+| `front-end` | `npm run lint:fix` | Aplicar correções automáticas do ESLint |
+| `front-end` | `npm run typecheck` | Verificar tipos TypeScript sem emitir JavaScript |
+| `back-end` | `npm run setup` | Criar `.env` com chaves privadas aleatórias |
+| `back-end` | `npm run develop` | Iniciar o Strapi em desenvolvimento na porta `1337` |
+| `back-end` | `npm run build` | Compilar o backend e o painel administrativo |
+| `back-end` | `npm start` | Iniciar o Strapi em produção |
+| `back-end` | `npm run seed` | Importar tutoriais, traduções, vídeos e imagens existentes |
+| `back-end` | `npm test` | Executar os testes dos contratos de dados |
+| `back-end` | `npm run test:integration` | Testar a API com banco MySQL exclusivo terminado em `_test` |
+| `back-end` | `npm run format:check` | Verificar a formatação do backend |
+| `back-end` | `npm run lint` | Verificar o código da API |
+| `back-end` | `npm run typecheck` | Verificar tipos do backend |
 
-O arquivo de teste atual do frontend ainda é um esqueleto sem asserções. O script `test` do backend é um placeholder que termina com erro. A presença das ferramentas não representa cobertura funcional; ainda não existem comandos de Playwright, lint ou formatação dedicados ao projeto.
+O teste unitário do frontend verifica a troca de idioma. O Playwright cobre tema, rotas, navegação, popup, carrossel, vídeos e movimentos normais e inversos das seis faces. Os testes do backend validam contratos, estados físicos, replays, autenticação, isolamento por usuário, snapshots, publicação, traduções e importação de mídias. A integração MySQL exige um banco de testes separado; o workflow do backend provisiona esse banco automaticamente na CI.
 
-## Adoção de Tailwind CSS
+Para executar os testes de navegador, a partir de `front-end`:
 
-Tailwind CSS será a base da estilização da interface. A migração deverá preservar o comportamento do cubo, os atalhos, a navegação e os dois idiomas.
+```sh
+npx playwright install chromium
+npm run build
+npm run test:e2e
+```
 
-Antes da instalação, será necessário revisar a compatibilidade do pipeline atual do Create React App e definir a versão e a integração do Tailwind. Avaliar Vite é uma possibilidade dessa revisão, não uma migração já implementada. Consulte a [documentação oficial de integração com Vite](https://tailwindcss.com/docs/installation/using-vite).
+O Playwright inicia o preview automaticamente quando a porta `4173` está disponível. Caso exista um preview local nessa porta, ele será reutilizado fora da CI. Para usar um navegador Chrome já instalado, é possível definir `PLAYWRIGHT_CHANNEL=chrome` no ambiente antes de executar os testes.
 
-A implementação deverá:
+## Tailwind CSS e preservação do visual
 
-- Usar classes utilitárias para layout, tipografia, espaçamento e responsividade.
-- Definir convenções de cores, tamanhos e estados dos componentes.
-- Preservar estilos calculados pelo motor 3D, usando estilos dinâmicos ou variáveis CSS quando necessário.
-- Substituir os estilos existentes de forma gradual e revisar dependências de estilização sem uso.
-- Integrar a formatação ao fluxo de desenvolvimento quando as ferramentas forem configuradas.
+O projeto utiliza Tailwind 3, integrado ao Create React App sem trocar o bundler. A escolha segue a [integração documentada para esse pipeline](https://v3.tailwindcss.com/docs/guides/create-react-app).
 
-Não há comandos de instalação de Tailwind nesta seção porque o pipeline de integração ainda será definido.
+- A configuração está em `front-end/tailwind.config.js`; as diretivas são carregadas em `src/index.css`.
+- O Preflight está desativado para preservar os estilos nativos, as margens, as medidas e o comportamento dos componentes existentes.
+- Os tokens `canvas`, `surface` e `accent` reutilizam as variáveis CSS das cores originais.
+- Os breakpoints `mobile`, `short-screen` e `compact-screen` preservam as condições originais de largura e altura.
+- Layouts usam utilitários nas classes dos componentes. Estados de interação, seletores do Swiper e estilos compartilhados usam `@apply` nos arquivos CSS.
+- As posições, dimensões e transformações calculadas pelo motor do cubo continuam em estilos dinâmicos. Pseudo-elementos, animações e barras de rolagem mantêm CSS específico quando necessário.
 
-## Backend e modelo de dados planejados
+Novos componentes devem seguir esses tokens e convenções, preservando a aparência e os controles existentes.
+
+## Formatação e qualidade do código
+
+O setup segue a skill local `code-formatter-installer`. O frontend usa Prettier com indentação de dois espaços, aspas simples, ponto e vírgula, largura de 100 caracteres e ordenação de classes pelo `prettier-plugin-tailwindcss`. A configuração está em `front-end/.prettierrc.json`.
+
+Para formatar e verificar, a partir de `front-end`:
+
+```sh
+npm run format
+npm run format:check
+npm run lint
+npm run typecheck
+npm run test:ci
+```
+
+O `.editorconfig` compartilha as convenções de edição. As configurações de VS Code recomendam Prettier, ESLint, EditorConfig e a extensão do Tailwind.
+
+O `npm ci` instala o hook de pre-commit do Husky em um checkout Git. O hook executa lint e formatação nos arquivos do frontend preparados para commit. Na CI, `HUSKY=0` evita a instalação dos hooks, e o workflow executa as verificações separadamente. Se precisar ignorar o hook em uma emergência, `git commit --no-verify` deve ser reservado a situações justificadas, com as verificações executadas posteriormente.
+
+O workflow `frontend-quality.yml` usa Node.js 22 e verifica instalação, formatação, lint, tipos, testes unitários, build e testes Playwright.
+
+## Backend e modelo de dados
 
 O [diagrama em DBML](back-end/diagram.dbml) descreve o modelo lógico para Strapi 5 com MySQL. Ele pode ser aberto no [dbdiagram.io](https://dbdiagram.io).
 
@@ -182,7 +241,7 @@ O [diagrama em DBML](back-end/diagram.dbml) descreve o modelo lógico para Strap
 
 O diagrama não representa exatamente as tabelas físicas: o Strapi administra relações, componentes, mídias e versões de conteúdo. Não execute diretamente o SQL exportado pelo dbdiagram sobre o banco do Strapi.
 
-Na implementação, os dados de cada usuário deverão ser protegidos por verificação de propriedade. Estados e movimentos do cubo exigirão um contrato versionado e validação no motor. Contas, presets, histórico, replay e partidas salvas ainda são funcionalidades planejadas.
+O backend implementa a verificação de propriedade, snapshots independentes e validação dos estados e replays. As APIs de contas, preferências, presets, tentativas e partidas salvas estão disponíveis; as respectivas telas e a ligação com o motor atual ainda serão implementadas. Os detalhes estão no [guia do backend](back-end/README.md).
 
 ## Skills locais
 
@@ -200,7 +259,7 @@ Cada diretório contém um `SKILL.md` com as instruções e, quando fornecidos p
 
 A skill de Strapi está instalada, mas a conexão com o servidor MCP exige configuração própria e autenticação OAuth. Ela não conecta nem instala o Strapi automaticamente. Consulte as [instruções oficiais do Docs MCP](https://docs.strapi.io/cms/ai/docs-mcp-server).
 
-Da mesma forma, as skills de Playwright e formatação não instalam as ferramentas apenas por estarem presentes no repositório.
+As ferramentas de Playwright e formatação foram configuradas no frontend. A presença das skills fornece as orientações; a instalação das ferramentas é feita pelo `npm ci`.
 
 ## Estrutura do repositório
 
@@ -210,17 +269,29 @@ rubiks-cube/
 │   └── skills/                # Skills locais de desenvolvimento
 ├── back-end/
 │   ├── diagram.dbml           # Modelo lógico para Strapi + MySQL
-│   ├── index.ts               # Servidor Fastify atual
-│   ├── index.js               # JavaScript executado pelo servidor
+│   ├── config/                # Banco, servidor, admin, plugins e CORS
+│   ├── src/api/               # Coleções, controladores, serviços e rotas
+│   ├── src/components/        # Aparência, partes e vídeos
+│   ├── src/extensions/        # Extensão do usuário nativo do Strapi
+│   ├── src/lib/               # Validações, propriedade, bootstrap e importação
+│   ├── scripts/               # Configuração e seed
+│   ├── tests/                 # Contratos e integração com MySQL
+│   ├── docker-compose.yml     # MySQL 8.4 para desenvolvimento
+│   ├── .env.example           # Configuração sem credenciais reais
+│   ├── README.md              # Guia completo da API
 │   └── package.json
 ├── front-end/
 │   ├── public/                # Arquivos públicos e imagens
+│   ├── scripts/               # Servidor de preview do build
+│   ├── tests/                 # Testes de navegador com Playwright
 │   ├── src/
 │   │   ├── Components/        # Componentes compartilhados
 │   │   ├── Contexts/          # Idioma, estado e motor do cubo
 │   │   ├── Pages/             # Páginas e conteúdo dos tutoriais
 │   │   ├── types/             # Tipos e interfaces TypeScript
 │   │   └── App.tsx            # Composição e rotas da aplicação
+│   ├── tailwind.config.js     # Tema, breakpoints e integração Tailwind
+│   ├── playwright.config.ts   # Projetos desktop e celular
 │   └── package.json
 └── README.md
 ```
@@ -242,13 +313,15 @@ O Strapi será hospedado separadamente em um serviço adequado à execução con
 ## Próximas etapas
 
 - [ ] Definir e registrar a versão de Node.js e o gerenciador de pacotes adotado.
-- [ ] Revisar o pipeline do frontend e integrar Tailwind CSS.
-- [ ] Migrar a estilização preservando o motor 3D e os controles existentes.
-- [ ] Substituir o backend Fastify por Strapi 5.
-- [ ] Configurar MySQL e implementar os modelos a partir do DBML.
-- [ ] Migrar tutoriais, imagens, vídeos e traduções para o Strapi.
-- [ ] Implementar autenticação e proteção dos dados por usuário.
-- [ ] Implementar preferências, presets e histórico de tentativas.
-- [ ] Definir o contrato de estado e movimentos para replay e partidas salvas.
-- [ ] Configurar formatação, lint e testes funcionais com Playwright.
+- [x] Integrar Tailwind 3 ao pipeline do frontend.
+- [x] Migrar a estilização preservando o motor 3D e os controles existentes.
+- [x] Substituir o backend Fastify por Strapi 5.
+- [x] Configurar MySQL e implementar os modelos a partir do DBML.
+- [x] Implementar importação dos tutoriais, imagens, vídeos e traduções para o Strapi.
+- [x] Implementar autenticação e proteção dos dados por usuário no backend.
+- [x] Implementar APIs de preferências, presets, tentativas e partidas salvas.
+- [x] Definir e validar o contrato de estado e movimentos para replay.
+- [ ] Conectar as telas de tutoriais ao Strapi e implementar as telas dos recursos pessoais.
+- [ ] Adaptar o motor do frontend para o contrato de estado e movimentos do backend.
+- [x] Configurar formatação, lint e testes funcionais com Playwright.
 - [ ] Validar e configurar a publicação do frontend na Vercel e do backend no provedor escolhido.

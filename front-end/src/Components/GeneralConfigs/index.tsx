@@ -1,8 +1,8 @@
-import React, { useRef, useContext } from "react";
-import "./styles.css";
+import React, { useRef, useContext } from 'react';
+import './styles.css';
 
-import Checkbox from "../Checkbox";
-import { Context } from "../../Contexts/GeneralConfigContext/Context";
+import Checkbox from '../Checkbox';
+import { Context } from '../../Contexts/GeneralConfigContext/Context';
 
 function GeneralConfigs() {
   const { setLanguage, currentLanguage, allLanguages } = useContext(Context).language;
@@ -18,10 +18,7 @@ function GeneralConfigs() {
 
     if (target === event?.currentTarget) {
       popupRef.current?.classList.remove('active');
-    } else if (
-      target instanceof Element && 
-      target?.className === "generalConfigClose"
-    ) {
+    } else if (target instanceof Element && target?.className === 'generalConfigClose') {
       popupRef.current?.classList.remove('active');
     }
   }
@@ -30,7 +27,7 @@ function GeneralConfigs() {
     const configContainer = event.currentTarget.parentNode as Element;
     const currentArrow = event.currentTarget.childNodes.item(2) as Element;
     const configContent = configContainer.childNodes.item(1) as Element;
-    
+
     if (currentArrow.classList.value.includes('active')) {
       currentArrow.classList.remove('active');
       configContent.classList.remove('active');
@@ -40,21 +37,21 @@ function GeneralConfigs() {
     }
   }
 
-  return(
+  return (
     <>
-      <img 
-        className="generalConfigIcon" 
-        onClick={openPopup} 
-        src="/images/config-icon.svg" 
-        alt="Config Icon" 
+      <img
+        className="generalConfigIcon"
+        onClick={openPopup}
+        src="/images/config-icon.svg"
+        alt="Config Icon"
       />
-      <div ref={popupRef} onClick={(event) => closePopup(event)} className="generalConfigPopup">
+      <div ref={popupRef} onClick={event => closePopup(event)} className="generalConfigPopup">
         <div className="generalConfigContainer">
-          <img 
-            className="generalConfigClose" 
-            onClick={(event) => closePopup(event)} 
-            src="/images/close-config.svg" 
-            alt="Close Config Popup" 
+          <img
+            className="generalConfigClose"
+            onClick={event => closePopup(event)}
+            src="/images/close-config.svg"
+            alt="Close Config Popup"
           />
           <h3>{configurations}</h3>
           <div className="generalConfigContent">
@@ -65,20 +62,18 @@ function GeneralConfigs() {
                 <img className="configArrow" src="/images/simple-arrow.svg" alt="Simple Arrow" />
               </p>
               <div className="languageConfigContent">
-                <Checkbox 
-                  checked={currentLanguage === "pt-br"} 
-                  functionEvent={() => setLanguage("pt-br")} 
-                  text="Português" 
+                <Checkbox
+                  checked={currentLanguage === 'pt-br'}
+                  functionEvent={() => setLanguage('pt-br')}
+                  text="Português"
                 />
-                <Checkbox 
-                  checked={currentLanguage === "en-us"} 
-                  functionEvent={() => 
-                  setLanguage("en-us")} 
-                  text="English" 
+                <Checkbox
+                  checked={currentLanguage === 'en-us'}
+                  functionEvent={() => setLanguage('en-us')}
+                  text="English"
                 />
               </div>
             </div>
-
           </div>
         </div>
       </div>

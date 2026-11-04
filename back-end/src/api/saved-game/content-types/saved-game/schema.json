@@ -1,0 +1,91 @@
+{
+  "kind": "collectionType",
+  "collectionName": "saved_games",
+  "info": {
+    "singularName": "saved-game",
+    "pluralName": "saved-games",
+    "displayName": "Saved games"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "savedGames",
+      "required": true
+    },
+    "preset": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cube-preset.cube-preset",
+      "inversedBy": "savedGames"
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 80,
+      "required": true
+    },
+    "cubeType": {
+      "type": "string",
+      "required": true,
+      "default": "3x3",
+      "minLength": 3,
+      "maxLength": 3
+    },
+    "elapsedMs": {
+      "type": "integer",
+      "min": 0,
+      "max": 2147483647,
+      "required": true,
+      "default": 0
+    },
+    "engineVersion": {
+      "type": "string",
+      "maxLength": 64,
+      "required": true
+    },
+    "initialState": {
+      "type": "json",
+      "required": true
+    },
+    "cubeState": {
+      "type": "json",
+      "required": true
+    },
+    "scramble": {
+      "type": "json"
+    },
+    "moves": {
+      "type": "json",
+      "required": true
+    },
+    "appearanceSnapshot": {
+      "type": "component",
+      "component": "cube.appearance",
+      "repeatable": false,
+      "required": true
+    },
+    "viewRotationX": {
+      "type": "float",
+      "required": true,
+      "default": 0
+    },
+    "viewRotationY": {
+      "type": "float",
+      "required": true,
+      "default": 0
+    },
+    "viewRotationZ": {
+      "type": "float",
+      "required": true,
+      "default": 0
+    },
+    "savedAt": {
+      "type": "datetime",
+      "required": true
+    }
+  }
+}

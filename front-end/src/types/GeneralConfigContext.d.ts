@@ -1,8 +1,8 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export interface Initial_State_Language {
-  "pt-br": Language;
-  "en-us": Language;
+  'pt-br': Language;
+  'en-us': Language;
 }
 
 export interface Language {
@@ -14,7 +14,7 @@ export interface Language {
     english: string;
     language: string;
     configurations: string;
-  },
+  };
   tutorialPage: {
     title: string;
     description: string;
@@ -28,14 +28,14 @@ export interface Language {
     commandArrowLeft: string;
     commandArrowUp: string;
     commandArrowRight: string;
-  },
+  };
   tutorialParts: {
     description: string;
-  },
+  };
   tutorialSteps: {
     videoDescription: string;
     part: string;
-  }
+  };
 }
 
 export interface GeneralConfigContextProps {
@@ -44,10 +44,10 @@ export interface GeneralConfigContextProps {
 
 export interface Context_Language {
   language: {
-    currentLanguage: CurrentLanguageValues,
-    allLanguages: Initial_State_Language,
+    currentLanguage: CurrentLanguageValues;
+    allLanguages: Initial_State_Language;
     setLanguage: (language: CurrentLanguageValues) => void;
-  }
+  };
 }
 
-export type CurrentLanguageValues = "pt-br" | "en-us"
+export type CurrentLanguageValues = 'pt-br' | 'en-us';

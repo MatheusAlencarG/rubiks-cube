@@ -1,0 +1,31 @@
+name: Frontend quality
+
+on:
+  push:
+    paths: ['front-end/**', '.editorconfig', '.github/workflows/frontend-quality.yml']
+  pull_request:
+    paths: ['front-end/**', '.editorconfig', '.github/workflows/frontend-quality.yml']
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: front-end
+    env:
+      HUSKY: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: front-end/package-lock.json
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

@@ -82,7 +82,7 @@
             "title": "Coloque um meio sem amarelo na terceira camada",
             "image": "/images/place-middle-without-yellow.png",
             "description": "Se você não tem nenhum meio sem amarelo na terceira camada, mas tem um meio errado na segunda camada como mostrado na imagem, posicione o cubo como mostrado na imagem e faça esta fórmula: D, 'Q, ' D, 'Q, 'W, Q, W. Isso pegará o meio da segunda camada e o colocará na terceira camada"
-          }, 
+          },
           {
             "id": 2,
             "title": "Alinhe o meio com o centro lateral",
@@ -339,7 +339,7 @@
             "title": "Place a middle without yellow in the third layer",
             "image": "/images/place-middle-without-yellow.png",
             "description": "If you don't have any middle without yellow in the third layer, but you have a wrong middle in the second layer as shown in the image, position the cube as shown in the image and do this formula: D, 'Q, 'D, 'Q, 'W, Q, W. This will take the middle of the second layer and put it on the third layer"
-          }, 
+          },
           {
             "id": 2,
             "title": "Align the middle with the side center",

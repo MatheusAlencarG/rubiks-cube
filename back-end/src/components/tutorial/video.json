@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_tutorial_videos",
+  "info": {
+    "displayName": "Tutorial video"
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "maxLength": 180,
+      "required": true
+    },
+    "embedUrl": {
+      "type": "string",
+      "maxLength": 2048,
+      "required": true
+    }
+  }
+}

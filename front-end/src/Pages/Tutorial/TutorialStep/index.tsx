@@ -1,17 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import './styles.css';
 
 import 'swiper/swiper.css';
 import Swiper from 'react-id-swiper';
 
-import data from './content.json'
+import data from './content.json';
 import { SwiperParams, TutorialStepProps } from '../../../types/index';
 
-import { Context } from "../../../Contexts/GeneralConfigContext/Context";
+import { Context } from '../../../Contexts/GeneralConfigContext/Context';
 
 function TutorialStep({ id }: TutorialStepProps) {
   const { allLanguages, currentLanguage } = useContext(Context).language;
-  const pageId = Number(id) -1;
+  const pageId = Number(id) - 1;
   const pageContent = data.content[currentLanguage][pageId];
   const swiperParams: SwiperParams = {
     effect: 'coverflow',
@@ -23,9 +23,9 @@ function TutorialStep({ id }: TutorialStepProps) {
       stretch: 0,
       depth: 100,
       modifier: 1,
-      slideShadows: true
+      slideShadows: true,
     },
-    activeSlideKey: '0'
+    activeSlideKey: '0',
   };
   const { part: partLanguage, videoDescription } = allLanguages[currentLanguage].tutorialSteps;
 
@@ -43,13 +43,13 @@ function TutorialStep({ id }: TutorialStepProps) {
     }
   }
 
-  return(
+  return (
     <div className="tutorialStepContainer">
       <div className="tutorialStepDescription">
         <h2>{pageContent.title}</h2>
         <p>{pageContent.description}</p>
       </div>
-      <Swiper { ...swiperParams }>
+      <Swiper {...swiperParams}>
         {pageContent.parts.map((part, index) => (
           <div key={index} className="partContainer">
             <div className="partBackground">
@@ -70,28 +70,28 @@ function TutorialStep({ id }: TutorialStepProps) {
             <img className="videoArrow" src="/images/simple-arrow-white.svg" alt="Simple Arrow" />
           </p>
           <div className="videoContent">
-            <iframe 
-              width="374" 
-              height="210" 
-              src={pageContent.videoURLOne} 
-              title="YouTube video player" 
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            <iframe
+              width="374"
+              height="210"
+              src={pageContent.videoURLOne}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               frameBorder="0"
-              >
-            </iframe>
-            {
-              pageContent.videoURLTwo ? <iframe 
-                width="374" 
-                height="210" 
-                src={pageContent.videoURLTwo} 
-                title="YouTube video player" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            ></iframe>
+            {pageContent.videoURLTwo ? (
+              <iframe
+                width="374"
+                height="210"
+                src={pageContent.videoURLTwo}
+                title="YouTube video player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 frameBorder="0"
-                >
-              </iframe> : ''
-            }
+              ></iframe>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>

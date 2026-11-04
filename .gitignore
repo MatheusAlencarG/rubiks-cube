@@ -12,6 +12,21 @@
 
 # production
 /front-end/build
+/front-end/test-results/
+/front-end/playwright-report/
+/.husky/_/
+/back-end/dist/
+/back-end/build/
+/back-end/.strapi/
+/back-end/.cache/
+/back-end/.tmp/
+/back-end/.strapi-updater.json
+/back-end/coverage/
+/back-end/public/uploads/*
+!/back-end/public/uploads/.gitkeep
+/back-end/.env
+/back-end/.env.*
+!/back-end/.env.example
 
 # misc
 .DS_Store

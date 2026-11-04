@@ -1,5 +1,5 @@
-import React from "react";
-import "./styles.css"
+import React from 'react';
+import './styles.css';
 
 interface CheckboxProps {
   text?: string;
@@ -8,14 +8,19 @@ interface CheckboxProps {
 }
 
 function Checkbox({ text, checked, functionEvent }: CheckboxProps) {
-  return(
+  return (
     <div className="checkboxContainer">
-      <label onClick={functionEvent}>
-        <input checked={checked} type="checkbox" />
+      <label>
+        <input
+          checked={checked}
+          type="checkbox"
+          onChange={functionEvent}
+          readOnly={!functionEvent}
+        />
         {text}
       </label>
     </div>
-  )
+  );
 }
 
 export default Checkbox;

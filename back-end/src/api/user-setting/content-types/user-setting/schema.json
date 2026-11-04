@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_settings",
+  "info": {
+    "singularName": "user-setting",
+    "pluralName": "user-settings",
+    "displayName": "User settings"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "userSettings",
+      "required": true
+    },
+    "ownerKey": {
+      "type": "string",
+      "maxLength": 64,
+      "private": true,
+      "unique": true,
+      "required": true,
+      "configurable": false
+    },
+    "language": {
+      "type": "enumeration",
+      "enum": ["pt-BR", "en-US"],
+      "default": "pt-BR",
+      "required": true
+    },
+    "themePrimaryColor": {
+      "type": "string",
+      "maxLength": 7,
+      "minLength": 7,
+      "default": "#111827",
+      "required": true
+    },
+    "themeSecondaryColor": {
+      "type": "string",
+      "maxLength": 7,
+      "minLength": 7,
+      "default": "#f9fafb",
+      "required": true
+    },
+    "activePreset": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cube-preset.cube-preset"
+    }
+  }
+}

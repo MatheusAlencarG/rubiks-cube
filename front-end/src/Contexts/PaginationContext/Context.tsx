@@ -1,5 +1,5 @@
-import { createContext } from "react";
-import { ChangePageStateProps } from "../../types/index";
+import { createContext } from 'react';
+import { ChangePageStateProps } from '../../types/index';
 
 export const INITIAL_STATE = {
   pageState: {
@@ -16,11 +16,11 @@ export const INITIAL_STATE = {
       '/tutorial/step/7',
     ],
     nextPage: '/tutorial',
-    prevPage: ''
+    prevPage: '',
   },
   prevPage: () => {},
   nextPage: () => {},
-  changePageState: ({newcurrentPageIndex}: ChangePageStateProps) => {},
-}
+  changePageState: ({ newcurrentPageIndex }: ChangePageStateProps) => {},
+};
 
 export const Context = createContext(INITIAL_STATE);

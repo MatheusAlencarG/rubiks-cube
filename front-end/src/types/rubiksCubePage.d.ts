@@ -1,4 +1,4 @@
-import { Piece } from "../Contexts/RubicksCubeContext/RucksCube3x3/Piece";
+import { Piece } from '../Contexts/RubicksCubeContext/RucksCube3x3/Piece';
 
 export interface CubeProps {
   widthCustom: number;

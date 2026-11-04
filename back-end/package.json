@@ -1,21 +1,54 @@
 {
-  "name": "back-end",
+  "name": "rubiks-cube-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "API e CMS do Rubik's Cube com Strapi 5 e MySQL",
+  "private": true,
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "develop": "strapi develop",
+    "dev": "strapi develop",
+    "build": "strapi build",
+    "start": "strapi start",
+    "strapi": "strapi",
+    "setup": "node scripts/setup-env.mjs",
+    "seed": "node scripts/seed.mjs",
+    "test": "tsx --test tests/contracts.test.ts tests/setup-env.test.cjs",
+    "test:integration": "node --test --test-concurrency=1 tests/integration.test.cjs",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "format:staged": "prettier --write",
+    "lint": "eslint src config tests --ext .ts,.cjs",
+    "lint:fix": "eslint src config tests --ext .ts,.cjs --fix",
+    "lint:staged": "eslint --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fastify": "^4.25.2"
+    "@strapi/strapi": "5.60.0",
+    "@strapi/plugin-users-permissions": "5.60.0",
+    "cubejs": "1.3.2",
+    "mysql2": "^3.15.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.1",
+    "styled-components": "^6.1.19",
+    "zod": "^4.1.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.7",
-    "typescript": "^5.3.3"
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.2",
+    "prettier": "^3.9.10",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22.0.0 <=26.x.x",
+    "npm": ">=10.0.0"
   }
 }

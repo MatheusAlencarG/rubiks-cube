@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_tutorial_parts",
+  "info": {
+    "displayName": "Tutorial part"
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "maxLength": 180,
+      "required": true
+    },
+    "description": {
+      "type": "richtext",
+      "required": true
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"],
+      "required": true
+    },
+    "imageAlt": {
+      "type": "string",
+      "maxLength": 180,
+      "required": true
+    }
+  }
+}

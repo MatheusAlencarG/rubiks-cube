@@ -1,84 +1,54 @@
 .tutorialPartsContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  padding: 20px 35px;
-  width: calc(100% - 70px);
-  height: 100%;
+  @apply flex h-full w-[calc(100%_-_70px)] flex-col justify-evenly px-[35px] py-[20px];
 }
 
 .tutorialPartsDescription h2 {
-  margin: 0;
-  margin-bottom: 25px;
-  text-align: center;
-  font-weight: 500;
+  @apply m-0 mb-[25px] text-center font-medium;
 }
 
 .tutorialPartsContainer > p {
-  margin: 0;
-  text-align: center;
+  @apply m-0 text-center;
 }
 
 .tutorialPartsDescription .description {
-  text-align: center;
+  @apply text-center;
 }
 
 .partContainer {
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
+  @apply flex !important;
+  @apply items-center justify-center;
 }
 
 .tutorialPartsContainer .partContainer.swiper-slide-active .partBackground {
-  width: 100%;
-  height: 100%;
-  opacity: 1;
+  @apply h-full w-full opacity-100;
 }
 
 .tutorialPartsContainer .partBackground {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  justify-content: space-between;
-  background: var(--black);
-  border: 2px var(--primary-color) solid;
-  border-radius: 16px;
-  width: 70%;
-  height: 174px;
-  transition: .6s;
-  opacity: .5;
+  @apply flex h-[174px] w-[70%] flex-col items-center justify-between rounded-[16px] border-2 border-solid border-accent bg-canvas text-center;
+  transition: 0.6s;
+  @apply opacity-50;
 }
 
 .tutorialPartsContainer .partContainer h3 {
-  margin: 15px 0;
-  color: var(--primary-color);
+  @apply mx-[0] my-[15px] text-accent;
 }
 
 .tutorialPartsContainer .partContainer img {
-  width: 120px;
+  @apply w-[120px];
 }
 
 .tutorialPartsContainer .partDescription {
-  display: flex;
-  opacity: 0;
-  align-items: center;
-  color: var(--white);
-  padding: 5px;
-  font-size: 13px;
-  height: 61px;
-  margin: 0;
+  @apply m-0 flex h-[61px] items-center p-[5px] text-[13px] text-surface opacity-0;
 }
 
 .tutorialPartsContainer .partContainer.swiper-slide-active .partDescription {
-  opacity: 1;
+  @apply opacity-100;
 }
-
 
 /* MOBILE */
 
 @media (max-width: 660px) {
   .tutorialPartsContainer .partBackground {
-    width: 80%;
+    @apply w-4/5;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import './styles.css';
 
 import 'swiper/swiper.css';
@@ -7,7 +7,7 @@ import Swiper from 'react-id-swiper';
 import data from './content.json';
 import { SwiperParams } from '../../../types/index';
 
-import { Context } from "../../../Contexts/GeneralConfigContext/Context";
+import { Context } from '../../../Contexts/GeneralConfigContext/Context';
 
 function TutorialParts() {
   const { currentLanguage, allLanguages } = useContext(Context).language;
@@ -22,19 +22,19 @@ function TutorialParts() {
       stretch: 0,
       depth: 100,
       modifier: 1,
-      slideShadows: true
+      slideShadows: true,
     },
-    activeSlideKey: '0'
-  }
+    activeSlideKey: '0',
+  };
   const { description } = allLanguages[currentLanguage].tutorialParts;
 
-  return(
+  return (
     <div className="tutorialPartsContainer">
       <div className="tutorialPartsDescription">
         <h2>{content.title}</h2>
         <p className="description" dangerouslySetInnerHTML={{ __html: content.description }}></p>
       </div>
-      <Swiper { ...swiperParams }>
+      <Swiper {...swiperParams}>
         {content.parts.map((part, index) => (
           <div key={index} className="partContainer">
             <div className="partBackground">

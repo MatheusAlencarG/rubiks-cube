@@ -1,0 +1,4 @@
+# Keep formatter output stable after a checkout on Windows or Linux.
+front-end/** text=auto eol=lf
+back-end/** text=auto eol=lf
+.husky/* text eol=lf

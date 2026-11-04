@@ -1,0 +1,2 @@
+cd front-end
+npx --no-install lint-staged --cwd ..

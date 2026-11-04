@@ -1,200 +1,136 @@
 .tutorialStepContainer {
-  padding: 20px 35px;
-  width: calc(100% - 70px);
-  overflow: auto;
+  @apply w-[calc(100%_-_70px)] overflow-auto px-[35px] py-[20px];
 }
 
 @media (max-height: 800px) {
   .tutorialStepContainer {
-    padding: 20px 0;
+    @apply px-0 py-[20px];
   }
 }
 
 @media (max-height: 1100px) {
   .tutorialStepContainer {
-    height: auto;
+    @apply h-auto;
   }
 }
 
 .tutorialStepContainer .tutorialStepDescription h2 {
-  margin: 0;
-  text-align: center;
-  font-weight: 500;
+  @apply m-0 text-center font-medium;
 }
 
 .tutorialStepContainer .tutorialStepDescription p {
-  text-align: center;
+  @apply text-center;
 }
 
 .tutorialStepContainer .swiper-container {
-  height: 500px;
-  min-height: 500px;
-  background: var(--black);
-  border: var(--primary-color) 2px solid;
-  border-radius: 16px;
-  padding: 20px;
-  overflow: hidden;
+  @apply h-[500px] min-h-[500px] overflow-hidden rounded-[16px] border-2 border-solid border-accent bg-canvas p-[20px];
 }
 
 .tutorialStepContainer .partContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
+  @apply flex flex-col items-center justify-evenly;
 }
 
 .tutorialStepContainer .partBackground {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  padding: 20px;
-  transition: .6s;
-  opacity: .5;
-  background: var(--white);
-  border: var(--primary-color) 2px solid;
-  border-radius: 16px;
-  position: relative;
-  width: 60%;
-  height: 60%;
+  @apply flex flex-col items-center justify-evenly p-[20px];
+  transition: 0.6s;
+  @apply relative h-[60%] w-[60%] rounded-[16px] border-2 border-solid border-accent bg-surface opacity-50;
 }
 
 .tutorialStepContainer .partContainer h3 {
-  margin: 0;
-  text-align: center;
-  font-weight: 500;
+  @apply m-0 text-center font-medium;
 }
 
 .tutorialStepContainer .partContainer p {
-  height: 0;
-  overflow: hidden;
+  @apply h-0 overflow-hidden;
 }
 
 .tutorialStepContainer .swiper-slide-active p {
-  height: auto;
-  overflow: auto;
+  @apply h-auto overflow-auto;
 }
 
 .tutorialStepContainer .swiper-slide-active .partBackground {
-  width: 100%;
-  height: calc(100% - 40px);
-  opacity: 1;
+  @apply h-[calc(100%_-_40px)] w-full opacity-100;
 }
 
 .tutorialStepContainer .partContainer img {
-  width: 160px;
+  @apply w-[160px];
 }
 
 .tutorialStepContainer .videos {
-  text-align: center;
+  @apply text-center;
 }
 
 .tutorialStepContainer .videos a {
-  padding: 3px;
+  @apply p-[3px];
 }
 
 .tutorialStepContainer .partId {
-  position: absolute;
-  bottom: 8px;
-  right: 10px;
-  background: var(--black);
-  color: var(--primary-color);
-  padding: 3px;
-  border: var(--primary-color) 2px solid;
-  border-radius: 10px;
+  @apply absolute bottom-[8px] right-[10px] rounded-[10px] border-2 border-solid border-accent bg-canvas p-[3px] text-accent;
 }
 
 .swiper-wrapper {
-  display: flex;
-  align-items: center;
+  @apply flex items-center;
 }
 
 .videoContentMain {
-  width: 100%;
-  background: var(--black);
-  border-radius: 15px;
-  border: 2px solid var(--primary-color);
-  margin-top: 20px;
+  @apply mt-[20px] w-full rounded-[15px] border-2 border-solid border-accent bg-canvas;
 }
 
 .videoContent {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  border-radius: 15px;
-  height: 0;
-  overflow: hidden;
-  padding: 0;
-  transition: .5s;
+  @apply flex h-0 flex-col items-center gap-[15px] overflow-hidden rounded-[15px] p-0;
+  transition: 0.5s;
 }
 
 .videoContent.active {
-  padding: 20px 0;
-  height: auto;
+  @apply h-auto px-0 py-[20px];
 }
 
 .videosContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  @apply flex flex-col items-center;
 }
 
 .videosTitle {
-  color: var(--primary-color);
-  text-align: center;
-  border-radius: 15px;
-  padding: 15px 0;
-  position: relative;
-  cursor: pointer;
-  margin: 0;
+  @apply relative m-0 cursor-pointer rounded-[15px] px-0 py-[15px] text-center text-accent;
 }
 
 .videoArrow {
-  width: 30px;
-  position: absolute;
-  top: calc(50% - 15px);
-  right: 10px;
+  @apply absolute right-[10px] top-[calc(50%_-_15px)] w-[30px];
   transform: rotate(90deg);
-  transition: .5s;
+  transition: 0.5s;
 }
 
 .videoArrow.active {
   transform: rotate(270deg);
 }
 
-
 /* MOBILE */
 
 @media (max-width: 660px) {
   .tutorialStepContainer {
-    padding: 20px 20px;
-    width: calc(100% - 40px);
+    @apply w-[calc(100%_-_40px)] px-[20px] py-[20px];
   }
-  
+
   .tutorialStepContainer .swiper-container {
-    width: calc(100% - 44px);
+    @apply w-[calc(100%_-_44px)];
   }
 
   .tutorialStepContainer .swiper-slide-active .partBackground {
-    width: calc(100% - 20px);
+    @apply w-[calc(100%_-_20px)];
   }
 
   .tutorialStepContainer .partBackground {
-    padding: 10px;
-    width: 83%;
+    @apply w-[83%] p-[10px];
   }
 
   .tutorialStepContainer .swiper-slide-active p {
-    text-align: center;
+    @apply text-center;
   }
 
   .videosTitle {
-    padding-right: 30px;
+    @apply pr-[30px];
   }
-  
+
   .videoContent iframe {
-    width: 90%;
-    height: auto;
+    @apply h-auto w-[90%];
   }
 }

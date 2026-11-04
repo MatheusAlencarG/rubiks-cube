@@ -9,8 +9,8 @@ import {
   LinkedTransformOriginsKeys,
   PieceClass,
   PieceClassKeys,
-  PieceClassValues
-} from "../../../types";
+  PieceClassValues,
+} from '../../../types';
 
 export class Piece {
   private id: number;
@@ -21,19 +21,8 @@ export class Piece {
 
   constructor({
     id,
-    styles: {
-      width,
-      height,
-      translateX,
-      translateY,
-      translateZ,
-    },
-    data: {
-      layer,
-      type,
-      colors,
-      faces,
-    },
+    styles: { width, height, translateX, translateY, translateZ },
+    data: { layer, type, colors, faces },
     linkedTransformOrigins: {
       frontX,
       frontY,
@@ -53,7 +42,7 @@ export class Piece {
       bottomX,
       bottomY,
       bottomZ,
-    }
+    },
   }: PieceConstructor) {
     this.id = id;
     this.styles = {
@@ -82,7 +71,7 @@ export class Piece {
       layer,
       type,
       colors,
-      faces
+      faces,
     };
     this.class = {
       frontClass: 'front',
@@ -110,8 +99,8 @@ export class Piece {
       topZ,
       bottomX,
       bottomY,
-      bottomZ
-    }
+      bottomZ,
+    };
   }
 
   public getId() {
@@ -124,13 +113,13 @@ export class Piece {
   }
 
   public setStyle(key: PieceStylesKeys, value: number | undefined) {
-    if (!value && value !== 0) return
-    
+    if (!value && value !== 0) return;
+
     this.styles[key] = value;
   }
 
   public getAllStyle() {
-    return this.styles
+    return this.styles;
   }
 
   public setAllStyle(styles: PieceStyles) {
@@ -138,7 +127,7 @@ export class Piece {
   }
 
   public getData(key: PieceDataKeys) {
-    return this.data[key]
+    return this.data[key];
   }
 
   public setData(key: PieceDataKeys, value: string & PieceColors[]) {
@@ -146,7 +135,7 @@ export class Piece {
   }
 
   public getAllData() {
-    return this.data
+    return this.data;
   }
 
   public setAllData(styles: PieceData) {
@@ -188,15 +177,15 @@ export class Piece {
   }
 
   public getLinkedTransformOrigins(key: LinkedTransformOriginsKeys) {
-    return this.linkedTransformOrigins[key]
+    return this.linkedTransformOrigins[key];
   }
 
   public getAllLinkedTransformOrigins() {
-    return this.linkedTransformOrigins
+    return this.linkedTransformOrigins;
   }
 
   public getClass(key: PieceClassKeys) {
-    return this.class[key]
+    return this.class[key];
   }
 
   public setClass(key: PieceClassKeys, value: PieceClassValues | undefined) {
@@ -204,7 +193,7 @@ export class Piece {
   }
 
   public getAllClass() {
-    return this.class
+    return this.class;
   }
 
   public setAllClass(classes: PieceClass) {

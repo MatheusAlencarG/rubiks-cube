@@ -1,0 +1,83 @@
+{
+  "collectionName": "components_cube_appearances",
+  "info": {
+    "displayName": "Cube appearance"
+  },
+  "attributes": {
+    "frontColor": {
+      "type": "string",
+      "maxLength": 7,
+      "minLength": 7,
+      "required": true,
+      "default": "#ff0000"
+    },
+    "backColor": {
+      "type": "string",
+      "maxLength": 7,
+      "minLength": 7,
+      "required": true,
+      "default": "#ffa500"
+    },
+    "leftColor": {
+      "type": "string",
+      "maxLength": 7,
+      "minLength": 7,
+      "required": true,
+      "default": "#0000ff"
+    },
+    "rightColor": {
+      "type": "string",
+      "maxLength": 7,
+      "minLength": 7,
+      "required": true,
+      "default": "#008000"
+    },
+    "topColor": {
+      "type": "string",
+      "maxLength": 7,
+      "minLength": 7,
+      "required": true,
+      "default": "#ffff00"
+    },
+    "bottomColor": {
+      "type": "string",
+      "maxLength": 7,
+      "minLength": 7,
+      "required": true,
+      "default": "#ffffff"
+    },
+    "widthPx": {
+      "type": "integer",
+      "min": 1,
+      "required": true,
+      "default": 240
+    },
+    "pieceRadiusPx": {
+      "type": "float",
+      "min": 0,
+      "required": true,
+      "default": 20
+    },
+    "transitionMs": {
+      "type": "integer",
+      "min": 0,
+      "required": true,
+      "default": 0
+    },
+    "initialRotationX": {
+      "type": "float",
+      "required": true,
+      "default": -45
+    },
+    "initialRotationY": {
+      "type": "float",
+      "required": true,
+      "default": -45
+    },
+    "initialRotationZ": {
+      "type": "float",
+      "required": true,
+      "default": 0
+    }
+  }
+}

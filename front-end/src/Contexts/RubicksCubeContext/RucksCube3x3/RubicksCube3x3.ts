@@ -9,9 +9,9 @@ import {
   RotateAxleValues,
   PieceColors,
   SetPieceValueOnTimeoutProps,
-} from "../../../types";
+} from '../../../types';
 
-import { Piece } from "./Piece";
+import { Piece } from './Piece';
 
 export class RubicksCube3x3 {
   private colors: RubicksCube3x3Colors;
@@ -20,27 +20,9 @@ export class RubicksCube3x3 {
   private pieces: Piece[];
 
   constructor({
-    colors: {
-      frontColor, 
-      backColor, 
-      leftColor, 
-      rightColor, 
-      topColor, 
-      bottomColor,
-    },
-    styles: {
-      width,
-      height,
-      pieceRadius,
-    },
-    rotateAxle: {
-      frontFace,
-      backFace,
-      leftFace,
-      rightFace,
-      topFace,
-      bottomFace
-    }
+    colors: { frontColor, backColor, leftColor, rightColor, topColor, bottomColor },
+    styles: { width, height, pieceRadius },
+    rotateAxle: { frontFace, backFace, leftFace, rightFace, topFace, bottomFace },
   }: RubicksCube3x3Constructor) {
     this.colors = {
       frontColor,
@@ -57,7 +39,7 @@ export class RubicksCube3x3 {
       rotateY: 0,
       rotateZ: 0,
       pieceRadius,
-      transition: .5,
+      transition: 0.5,
     };
     this.rotateAxle = {
       frontFace,
@@ -66,28 +48,28 @@ export class RubicksCube3x3 {
       rightFace,
       topFace,
       bottomFace,
-    }
-    this.pieces = []
+    };
+    this.pieces = [];
   }
 
   public verticalCubeMovement(movementType: 'top' | 'bottom') {
-    const isTop = movementType === "top";
-    
-    if (this.styles.rotateZ === undefined) return
+    const isTop = movementType === 'top';
+
+    if (this.styles.rotateZ === undefined) return;
 
     const accountValue = isTop ? this.styles.rotateZ - 90 : this.styles.rotateZ + 90;
 
-    this.styles.rotateZ = accountValue
+    this.styles.rotateZ = accountValue;
   }
 
   public horizontalCubeMovement(movementType: 'left' | 'right') {
-    const isLeft = movementType === "left";
-    
-    if (this.styles.rotateY === undefined) return
+    const isLeft = movementType === 'left';
+
+    if (this.styles.rotateY === undefined) return;
 
     const accountValue = isLeft ? this.styles.rotateY - 90 : this.styles.rotateY + 90;
-    
-    this.styles.rotateY = accountValue
+
+    this.styles.rotateY = accountValue;
   }
 
   public backPiecesMovement(movementType?: 'shift') {
@@ -97,50 +79,63 @@ export class RubicksCube3x3 {
 
     const cachePieceColor = pieces.map(piece => {
       return {
-        id: piece.getId(), 
-        colors: piece.getData("colors")
-      }
+        id: piece.getId(),
+        colors: piece.getData('colors'),
+      };
     });
 
     const cacheClass = pieces.map(piece => {
       return {
         id: piece.getId(),
-        backClass: piece.getClass("backClass"),
-        frontClass: piece.getClass("frontClass"),
-        bottomClass: piece.getClass("bottomClass"),
-        leftClass: piece.getClass("leftClass"),
-        rightClass: piece.getClass("rightClass"),
-        topClass: piece.getClass("topClass"),
-      }
-    })
+        backClass: piece.getClass('backClass'),
+        frontClass: piece.getClass('frontClass'),
+        bottomClass: piece.getClass('bottomClass'),
+        leftClass: piece.getClass('leftClass'),
+        rightClass: piece.getClass('rightClass'),
+        topClass: piece.getClass('topClass'),
+      };
+    });
 
     pieceIds.forEach((pieceId, index) => {
       const currentPiece = pieces.find(piece => piece.getId() === pieceId) as Piece;
       const { backX, backY, backZ } = currentPiece.getBackLinkedTransformOrigins();
       const nextPiece = pieces.find(_piece => {
-        const nextIndex = (shiftPressed ? index + 2 : (index - 2 + pieceIds.length)) % pieceIds.length;
+        const nextIndex =
+          (shiftPressed ? index + 2 : index - 2 + pieceIds.length) % pieceIds.length;
         return _piece.getId() === pieceIds[nextIndex];
       });
-      const nextCacheColors = cachePieceColor.find(cacheColor => 
-        cacheColor.id === nextPiece?.getId())?.colors as string & PieceColors[];
+      const nextCacheColors = cachePieceColor.find(
+        cacheColor => cacheColor.id === nextPiece?.getId()
+      )?.colors as string & PieceColors[];
 
-      currentPiece.setStyle("transition", .5);
-      currentPiece.setStyle("transformOriginX", backX);
-      currentPiece.setStyle("transformOriginY", backY);
-      currentPiece.setStyle("transformOriginZ", backZ);
+      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transformOriginX', backX);
+      currentPiece.setStyle('transformOriginY', backY);
+      currentPiece.setStyle('transformOriginZ', backZ);
       currentPiece.setStyle(
-        "rotateZ", 
-        this.getRotateWithInvertedRotation({shiftPressed, faceInverted: true, rotate: currentPiece.getStyle("rotateZ")})
+        'rotateZ',
+        this.getRotateWithInvertedRotation({
+          shiftPressed,
+          faceInverted: true,
+          rotate: currentPiece.getStyle('rotateZ'),
+        })
       );
 
       setTimeout(() => {
-        const nextCacheClass = cacheClass.find(cacheClass =>
-          cacheClass.id === nextPiece?.getId())
+        const nextCacheClass = cacheClass.find(cacheClass => cacheClass.id === nextPiece?.getId());
 
-        shiftPressed ? currentPiece.setClass('bottomClass', nextCacheClass?.rightClass) : currentPiece.setClass('bottomClass', nextCacheClass?.leftClass);
-        shiftPressed ? currentPiece.setClass('rightClass', nextCacheClass?.topClass) : currentPiece.setClass('rightClass', nextCacheClass?.bottomClass);
-        shiftPressed ? currentPiece.setClass('topClass', nextCacheClass?.leftClass) : currentPiece.setClass('topClass', nextCacheClass?.rightClass);
-        shiftPressed ? currentPiece.setClass('leftClass', nextCacheClass?.bottomClass) : currentPiece.setClass('leftClass', nextCacheClass?.topClass);
+        shiftPressed
+          ? currentPiece.setClass('bottomClass', nextCacheClass?.rightClass)
+          : currentPiece.setClass('bottomClass', nextCacheClass?.leftClass);
+        shiftPressed
+          ? currentPiece.setClass('rightClass', nextCacheClass?.topClass)
+          : currentPiece.setClass('rightClass', nextCacheClass?.bottomClass);
+        shiftPressed
+          ? currentPiece.setClass('topClass', nextCacheClass?.leftClass)
+          : currentPiece.setClass('topClass', nextCacheClass?.rightClass);
+        shiftPressed
+          ? currentPiece.setClass('leftClass', nextCacheClass?.bottomClass)
+          : currentPiece.setClass('leftClass', nextCacheClass?.topClass);
         currentPiece.setClass('backClass', nextCacheClass?.backClass);
         currentPiece.setClass('frontClass', nextCacheClass?.frontClass);
 
@@ -150,10 +145,10 @@ export class RubicksCube3x3 {
           shiftPressed,
           faceInverted: true,
           rotateAxle: 'pieceRotateZ',
-          pieceRotateAxle: 'rotateZ'
-        })
+          pieceRotateAxle: 'rotateZ',
+        });
       }, 500);
-    })
+    });
   }
 
   public leftPiecesMovement(movementType?: 'shift') {
@@ -163,50 +158,63 @@ export class RubicksCube3x3 {
 
     const cachePieceColor = pieces.map(piece => {
       return {
-        id: piece.getId(), 
-        colors: piece.getData("colors")
-      }
+        id: piece.getId(),
+        colors: piece.getData('colors'),
+      };
     });
 
     const cacheClass = pieces.map(piece => {
       return {
         id: piece.getId(),
-        backClass: piece.getClass("backClass"),
-        frontClass: piece.getClass("frontClass"),
-        bottomClass: piece.getClass("bottomClass"),
-        leftClass: piece.getClass("leftClass"),
-        rightClass: piece.getClass("rightClass"),
-        topClass: piece.getClass("topClass"),
-      }
-    })
+        backClass: piece.getClass('backClass'),
+        frontClass: piece.getClass('frontClass'),
+        bottomClass: piece.getClass('bottomClass'),
+        leftClass: piece.getClass('leftClass'),
+        rightClass: piece.getClass('rightClass'),
+        topClass: piece.getClass('topClass'),
+      };
+    });
 
     pieceIds.forEach((pieceId, index) => {
       const currentPiece = pieces.find(piece => piece.getId() === pieceId) as Piece;
       const { leftX, leftY, leftZ } = currentPiece.getLeftLinkedTransformOrigins();
       const nextPiece = pieces.find(_piece => {
-        const nextIndex = (shiftPressed ? index + 2 : (index - 2 + pieceIds.length)) % pieceIds.length;
+        const nextIndex =
+          (shiftPressed ? index + 2 : index - 2 + pieceIds.length) % pieceIds.length;
         return _piece.getId() === pieceIds[nextIndex];
       });
-      const nextCacheColors = cachePieceColor.find(cacheColor => 
-        cacheColor.id === nextPiece?.getId())?.colors as string & PieceColors[];
+      const nextCacheColors = cachePieceColor.find(
+        cacheColor => cacheColor.id === nextPiece?.getId()
+      )?.colors as string & PieceColors[];
 
-      currentPiece.setStyle("transition", .5);
-      currentPiece.setStyle("transformOriginX", leftX);
-      currentPiece.setStyle("transformOriginY", leftY);
-      currentPiece.setStyle("transformOriginZ", leftZ);
+      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transformOriginX', leftX);
+      currentPiece.setStyle('transformOriginY', leftY);
+      currentPiece.setStyle('transformOriginZ', leftZ);
       currentPiece.setStyle(
-        "rotateX", 
-        this.getRotateWithInvertedRotation({shiftPressed, faceInverted: true, rotate: currentPiece.getStyle("rotateX")})
+        'rotateX',
+        this.getRotateWithInvertedRotation({
+          shiftPressed,
+          faceInverted: true,
+          rotate: currentPiece.getStyle('rotateX'),
+        })
       );
 
       setTimeout(() => {
-        const nextCacheClass = cacheClass.find(cacheClass =>
-          cacheClass.id === nextPiece?.getId())
+        const nextCacheClass = cacheClass.find(cacheClass => cacheClass.id === nextPiece?.getId());
 
-        shiftPressed ? currentPiece.setClass('bottomClass', nextCacheClass?.backClass) : currentPiece.setClass('bottomClass', nextCacheClass?.frontClass);
-        shiftPressed ? currentPiece.setClass('frontClass', nextCacheClass?.bottomClass) : currentPiece.setClass('frontClass', nextCacheClass?.topClass);
-        shiftPressed ? currentPiece.setClass('topClass', nextCacheClass?.frontClass) : currentPiece.setClass('topClass', nextCacheClass?.backClass);
-        shiftPressed ? currentPiece.setClass('backClass', nextCacheClass?.topClass) : currentPiece.setClass('backClass', nextCacheClass?.bottomClass);
+        shiftPressed
+          ? currentPiece.setClass('bottomClass', nextCacheClass?.backClass)
+          : currentPiece.setClass('bottomClass', nextCacheClass?.frontClass);
+        shiftPressed
+          ? currentPiece.setClass('frontClass', nextCacheClass?.bottomClass)
+          : currentPiece.setClass('frontClass', nextCacheClass?.topClass);
+        shiftPressed
+          ? currentPiece.setClass('topClass', nextCacheClass?.frontClass)
+          : currentPiece.setClass('topClass', nextCacheClass?.backClass);
+        shiftPressed
+          ? currentPiece.setClass('backClass', nextCacheClass?.topClass)
+          : currentPiece.setClass('backClass', nextCacheClass?.bottomClass);
         currentPiece.setClass('leftClass', nextCacheClass?.leftClass);
         currentPiece.setClass('rightClass', nextCacheClass?.rightClass);
 
@@ -216,10 +224,10 @@ export class RubicksCube3x3 {
           shiftPressed,
           faceInverted: true,
           rotateAxle: 'pieceRotateX',
-          pieceRotateAxle: 'rotateX'
-        })
+          pieceRotateAxle: 'rotateX',
+        });
       }, 500);
-    })
+    });
   }
 
   public topPiecesMovement(movementType?: 'shift') {
@@ -229,50 +237,63 @@ export class RubicksCube3x3 {
 
     const cachePieceColor = pieces.map(piece => {
       return {
-        id: piece.getId(), 
-        colors: piece.getData("colors")
-      }
+        id: piece.getId(),
+        colors: piece.getData('colors'),
+      };
     });
 
     const cacheClass = pieces.map(piece => {
       return {
         id: piece.getId(),
-        backClass: piece.getClass("backClass"),
-        frontClass: piece.getClass("frontClass"),
-        bottomClass: piece.getClass("bottomClass"),
-        leftClass: piece.getClass("leftClass"),
-        rightClass: piece.getClass("rightClass"),
-        topClass: piece.getClass("topClass"),
-      }
-    })
+        backClass: piece.getClass('backClass'),
+        frontClass: piece.getClass('frontClass'),
+        bottomClass: piece.getClass('bottomClass'),
+        leftClass: piece.getClass('leftClass'),
+        rightClass: piece.getClass('rightClass'),
+        topClass: piece.getClass('topClass'),
+      };
+    });
 
     pieceIds.forEach((pieceId, index) => {
       const currentPiece = pieces.find(piece => piece.getId() === pieceId) as Piece;
       const { topX, topY, topZ } = currentPiece.getTopLinkedTransformOrigins();
       const nextPiece = pieces.find(_piece => {
-        const nextIndex = (shiftPressed ? index + 2 : (index - 2 + pieceIds.length)) % pieceIds.length;
+        const nextIndex =
+          (shiftPressed ? index + 2 : index - 2 + pieceIds.length) % pieceIds.length;
         return _piece.getId() === pieceIds[nextIndex];
       });
-      const nextCacheColors = cachePieceColor.find(cacheColor => 
-        cacheColor.id === nextPiece?.getId())?.colors as string & PieceColors[];
+      const nextCacheColors = cachePieceColor.find(
+        cacheColor => cacheColor.id === nextPiece?.getId()
+      )?.colors as string & PieceColors[];
 
-      currentPiece.setStyle("transition", .5);
-      currentPiece.setStyle("transformOriginX", topX);
-      currentPiece.setStyle("transformOriginY", topY);
-      currentPiece.setStyle("transformOriginZ", topZ);
+      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transformOriginX', topX);
+      currentPiece.setStyle('transformOriginY', topY);
+      currentPiece.setStyle('transformOriginZ', topZ);
       currentPiece.setStyle(
-        "rotateY", 
-        this.getRotateWithInvertedRotation({shiftPressed, faceInverted: true, rotate: currentPiece.getStyle("rotateY")})
+        'rotateY',
+        this.getRotateWithInvertedRotation({
+          shiftPressed,
+          faceInverted: true,
+          rotate: currentPiece.getStyle('rotateY'),
+        })
       );
 
       setTimeout(() => {
-        const nextCacheClass = cacheClass.find(cacheClass =>
-          cacheClass.id === nextPiece?.getId())
+        const nextCacheClass = cacheClass.find(cacheClass => cacheClass.id === nextPiece?.getId());
 
-        shiftPressed ? currentPiece.setClass('rightClass', nextCacheClass?.frontClass) : currentPiece.setClass('rightClass', nextCacheClass?.backClass);
-        shiftPressed ? currentPiece.setClass('frontClass', nextCacheClass?.leftClass) : currentPiece.setClass('frontClass', nextCacheClass?.rightClass);
-        shiftPressed ? currentPiece.setClass('leftClass', nextCacheClass?.backClass) : currentPiece.setClass('leftClass', nextCacheClass?.frontClass);
-        shiftPressed ? currentPiece.setClass('backClass', nextCacheClass?.rightClass) : currentPiece.setClass('backClass', nextCacheClass?.leftClass);
+        shiftPressed
+          ? currentPiece.setClass('rightClass', nextCacheClass?.frontClass)
+          : currentPiece.setClass('rightClass', nextCacheClass?.backClass);
+        shiftPressed
+          ? currentPiece.setClass('frontClass', nextCacheClass?.leftClass)
+          : currentPiece.setClass('frontClass', nextCacheClass?.rightClass);
+        shiftPressed
+          ? currentPiece.setClass('leftClass', nextCacheClass?.backClass)
+          : currentPiece.setClass('leftClass', nextCacheClass?.frontClass);
+        shiftPressed
+          ? currentPiece.setClass('backClass', nextCacheClass?.rightClass)
+          : currentPiece.setClass('backClass', nextCacheClass?.leftClass);
         currentPiece.setClass('bottomClass', nextCacheClass?.bottomClass);
         currentPiece.setClass('topClass', nextCacheClass?.topClass);
 
@@ -282,10 +303,10 @@ export class RubicksCube3x3 {
           shiftPressed,
           faceInverted: true,
           rotateAxle: 'pieceRotateY',
-          pieceRotateAxle: 'rotateY'
-        })
+          pieceRotateAxle: 'rotateY',
+        });
       }, 500);
-    })
+    });
   }
 
   public frontPiecesMovement(movementType?: 'shift') {
@@ -295,51 +316,62 @@ export class RubicksCube3x3 {
 
     const cachePieceColor = pieces.map(piece => {
       return {
-        id: piece.getId(), 
-        colors: piece.getData("colors")
-      }
+        id: piece.getId(),
+        colors: piece.getData('colors'),
+      };
     });
 
     const cacheClass = pieces.map(piece => {
       return {
         id: piece.getId(),
-        backClass: piece.getClass("backClass"),
-        frontClass: piece.getClass("frontClass"),
-        bottomClass: piece.getClass("bottomClass"),
-        leftClass: piece.getClass("leftClass"),
-        rightClass: piece.getClass("rightClass"),
-        topClass: piece.getClass("topClass"),
-      }
-    })
-
+        backClass: piece.getClass('backClass'),
+        frontClass: piece.getClass('frontClass'),
+        bottomClass: piece.getClass('bottomClass'),
+        leftClass: piece.getClass('leftClass'),
+        rightClass: piece.getClass('rightClass'),
+        topClass: piece.getClass('topClass'),
+      };
+    });
 
     pieceIds.forEach((pieceId, index) => {
       const currentPiece = pieces.find(piece => piece.getId() === pieceId) as Piece;
       const { frontX, frontY, frontZ } = currentPiece.getFrontLinkedTransformOrigins();
       const nextPiece = pieces.find(_piece => {
-        const nextIndex = (shiftPressed ? index + 2 : (index - 2 + pieceIds.length)) % pieceIds.length;
+        const nextIndex =
+          (shiftPressed ? index + 2 : index - 2 + pieceIds.length) % pieceIds.length;
         return _piece.getId() === pieceIds[nextIndex];
       });
-      const nextCacheColors = cachePieceColor.find(cacheColor => 
-        cacheColor.id === nextPiece?.getId())?.colors as string & PieceColors[];
+      const nextCacheColors = cachePieceColor.find(
+        cacheColor => cacheColor.id === nextPiece?.getId()
+      )?.colors as string & PieceColors[];
 
-      currentPiece.setStyle("transition", .5);
-      currentPiece.setStyle("transformOriginX", frontX);
-      currentPiece.setStyle("transformOriginY", frontY);
-      currentPiece.setStyle("transformOriginZ", frontZ);
+      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transformOriginX', frontX);
+      currentPiece.setStyle('transformOriginY', frontY);
+      currentPiece.setStyle('transformOriginZ', frontZ);
       currentPiece.setStyle(
-        "rotateZ", 
-        this.getRotateWithInvertedRotation({shiftPressed, rotate: currentPiece.getStyle("rotateZ")})
+        'rotateZ',
+        this.getRotateWithInvertedRotation({
+          shiftPressed,
+          rotate: currentPiece.getStyle('rotateZ'),
+        })
       );
 
       setTimeout(() => {
-        const nextCacheClass = cacheClass.find(cacheClass =>
-          cacheClass.id === nextPiece?.getId())
-        
-        shiftPressed ? currentPiece.setClass('leftClass', nextCacheClass?.topClass) : currentPiece.setClass('leftClass', nextCacheClass?.bottomClass);
-        shiftPressed ? currentPiece.setClass('bottomClass', nextCacheClass?.leftClass) : currentPiece.setClass('bottomClass', nextCacheClass?.rightClass);
-        shiftPressed ? currentPiece.setClass('rightClass', nextCacheClass?.bottomClass) : currentPiece.setClass('rightClass', nextCacheClass?.topClass);
-        shiftPressed ? currentPiece.setClass('topClass', nextCacheClass?.rightClass) : currentPiece.setClass('topClass', nextCacheClass?.leftClass);
+        const nextCacheClass = cacheClass.find(cacheClass => cacheClass.id === nextPiece?.getId());
+
+        shiftPressed
+          ? currentPiece.setClass('leftClass', nextCacheClass?.topClass)
+          : currentPiece.setClass('leftClass', nextCacheClass?.bottomClass);
+        shiftPressed
+          ? currentPiece.setClass('bottomClass', nextCacheClass?.leftClass)
+          : currentPiece.setClass('bottomClass', nextCacheClass?.rightClass);
+        shiftPressed
+          ? currentPiece.setClass('rightClass', nextCacheClass?.bottomClass)
+          : currentPiece.setClass('rightClass', nextCacheClass?.topClass);
+        shiftPressed
+          ? currentPiece.setClass('topClass', nextCacheClass?.rightClass)
+          : currentPiece.setClass('topClass', nextCacheClass?.leftClass);
         currentPiece.setClass('frontClass', nextCacheClass?.frontClass);
         currentPiece.setClass('backClass', nextCacheClass?.backClass);
 
@@ -348,10 +380,10 @@ export class RubicksCube3x3 {
           nextCacheColors,
           shiftPressed,
           rotateAxle: 'pieceRotateZ',
-          pieceRotateAxle: 'rotateZ'
-        })
+          pieceRotateAxle: 'rotateZ',
+        });
       }, 500);
-    })
+    });
   }
 
   public bottomPiecesMovement(movementType?: 'shift') {
@@ -361,51 +393,62 @@ export class RubicksCube3x3 {
 
     const cachePieceColor = pieces.map(piece => {
       return {
-        id: piece.getId(), 
-        colors: piece.getData("colors")
-      }
+        id: piece.getId(),
+        colors: piece.getData('colors'),
+      };
     });
 
     const cacheClass = pieces.map(piece => {
       return {
         id: piece.getId(),
-        backClass: piece.getClass("backClass"),
-        frontClass: piece.getClass("frontClass"),
-        bottomClass: piece.getClass("bottomClass"),
-        leftClass: piece.getClass("leftClass"),
-        rightClass: piece.getClass("rightClass"),
-        topClass: piece.getClass("topClass"),
-      }
-    })
-
+        backClass: piece.getClass('backClass'),
+        frontClass: piece.getClass('frontClass'),
+        bottomClass: piece.getClass('bottomClass'),
+        leftClass: piece.getClass('leftClass'),
+        rightClass: piece.getClass('rightClass'),
+        topClass: piece.getClass('topClass'),
+      };
+    });
 
     pieceIds.forEach((pieceId, index) => {
       const currentPiece = pieces.find(piece => piece.getId() === pieceId) as Piece;
       const { bottomX, bottomY, bottomZ } = currentPiece.getBottomLinkedTransformOrigins();
       const nextPiece = pieces.find(_piece => {
-        const nextIndex = (shiftPressed ? index + 2 : (index - 2 + pieceIds.length)) % pieceIds.length;
+        const nextIndex =
+          (shiftPressed ? index + 2 : index - 2 + pieceIds.length) % pieceIds.length;
         return _piece.getId() === pieceIds[nextIndex];
       });
-      const nextCacheColors = cachePieceColor.find(cacheColor => 
-        cacheColor.id === nextPiece?.getId())?.colors as string & PieceColors[];
+      const nextCacheColors = cachePieceColor.find(
+        cacheColor => cacheColor.id === nextPiece?.getId()
+      )?.colors as string & PieceColors[];
 
-      currentPiece.setStyle("transition", .5);
-      currentPiece.setStyle("transformOriginX", bottomX);
-      currentPiece.setStyle("transformOriginY", bottomY);
-      currentPiece.setStyle("transformOriginZ", bottomZ);
+      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transformOriginX', bottomX);
+      currentPiece.setStyle('transformOriginY', bottomY);
+      currentPiece.setStyle('transformOriginZ', bottomZ);
       currentPiece.setStyle(
-        "rotateY", 
-        this.getRotateWithInvertedRotation({shiftPressed, rotate: currentPiece.getStyle("rotateY")})
+        'rotateY',
+        this.getRotateWithInvertedRotation({
+          shiftPressed,
+          rotate: currentPiece.getStyle('rotateY'),
+        })
       );
 
       setTimeout(() => {
-        const nextCacheClass = cacheClass.find(cacheClass =>
-          cacheClass.id === nextPiece?.getId())
-        
-        shiftPressed ? currentPiece.setClass('leftClass', nextCacheClass?.frontClass) : currentPiece.setClass('leftClass', nextCacheClass?.backClass);
-        shiftPressed ? currentPiece.setClass('backClass', nextCacheClass?.leftClass) : currentPiece.setClass('backClass', nextCacheClass?.rightClass);
-        shiftPressed ? currentPiece.setClass('rightClass', nextCacheClass?.backClass) : currentPiece.setClass('rightClass', nextCacheClass?.frontClass);
-        shiftPressed ? currentPiece.setClass('frontClass', nextCacheClass?.rightClass) : currentPiece.setClass('frontClass', nextCacheClass?.leftClass);
+        const nextCacheClass = cacheClass.find(cacheClass => cacheClass.id === nextPiece?.getId());
+
+        shiftPressed
+          ? currentPiece.setClass('leftClass', nextCacheClass?.frontClass)
+          : currentPiece.setClass('leftClass', nextCacheClass?.backClass);
+        shiftPressed
+          ? currentPiece.setClass('backClass', nextCacheClass?.leftClass)
+          : currentPiece.setClass('backClass', nextCacheClass?.rightClass);
+        shiftPressed
+          ? currentPiece.setClass('rightClass', nextCacheClass?.backClass)
+          : currentPiece.setClass('rightClass', nextCacheClass?.frontClass);
+        shiftPressed
+          ? currentPiece.setClass('frontClass', nextCacheClass?.rightClass)
+          : currentPiece.setClass('frontClass', nextCacheClass?.leftClass);
         currentPiece.setClass('topClass', nextCacheClass?.topClass);
         currentPiece.setClass('bottomClass', nextCacheClass?.bottomClass);
 
@@ -414,10 +457,10 @@ export class RubicksCube3x3 {
           nextCacheColors,
           shiftPressed,
           rotateAxle: 'pieceRotateY',
-          pieceRotateAxle: 'rotateY'
-        })
+          pieceRotateAxle: 'rotateY',
+        });
       }, 500);
-    })
+    });
   }
 
   public rightPiecesMovement(movementType?: 'shift') {
@@ -427,51 +470,62 @@ export class RubicksCube3x3 {
 
     const cachePieceColor = pieces.map(piece => {
       return {
-        id: piece.getId(), 
-        colors: piece.getData("colors")
-      }
+        id: piece.getId(),
+        colors: piece.getData('colors'),
+      };
     });
 
     const cacheClass = pieces.map(piece => {
       return {
         id: piece.getId(),
-        backClass: piece.getClass("backClass"),
-        frontClass: piece.getClass("frontClass"),
-        bottomClass: piece.getClass("bottomClass"),
-        leftClass: piece.getClass("leftClass"),
-        rightClass: piece.getClass("rightClass"),
-        topClass: piece.getClass("topClass"),
-      }
-    })
-
+        backClass: piece.getClass('backClass'),
+        frontClass: piece.getClass('frontClass'),
+        bottomClass: piece.getClass('bottomClass'),
+        leftClass: piece.getClass('leftClass'),
+        rightClass: piece.getClass('rightClass'),
+        topClass: piece.getClass('topClass'),
+      };
+    });
 
     pieceIds.forEach((pieceId, index) => {
       const currentPiece = pieces.find(piece => piece.getId() === pieceId) as Piece;
       const { rightX, rightY, rightZ } = currentPiece.getRightLinkedTransformOrigins();
       const nextPiece = pieces.find(_piece => {
-        const nextIndex = (shiftPressed ? index + 2 : (index - 2 + pieceIds.length)) % pieceIds.length;
+        const nextIndex =
+          (shiftPressed ? index + 2 : index - 2 + pieceIds.length) % pieceIds.length;
         return _piece.getId() === pieceIds[nextIndex];
       });
-      const nextCacheColors = cachePieceColor.find(cacheColor => 
-        cacheColor.id === nextPiece?.getId())?.colors as string & PieceColors[];
+      const nextCacheColors = cachePieceColor.find(
+        cacheColor => cacheColor.id === nextPiece?.getId()
+      )?.colors as string & PieceColors[];
 
-      currentPiece.setStyle("transition", .5);
-      currentPiece.setStyle("transformOriginX", rightX);
-      currentPiece.setStyle("transformOriginY", rightY);
-      currentPiece.setStyle("transformOriginZ", rightZ);
+      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transformOriginX', rightX);
+      currentPiece.setStyle('transformOriginY', rightY);
+      currentPiece.setStyle('transformOriginZ', rightZ);
       currentPiece.setStyle(
-        "rotateX", 
-        this.getRotateWithInvertedRotation({shiftPressed, rotate: currentPiece.getStyle("rotateX")})
+        'rotateX',
+        this.getRotateWithInvertedRotation({
+          shiftPressed,
+          rotate: currentPiece.getStyle('rotateX'),
+        })
       );
 
       setTimeout(() => {
-        const nextCacheClass = cacheClass.find(cacheClass =>
-          cacheClass.id === nextPiece?.getId())
-        
-        shiftPressed ? currentPiece.setClass('topClass', nextCacheClass?.backClass) : currentPiece.setClass('topClass', nextCacheClass?.frontClass);
-        shiftPressed ? currentPiece.setClass('backClass', nextCacheClass?.bottomClass) : currentPiece.setClass('backClass', nextCacheClass?.topClass);
-        shiftPressed ? currentPiece.setClass('bottomClass', nextCacheClass?.frontClass) : currentPiece.setClass('bottomClass', nextCacheClass?.backClass);
-        shiftPressed ? currentPiece.setClass('frontClass', nextCacheClass?.topClass) : currentPiece.setClass('frontClass', nextCacheClass?.bottomClass);
+        const nextCacheClass = cacheClass.find(cacheClass => cacheClass.id === nextPiece?.getId());
+
+        shiftPressed
+          ? currentPiece.setClass('topClass', nextCacheClass?.backClass)
+          : currentPiece.setClass('topClass', nextCacheClass?.frontClass);
+        shiftPressed
+          ? currentPiece.setClass('backClass', nextCacheClass?.bottomClass)
+          : currentPiece.setClass('backClass', nextCacheClass?.topClass);
+        shiftPressed
+          ? currentPiece.setClass('bottomClass', nextCacheClass?.frontClass)
+          : currentPiece.setClass('bottomClass', nextCacheClass?.backClass);
+        shiftPressed
+          ? currentPiece.setClass('frontClass', nextCacheClass?.topClass)
+          : currentPiece.setClass('frontClass', nextCacheClass?.bottomClass);
         currentPiece.setClass('leftClass', nextCacheClass?.leftClass);
         currentPiece.setClass('rightClass', nextCacheClass?.rightClass);
 
@@ -480,33 +534,57 @@ export class RubicksCube3x3 {
           nextCacheColors,
           shiftPressed,
           rotateAxle: 'pieceRotateX',
-          pieceRotateAxle: 'rotateX'
-        })
+          pieceRotateAxle: 'rotateX',
+        });
       }, 500);
-    })
+    });
   }
 
-  private setPieceValueOnTimeout({ currentPiece, nextCacheColors, shiftPressed, faceInverted, rotateAxle, pieceRotateAxle }: SetPieceValueOnTimeoutProps) {
-    currentPiece.setData("colors", nextCacheColors);
+  private setPieceValueOnTimeout({
+    currentPiece,
+    nextCacheColors,
+    shiftPressed,
+    faceInverted,
+    rotateAxle,
+    pieceRotateAxle,
+  }: SetPieceValueOnTimeoutProps) {
+    currentPiece.setData('colors', nextCacheColors);
     currentPiece.setStyle(
-      rotateAxle, 
-      this.getRotateWithInvertedRotation({shiftPressed, faceInverted, rotate: currentPiece.getStyle(rotateAxle)})
+      rotateAxle,
+      this.getRotateWithInvertedRotation({
+        shiftPressed,
+        faceInverted,
+        rotate: currentPiece.getStyle(rotateAxle),
+      })
     );
 
-    currentPiece.setStyle("transformOriginX", 0);
-    currentPiece.setStyle("transformOriginY", 0);
-    currentPiece.setStyle("transformOriginZ", 0);
-    currentPiece.setStyle("transition", 0)
+    currentPiece.setStyle('transformOriginX', 0);
+    currentPiece.setStyle('transformOriginY', 0);
+    currentPiece.setStyle('transformOriginZ', 0);
+    currentPiece.setStyle('transition', 0);
     currentPiece.setStyle(pieceRotateAxle, 0);
   }
 
-  private getRotateWithInvertedRotation({ shiftPressed, faceInverted = false, rotate }: { shiftPressed: boolean, faceInverted?: boolean, rotate: number }) {
-    return faceInverted ? shiftPressed ? rotate + 90 : rotate - 90 : shiftPressed ? rotate - 90 : rotate + 90;
+  private getRotateWithInvertedRotation({
+    shiftPressed,
+    faceInverted = false,
+    rotate,
+  }: {
+    shiftPressed: boolean;
+    faceInverted?: boolean;
+    rotate: number;
+  }) {
+    return faceInverted
+      ? shiftPressed
+        ? rotate + 90
+        : rotate - 90
+      : shiftPressed
+        ? rotate - 90
+        : rotate + 90;
   }
 
-
   public getColor(key: RubicksCube3x3ColorsKeys) {
-    return this.colors[key]
+    return this.colors[key];
   }
 
   public setColor(key: RubicksCube3x3ColorsKeys, value: string) {
@@ -514,13 +592,13 @@ export class RubicksCube3x3 {
   }
 
   public getAllColor() {
-    return this.colors
+    return this.colors;
   }
 
   public setAllColor(colors: RubicksCube3x3Colors) {
     this.colors = colors;
   }
-  
+
   public getStyle(key: RubicksCube3x3StylesKeys) {
     const style = this.styles[key] as number;
     return style;
@@ -531,7 +609,7 @@ export class RubicksCube3x3 {
   }
 
   public getAllStyle() {
-    return this.styles
+    return this.styles;
   }
 
   public setAllStyle(value: RubicksCube3x3Styles) {
@@ -539,7 +617,7 @@ export class RubicksCube3x3 {
   }
 
   public getRotateAxle(key: RubicksCube3x3RotateAxleKeys) {
-    return this.rotateAxle[key]
+    return this.rotateAxle[key];
   }
 
   public setRotateAxle(key: RubicksCube3x3RotateAxleKeys, value: RotateAxleValues) {
@@ -547,7 +625,7 @@ export class RubicksCube3x3 {
   }
 
   public getAllRotateAxle() {
-    return this.rotateAxle
+    return this.rotateAxle;
   }
 
   public setAllRotateAxle(value: RubicksCube3x3RotateAxle) {

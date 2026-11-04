@@ -1,0 +1,51 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cube_presets",
+  "info": {
+    "singularName": "cube-preset",
+    "pluralName": "cube-presets",
+    "displayName": "Cube presets"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "cubePresets",
+      "required": true
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 80,
+      "required": true
+    },
+    "cubeType": {
+      "type": "string",
+      "required": true,
+      "default": "3x3",
+      "minLength": 3,
+      "maxLength": 3
+    },
+    "appearance": {
+      "type": "component",
+      "component": "cube.appearance",
+      "repeatable": false,
+      "required": true
+    },
+    "solveAttempts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::solve-attempt.solve-attempt",
+      "mappedBy": "preset"
+    },
+    "savedGames": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::saved-game.saved-game",
+      "mappedBy": "preset"
+    }
+  }
+}

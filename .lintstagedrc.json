@@ -1,0 +1,12 @@
+{
+  "front-end/**/*.{ts,tsx}": [
+    "npm --prefix front-end run lint:staged --",
+    "npm --prefix front-end run format:staged --"
+  ],
+  "front-end/**/*.{js,cjs,css,json,md,html}": "npm --prefix front-end run format:staged --",
+  "back-end/**/*.{ts,cjs}": [
+    "npm --prefix back-end run lint:staged --",
+    "npm --prefix back-end run format:staged --"
+  ],
+  "back-end/**/*.{json,mjs,md,yml}": "npm --prefix back-end run format:staged --"
+}

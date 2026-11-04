@@ -1,9 +1,9 @@
-import { 
-  Cube, 
-  FacePiece, 
-  Initial_State_Cube, 
-  FaceContent, 
-  Piece, 
+import {
+  Cube,
+  FacePiece,
+  Initial_State_Cube,
+  FaceContent,
+  Piece,
   RubicksCubeContextProps,
   SetInfoCubeProps,
   FacePieces,
@@ -12,35 +12,27 @@ import {
   GetNewLayerPiecesProps,
   GetOldPiecesWithRotationProps,
   GetNewFacePieces,
-} from "./cubeContext";
+} from './cubeContext';
 
 import {
   CubeProps,
   PieceContainerProps,
   PieceFaceProps,
   RenderPieceFaceProps,
-} from "./rubiksCubePage";
+} from './rubiksCubePage';
 
-import {
-  ChangePageStateProps,
-  PageSTate,
-  PaginationContextProps,
-} from "./paginationContext";
+import { ChangePageStateProps, PageSTate, PaginationContextProps } from './paginationContext';
 
-import {
-  SwiperParams,
-} from "./SwiperTypes";
+import { SwiperParams } from './SwiperTypes';
 
-import {
-  TutorialStepProps,
-} from "./TutorialStepPage";
+import { TutorialStepProps } from './TutorialStepPage';
 
 import {
   Initial_State_Language,
   GeneralConfigContextProps,
   Context_Language,
   CurrentLanguageValues,
-} from "./GeneralConfigContext";
+} from './GeneralConfigContext';
 
 import {
   RubicksCube3x3Constructor,
@@ -63,14 +55,14 @@ import {
   LinkedTransformOriginsKeys,
   PieceClassValues,
   PieceColors,
-} from "./RubicksCube3x3"
+} from './RubicksCube3x3';
 
 export {
-  Cube, 
-  FacePiece, 
+  Cube,
+  FacePiece,
   Initial_State_Cube,
-  FaceContent, 
-  Piece, 
+  FaceContent,
+  Piece,
   RubicksCubeContextProps,
   SetInfoCubeProps,
   FacePieces,
@@ -112,4 +104,4 @@ export {
   LinkedTransformOriginsKeys,
   PieceClassValues,
   PieceColors,
-}
+};

@@ -1,35 +1,11 @@
-.headerContainer {
-  display: flex;
-  width: 100%;
-  z-index: 1;
-}
-
-.headerLinkContainer {
-  width: -webkit-fill-available;
-  text-align: center;
-  background-color: var(--white);
-  text-decoration: none;
-  color: var(--black);
-  border-radius: 13px;
-  text-transform: capitalize;
-}
-
-.headerContainer div {
-  padding: 13px 0;
-}
-
 .headerLinkContainer.active {
-  background-color: var(--black);
-  border: #D7FA19 solid;
-  color: var(--primary-color);
+  @apply border-solid border-accent bg-canvas text-accent;
 }
 
 .headerLinkContainer.tutorial.active {
-  border-width: 0 2px 2px 0;
-  border-radius: 13px 0;
+  @apply rounded-[13px_0] border-b-2 border-l-0 border-r-2 border-t-0;
 }
 
 .headerLinkContainer.rubick.active {
-  border-width: 0 0 2px 2px;
-  border-radius: 0 13px;
+  @apply rounded-[0_13px] border-b-2 border-l-2 border-r-0 border-t-0;
 }

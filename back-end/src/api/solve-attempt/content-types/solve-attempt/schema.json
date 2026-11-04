@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "solve_attempts",
+  "info": {
+    "singularName": "solve-attempt",
+    "pluralName": "solve-attempts",
+    "displayName": "Solve attempts"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "solveAttempts",
+      "required": true
+    },
+    "preset": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cube-preset.cube-preset",
+      "inversedBy": "solveAttempts"
+    },
+    "cubeType": {
+      "type": "string",
+      "required": true,
+      "default": "3x3",
+      "minLength": 3,
+      "maxLength": 3
+    },
+    "durationMs": {
+      "type": "integer",
+      "min": 1,
+      "max": 2147483647,
+      "required": true
+    },
+    "completedAt": {
+      "type": "datetime",
+      "required": true
+    },
+    "engineVersion": {
+      "type": "string",
+      "maxLength": 64,
+      "required": true
+    },
+    "initialState": {
+      "type": "json",
+      "required": true
+    },
+    "scramble": {
+      "type": "json"
+    },
+    "moves": {
+      "type": "json",
+      "required": true
+    },
+    "appearanceSnapshot": {
+      "type": "component",
+      "component": "cube.appearance",
+      "repeatable": false,
+      "required": true
+    }
+  }
+}

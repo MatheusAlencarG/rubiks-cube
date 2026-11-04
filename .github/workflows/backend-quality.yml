@@ -1,0 +1,51 @@
+name: Backend quality
+
+on:
+  push:
+    paths: ['back-end/**', '.github/workflows/backend-quality.yml']
+  pull_request:
+    paths: ['back-end/**', '.github/workflows/backend-quality.yml']
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: rubiks_cube_test
+          MYSQL_USER: rubiks_test
+          MYSQL_PASSWORD: integration-only-password
+          MYSQL_ROOT_PASSWORD: integration-root-password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
+    env:
+      DATABASE_HOST: 127.0.0.1
+      DATABASE_PORT: '3306'
+      DATABASE_NAME: rubiks_cube_test
+      DATABASE_USERNAME: rubiks_test
+      DATABASE_PASSWORD: integration-only-password
+      DATABASE_SSL: 'false'
+      STRAPI_TELEMETRY_DISABLED: 'true'
+    defaults:
+      run:
+        working-directory: back-end
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: back-end/package-lock.json
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm run test:integration

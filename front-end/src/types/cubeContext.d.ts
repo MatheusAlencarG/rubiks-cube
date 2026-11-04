@@ -1,7 +1,7 @@
-import { ReactNode } from "react"
+import { ReactNode } from 'react';
 
 export interface RubicksCubeContextProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export interface Initial_State_Cube {
@@ -59,11 +59,11 @@ export interface Piece {
   pieceRotate: ThreeDType;
   faces: FacePiece;
   data: {
-    layer: string,
-    type: string,
+    layer: string;
+    type: string;
     colors: string[];
     faces: string[];
-  }
+  };
 }
 
 export interface ThreeDType {
@@ -92,17 +92,17 @@ export interface SetInfoCubeProps {
       rightFaceColor: string;
       frontFaceColor: string;
       backFaceColor: string;
-    },
+    };
     rotate: ThreeDType;
     pieces: Piece[];
-  }
+  };
 }
 
 export interface GetNewLayerPiecesProps {
   pieces: Piece[];
   topFaceColor: string;
   bottomFaceColor: string;
-} 
+}
 
 export interface GetNewPiecesProps {
   pieces: Piece[];

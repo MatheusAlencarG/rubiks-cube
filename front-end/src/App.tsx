@@ -8,7 +8,7 @@ import TutorialParts from './Pages/Tutorial/TutorialParts';
 import TutorialStep from './Pages/Tutorial/TutorialStep';
 import PageNotFound from './Pages/PageNotFound';
 
-import GeneralConfigContext from "./Contexts/GeneralConfigContext/GeneralConfigContext";
+import GeneralConfigContext from './Contexts/GeneralConfigContext/GeneralConfigContext';
 
 function App() {
   return (

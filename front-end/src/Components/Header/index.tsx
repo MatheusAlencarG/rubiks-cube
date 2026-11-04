@@ -1,20 +1,19 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import "./styles.css";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import './styles.css';
 
-import { Link, useLocation } from "react-router-dom";
-import { Context } from "../../Contexts/PaginationContext/Context";
-import { Context as GeneralConfigContext } from "../../Contexts/GeneralConfigContext/Context";
+import { Link, useLocation } from 'react-router-dom';
+import { Context } from '../../Contexts/PaginationContext/Context';
+import { Context as GeneralConfigContext } from '../../Contexts/GeneralConfigContext/Context';
 
 function Header() {
   const { pageState } = useContext(Context);
   const { allLanguages, currentLanguage } = useContext(GeneralConfigContext).language;
-  const [ tutorialLink, setTutorialLink ] = useState<string>();
+  const [tutorialLink, setTutorialLink] = useState<string>();
   const tutorialRef = useRef<HTMLDivElement>(null);
   const rubickRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const { tabOne, tabTwo } = allLanguages[currentLanguage].global;
 
-  
   function detectPage() {
     const tutorialParent = tutorialRef.current?.parentNode as Element;
     const rubickParent = rubickRef.current?.parentNode as Element;
@@ -28,26 +27,30 @@ function Header() {
       tutorialParent?.classList.remove('active');
     }
   }
-  
+
   useEffect(() => {
     detectPage();
     setTutorialLink(pageState.listOfPages[pageState.currentPageIndex]);
-  }, [location])
+  }, [location, pageState.currentPageIndex, pageState.listOfPages]);
 
   return (
-    <div className="headerContainer">
-        <Link 
-          className="headerLinkContainer tutorial active" 
-          to={tutorialLink ?? '/tutorial'} 
-        >
-          <div ref={tutorialRef}>{tabOne}</div>
-        </Link>
-        <Link 
-          className="headerLinkContainer rubick" 
-          to="/rubicksCube"
-        >
-          <div ref={rubickRef}>{tabTwo}</div>
-        </Link>
+    <div className="headerContainer z-[1] flex w-full">
+      <Link
+        className="headerLinkContainer tutorial active w-[-webkit-fill-available] rounded-[13px] bg-surface text-center capitalize text-canvas no-underline"
+        to={tutorialLink ?? '/tutorial'}
+      >
+        <div ref={tutorialRef} className="py-[13px]">
+          {tabOne}
+        </div>
+      </Link>
+      <Link
+        className="headerLinkContainer rubick w-[-webkit-fill-available] rounded-[13px] bg-surface text-center capitalize text-canvas no-underline"
+        to="/rubicksCube"
+      >
+        <div ref={rubickRef} className="py-[13px]">
+          {tabTwo}
+        </div>
+      </Link>
     </div>
   );
 }
