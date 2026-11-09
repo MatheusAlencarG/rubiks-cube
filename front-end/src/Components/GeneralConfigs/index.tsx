@@ -1,67 +1,109 @@
-import React, { useRef, useContext } from 'react';
+import React, { useContext, useEffect, useId, useRef, useState } from 'react';
 import './styles.css';
-
 import Checkbox from '../Checkbox';
+import Account from '../Account';
+import AppPreferences from '../AppPreferences';
+import Disclosure from '../Disclosure';
 import { Context } from '../../Contexts/GeneralConfigContext/Context';
 
 function GeneralConfigs() {
   const { setLanguage, currentLanguage, allLanguages } = useContext(Context).language;
-  const popupRef = useRef<HTMLDivElement>(null);
   const { configurations, language } = allLanguages[currentLanguage].global;
-
-  function openPopup() {
-    popupRef.current?.classList.add('active');
-  }
-
-  function closePopup(event: React.MouseEvent<HTMLElement>) {
-    const target = event.target;
-
-    if (target === event?.currentTarget) {
-      popupRef.current?.classList.remove('active');
-    } else if (target instanceof Element && target?.className === 'generalConfigClose') {
-      popupRef.current?.classList.remove('active');
+  const en = currentLanguage === 'en-us';
+  const [open, setOpen] = useState(false);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
+  const dialog = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+  useEffect(() => {
+    if (!open) return;
+    const previousTrigger = trigger.current;
+    closeButton.current?.focus();
+    function keydown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setOpen(false);
+      }
+      if (event.key === 'Tab') {
+        const items = Array.from(
+          dialog.current?.querySelectorAll<HTMLElement>(
+            'button:not(:disabled), input:not(:disabled), select:not(:disabled), a[href]'
+          ) ?? []
+        ).filter(item => !item.closest('[inert]'));
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
     }
-  }
-
-  function toggleConfig(event: React.MouseEvent<HTMLElement>) {
-    const configContainer = event.currentTarget.parentNode as Element;
-    const currentArrow = event.currentTarget.childNodes.item(2) as Element;
-    const configContent = configContainer.childNodes.item(1) as Element;
-
-    if (currentArrow.classList.value.includes('active')) {
-      currentArrow.classList.remove('active');
-      configContent.classList.remove('active');
-    } else {
-      currentArrow.classList.add('active');
-      configContent.classList.add('active');
-    }
-  }
-
+    document.addEventListener('keydown', keydown);
+    return () => {
+      document.removeEventListener('keydown', keydown);
+      previousTrigger?.focus();
+    };
+  }, [open]);
   return (
     <>
-      <img
+      <button
+        ref={trigger}
+        type="button"
         className="generalConfigIcon"
-        onClick={openPopup}
-        src="/images/config-icon.svg"
-        alt="Config Icon"
-      />
-      <div ref={popupRef} onClick={event => closePopup(event)} className="generalConfigPopup">
-        <div className="generalConfigContainer">
-          <img
+        aria-label={configurations}
+        aria-haspopup="dialog"
+        onClick={() => setOpen(true)}
+      >
+        <img src="/images/config-icon.svg" alt="Config Icon" />
+      </button>
+      <div
+        onClick={event => {
+          if (event.target === event.currentTarget) setOpen(false);
+        }}
+        className={`generalConfigPopup ${open ? 'active' : ''}`}
+        aria-hidden={!open}
+      >
+        <div
+          ref={dialog}
+          className="generalConfigContainer"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+        >
+          <button
+            ref={closeButton}
+            type="button"
             className="generalConfigClose"
-            onClick={event => closePopup(event)}
-            src="/images/close-config.svg"
-            alt="Close Config Popup"
-          />
-          <h3>{configurations}</h3>
+            aria-label={en ? 'Close settings' : 'Fechar configurações'}
+            onClick={() => setOpen(false)}
+          >
+            <img src="/images/close-config.svg" alt="Close Config Popup" />
+          </button>
+          <h3 id={titleId}>{configurations}</h3>
           <div className="generalConfigContent">
+            <Account />
+            <AppPreferences />
             <div className="languageConfig">
-              <p className="languageConfigTitle" onClick={toggleConfig}>
-                <img className="iconConfig" src="/images/language-icon.svg" alt="Language Icon" />
-                {language}
-                <img className="configArrow" src="/images/simple-arrow.svg" alt="Simple Arrow" />
-              </p>
-              <div className="languageConfigContent">
+              <Disclosure
+                title={
+                  <>
+                    <img
+                      className="iconConfig"
+                      src="/images/language-icon.svg"
+                      alt="Language Icon"
+                    />
+                    {language}
+                  </>
+                }
+                buttonClass="languageConfigTitle"
+                contentClass="languageConfigContent"
+                arrowClass="configArrow"
+                arrowSrc="/images/simple-arrow.svg"
+                arrowAlt="Simple Arrow"
+              >
                 <Checkbox
                   checked={currentLanguage === 'pt-br'}
                   functionEvent={() => setLanguage('pt-br')}
@@ -72,7 +114,7 @@ function GeneralConfigs() {
                   functionEvent={() => setLanguage('en-us')}
                   text="English"
                 />
-              </div>
+              </Disclosure>
             </div>
           </div>
         </div>
@@ -80,5 +122,4 @@ function GeneralConfigs() {
     </>
   );
 }
-
 export default GeneralConfigs;

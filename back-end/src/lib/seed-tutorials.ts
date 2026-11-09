@@ -46,8 +46,8 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
       return {
         title: english ? 'Game Commands' : 'Comandos do Jogo',
         description: english
-          ? 'Use W, A, S, D, Q and E to move the cube faces. Hold Shift for inverse moves. Use the arrow keys to rotate the cube view.'
-          : 'Use W, A, S, D, Q e E para mover as faces do cubo. Segure Shift para os movimentos inversos. Use as setas para girar a visualização do cubo.',
+          ? 'Practice with the interactive 3×3 cube. Follow the current controls below and customize your keyboard and appearance in settings.'
+          : 'Pratique com o cubo 3×3 interativo. Consulte os comandos atuais abaixo e personalize o teclado e a aparência nas configurações.',
         cubeType: '3x3',
         kind,
         displayOrder: 0,
@@ -83,6 +83,7 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
   }
 
   let created = 0;
+  let updated = 0;
   for (const item of [
     { key: 'overview', kind: 'overview' },
     { key: 'cube-parts', kind: 'parts' },
@@ -97,6 +98,56 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
       const existing = await documents.findFirst({ locale, filters: { slug } });
       if (existing) {
         documentId ??= existing.documentId;
+        if (item.kind === 'overview') {
+          const legacyDescription =
+            sourceKey === 'en-us'
+              ? 'Use W, A, S, D, Q and E to move the cube faces. Hold Shift for inverse moves. Use the arrow keys to rotate the cube view.'
+              : 'Use W, A, S, D, Q e E para mover as faces do cubo. Segure Shift para os movimentos inversos. Use as setas para girar a visualização do cubo.';
+          if (existing.description === legacyDescription) {
+            const populate = { parts: true, videos: true };
+            const draft = await documents.findOne({
+              documentId: existing.documentId,
+              locale,
+              status: 'draft',
+              populate,
+            });
+            const published = await documents.findOne({
+              documentId: existing.documentId,
+              locale,
+              status: 'published',
+              populate,
+            });
+            const fields = [
+              'title',
+              'slug',
+              'description',
+              'kind',
+              'cubeType',
+              'displayOrder',
+              'stepNumber',
+            ];
+            if (
+              draft &&
+              published &&
+              fields.every(key => draft[key] === published[key]) &&
+              !draft.parts.length &&
+              !draft.videos.length &&
+              !published.parts.length &&
+              !published.videos.length
+            ) {
+              const source = await tutorialData(sourceKey, 'overview');
+              if (draft.title === source.title) {
+                await documents.update({
+                  documentId: existing.documentId,
+                  locale,
+                  status: 'published',
+                  data: { description: source.description },
+                });
+                updated++;
+              }
+            }
+          }
+        }
         continue;
       }
       const data = { ...(await tutorialData(sourceKey, item.kind, item.number)), slug };
@@ -107,5 +158,5 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
       created++;
     }
   }
-  return { created, images: mediaCache.size };
+  return { created, updated, images: mediaCache.size };
 }

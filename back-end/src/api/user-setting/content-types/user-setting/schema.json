@@ -49,6 +49,34 @@
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::cube-preset.cube-preset"
+    },
+    "themeMode": {
+      "type": "enumeration",
+      "enum": ["dark", "light", "custom"],
+      "default": "dark",
+      "required": true
+    },
+    "themeSurfaceColor": {
+      "type": "string",
+      "minLength": 7,
+      "maxLength": 7,
+      "default": "#242420",
+      "required": true
+    },
+    "themeAccentColor": {
+      "type": "string",
+      "minLength": 7,
+      "maxLength": 7,
+      "default": "#d7fa19",
+      "required": true
+    },
+    "keyboardBindings": {
+      "type": "json"
+    },
+    "hintsEnabled": {
+      "type": "boolean",
+      "default": false,
+      "required": true
     }
   }
 }

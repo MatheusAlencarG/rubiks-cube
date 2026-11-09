@@ -1,87 +1,48 @@
 import React, { useContext } from 'react';
 import './styles.css';
+import { Link, useLocation } from 'react-router-dom';
 import { Context } from '../../Contexts/PaginationContext/Context';
 
-import { Link } from 'react-router-dom';
-
+function PageArrow({ destination, previous = false }: { destination: string; previous?: boolean }) {
+  const image = (
+    <img
+      className="pageImage w-[30px]"
+      src={`/images/simple-arrow${destination ? '' : '-grey'}.svg`}
+      alt={previous ? 'Prev Arrow' : 'Next Arrow'}
+    />
+  );
+  return (
+    <div className={`${previous ? 'prevPage' : 'nextPage'} ${destination ? 'active' : ''}`}>
+      {destination ? (
+        <Link className="footerLink flex text-ink no-underline" to={destination}>
+          {image}
+        </Link>
+      ) : (
+        image
+      )}
+    </div>
+  );
+}
 function Footer() {
-  const { pageState, nextPage, prevPage, changePageState } = useContext(Context);
-
-  function verifyPage(): boolean {
-    return window.location.pathname.includes('tutorial') || window.location.pathname === '/';
-  }
-
-  function verifyPrevPage(): boolean {
-    return pageState.prevPage !== '';
-  }
-
-  function verifyNextPage(): boolean {
-    return pageState.nextPage !== '';
-  }
-
+  const { pageState } = useContext(Context);
+  const { pathname } = useLocation();
+  const isTutorial = pathname === '/' || pathname.startsWith('/tutorial');
   return (
     <div className="footerContainer flex w-[calc(100%_-_70px)] flex-col items-center px-[35px] py-0">
-      {verifyPage() && (
+      {isTutorial && (
         <div className="navigatorContainer flex items-center gap-[7px]">
-          {verifyPrevPage() ? (
-            <div className="prevPage active">
-              <Link
-                onClick={prevPage}
-                className="footerLink flex text-canvas no-underline"
-                to={pageState.prevPage}
-              >
-                <img
-                  className="pageImage w-[30px]"
-                  src="/images/simple-arrow.svg"
-                  alt="Prev Arrow"
-                />
-              </Link>
-            </div>
-          ) : (
-            <div className="prevPage">
-              <img
-                className="pageImage w-[30px]"
-                src="/images/simple-arrow-grey.svg"
-                alt="Prev Arrow"
-              />
-            </div>
-          )}
-          {pageState.listOfPages.map((page, index) => {
-            return (
-              <Link
-                key={index}
-                to={page}
-                onClick={() => changePageState({ newcurrentPageIndex: index })}
-              >
-                <div
-                  className={`page ${pageState.listOfPages.indexOf(page) === pageState.currentPageIndex ? 'active' : ''}`}
-                ></div>
-              </Link>
-            );
-          })}
-          {verifyNextPage() ? (
-            <div className="nextPage active">
-              <Link
-                onClick={nextPage}
-                className="footerLink flex text-canvas no-underline"
-                to={pageState.nextPage}
-              >
-                <img
-                  className="pageImage w-[30px]"
-                  src="/images/simple-arrow.svg"
-                  alt="Next Arrow"
-                />
-              </Link>
-            </div>
-          ) : (
-            <div className="nextPage">
-              <img
-                className="pageImage w-[30px]"
-                src="/images/simple-arrow-grey.svg"
-                alt="Prev Arrow"
-              />
-            </div>
-          )}
+          <PageArrow destination={pageState.prevPage} previous />
+          {pageState.listOfPages.map((page, index) => (
+            <Link
+              key={page}
+              to={page}
+              aria-label={`Tutorial ${index + 1}`}
+              aria-current={index === pageState.currentPageIndex ? 'page' : undefined}
+            >
+              <div className={`page ${index === pageState.currentPageIndex ? 'active' : ''}`} />
+            </Link>
+          ))}
+          <PageArrow destination={pageState.nextPage} />
         </div>
       )}
       <p className="copyrightText w-full text-center text-[10px]">
@@ -90,5 +51,4 @@ function Footer() {
     </div>
   );
 }
-
 export default Footer;

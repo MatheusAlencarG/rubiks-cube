@@ -1,4 +1,6 @@
 import { ReactNode } from 'react';
+import { Settings, SettingsPatch } from '../api/types';
+import type { UiPreferences } from '../preferences';
 
 export interface Initial_State_Language {
   'pt-br': Language;
@@ -43,6 +45,14 @@ export interface GeneralConfigContextProps {
 }
 
 export interface Context_Language {
+  preferences: {
+    settings?: Settings;
+    loading: boolean;
+    error: string;
+    ui: UiPreferences;
+    update: (data: Partial<UiPreferences>) => void;
+    save: (data: SettingsPatch) => Promise<void>;
+  };
   language: {
     currentLanguage: CurrentLanguageValues;
     allLanguages: Initial_State_Language;

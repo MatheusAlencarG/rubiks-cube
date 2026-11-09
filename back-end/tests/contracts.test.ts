@@ -12,6 +12,7 @@ import {
   validateAttempt,
   validateSavedGame,
   isAllowedEmbed,
+  DEFAULT_KEYBOARD_BINDINGS,
 } from '../src/lib/contracts';
 
 const state = (facelets = SOLVED_FACELETS) => ({
@@ -53,6 +54,31 @@ test('accepts only the supported locales and hexadecimal themes', () => {
   assert.equal(settingsSchema.parse({}).language, 'pt-BR');
   assert.equal(settingsSchema.safeParse({ language: 'pt-br' }).success, false);
   assert.equal(settingsSchema.safeParse({ themePrimaryColor: '#xyzxyz' }).success, false);
+});
+
+test('validates themes, stored hints preference and unique keyboard controls', () => {
+  const data = settingsSchema.parse({
+    themeMode: 'custom',
+    themeSurfaceColor: '#123456',
+    hintsEnabled: true,
+    keyboardBindings: { ...DEFAULT_KEYBOARD_BINDINGS, front: 'x' },
+  });
+  assert.equal(data.hintsEnabled, true);
+  assert.equal(data.keyboardBindings.front, 'x');
+  assert.deepEqual(
+    settingsSchema.parse({ keyboardBindings: null }).keyboardBindings,
+    DEFAULT_KEYBOARD_BINDINGS
+  );
+  for (const invalid of [
+    { themeMode: 'system' },
+    { themeSurfaceColor: 'blue' },
+    { themeAccentColor: '#zzz000' },
+    { hintsEnabled: 'true' },
+    { keyboardBindings: { ...DEFAULT_KEYBOARD_BINDINGS, front: 'a' } },
+    { keyboardBindings: { ...DEFAULT_KEYBOARD_BINDINGS, front: 'Escape' } },
+    { keyboardBindings: { front: 'x' } },
+  ])
+    assert.equal(settingsSchema.safeParse(invalid).success, false);
 });
 
 test('recognizes solved and scrambled physical cubes', () => {

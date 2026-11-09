@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .keyboard-key {
+    @apply inline-block min-w-[28px] rounded border border-solid border-accent bg-canvas px-2 py-1 text-center text-sm font-semibold text-on-canvas;
+  }
+  .disclosure-button {
+    @apply box-border w-full border-0 [font-family:inherit] [font-size:inherit];
+  }
+  .app-button {
+    @apply cursor-pointer rounded-md border border-solid border-accent bg-canvas px-3 py-2 text-sm text-on-canvas disabled:cursor-wait disabled:opacity-50;
+  }
+  .app-input {
+    @apply box-border block w-full rounded-md border border-solid border-gray-400 bg-white px-2 py-2 text-sm text-black;
+  }
+}
+
 body {
   margin: 0;
   font-family:
@@ -9,7 +24,7 @@ body {
     'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  @apply bg-canvas;
+  @apply bg-canvas text-ink;
 }
 
 code {
@@ -19,12 +34,24 @@ code {
 /* Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #d7fa19 #c2c2ae;
+  scrollbar-color: var(--primary-color) var(--white);
+}
+
+.generalConfigIcon img,
+.generalConfigClose img,
+.videoArrow {
+  filter: var(--canvas-icon-filter);
+}
+.configArrow,
+.iconConfig {
+  filter: var(--accent-icon-filter);
+}
+.pageImage {
+  filter: var(--ink-icon-filter);
 }
 
 /* Chrome, Edge and Safari */
 *::-webkit-scrollbar {
-  width: 10px;
   width: 10px;
 }
 *::-webkit-scrollbar-track {
@@ -42,20 +69,23 @@ code {
 
 *::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  background-color: #d7fa19;
+  background-color: var(--primary-color);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #d7fa19;
+  background-color: var(--primary-color);
 }
 
 *::-webkit-scrollbar-thumb:active {
-  background-color: #d7fa19;
+  background-color: var(--primary-color);
 }
 
 :root {
   --black: #151513;
-  --white: #f5f5f5;
+  --white: #242420;
+  --ink: #f5f5f5;
+  --on-canvas: #f5f5f5;
+  --on-accent: #151513;
   --primary-color: #d7fa19;
   --desktop: 'min-width: 661px';
   --mobile: 'max-width: 660px';

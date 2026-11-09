@@ -30,10 +30,50 @@ export const appearanceSchema = z.object({
   initialRotationZ: z.number().finite().default(0),
 });
 
+const keyboardKey = z.string().regex(/^(?:[a-z0-9]|Arrow(?:Left|Right|Up|Down))$/);
+export const DEFAULT_KEYBOARD_BINDINGS = {
+  front: 'w',
+  left: 'a',
+  back: 's',
+  right: 'd',
+  top: 'q',
+  bottom: 'e',
+  viewLeft: 'ArrowLeft',
+  viewRight: 'ArrowRight',
+  viewUp: 'ArrowUp',
+  viewDown: 'ArrowDown',
+};
+export const keyboardBindingsSchema = z
+  .object({
+    front: keyboardKey,
+    left: keyboardKey,
+    back: keyboardKey,
+    right: keyboardKey,
+    top: keyboardKey,
+    bottom: keyboardKey,
+    viewLeft: keyboardKey,
+    viewRight: keyboardKey,
+    viewUp: keyboardKey,
+    viewDown: keyboardKey,
+  })
+  .strict()
+  .refine(
+    bindings => new Set(Object.values(bindings)).size === 10,
+    'Cada comando deve usar uma tecla diferente.'
+  );
+
 export const settingsSchema = z.object({
   language: z.enum(['pt-BR', 'en-US']).default('pt-BR'),
   themePrimaryColor: color.default('#111827'),
   themeSecondaryColor: color.default('#f9fafb'),
+  themeMode: z.enum(['dark', 'light', 'custom']).default('dark'),
+  themeSurfaceColor: color.default('#242420'),
+  themeAccentColor: color.default('#d7fa19'),
+  keyboardBindings: z.preprocess(
+    value => value ?? DEFAULT_KEYBOARD_BINDINGS,
+    keyboardBindingsSchema
+  ),
+  hintsEnabled: z.boolean().default(false),
 });
 
 export const presetSchema = z.object({

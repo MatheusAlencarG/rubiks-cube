@@ -2,12 +2,21 @@
   @apply absolute right-[15px] top-[15px] w-[40px] cursor-pointer;
 }
 
+.generalConfigIcon,
+.generalConfigClose {
+  @apply border-0 bg-transparent p-0;
+}
+.generalConfigIcon img,
+.generalConfigClose img {
+  @apply block w-full;
+}
+
 .generalConfigPopup {
-  @apply fixed top-0 z-[2] hidden h-screen w-screen items-center justify-center bg-black/50;
+  @apply fixed top-0 z-50 hidden h-screen w-screen items-center justify-center bg-black/50;
 }
 
 .generalConfigContainer {
-  @apply relative h-1/2 w-1/2 overflow-auto rounded-[10px] border-2 border-solid border-accent bg-canvas text-center text-surface;
+  @apply relative h-1/2 w-1/2 overflow-auto rounded-[10px] border-2 border-solid border-accent bg-canvas text-center text-on-canvas;
 }
 
 .generalConfigPopup.active {
@@ -31,7 +40,7 @@
 }
 
 .languageConfigTitle {
-  @apply relative m-0 flex cursor-pointer items-center justify-center gap-[10px] rounded-[10px] bg-accent font-bold text-black;
+  @apply relative m-0 flex cursor-pointer items-center justify-center gap-[10px] rounded-[10px] bg-accent p-0 font-bold capitalize text-black;
 }
 
 .iconConfig {
@@ -56,6 +65,16 @@
 
 .languageConfigContent.active {
   @apply h-fit p-[15px];
+}
+
+.preferenceTitle {
+  @apply min-h-[45px];
+}
+.preferenceContent {
+  @apply h-0 overflow-hidden p-0 text-left normal-case;
+}
+.preferenceContent.active {
+  @apply h-auto p-[15px];
 }
 
 /* MOBILE */

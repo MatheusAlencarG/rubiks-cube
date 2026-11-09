@@ -4,13 +4,12 @@ import {
   PieceData,
   PieceStylesKeys,
   PieceDataKeys,
-  PieceColors,
   LinkedTransformOrigins,
   LinkedTransformOriginsKeys,
   PieceClass,
   PieceClassKeys,
   PieceClassValues,
-} from '../../../types';
+} from '../../../types/RubicksCube3x3';
 
 export class Piece {
   private id: number;
@@ -126,11 +125,11 @@ export class Piece {
     this.styles = styles;
   }
 
-  public getData(key: PieceDataKeys) {
+  public getData<Key extends PieceDataKeys>(key: Key): PieceData[Key] {
     return this.data[key];
   }
 
-  public setData(key: PieceDataKeys, value: string & PieceColors[]) {
+  public setData<Key extends PieceDataKeys>(key: Key, value: PieceData[Key]) {
     this.data[key] = value;
   }
 

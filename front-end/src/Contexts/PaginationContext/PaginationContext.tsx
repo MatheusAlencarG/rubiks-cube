@@ -1,56 +1,36 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { Context, INITIAL_STATE } from './Context';
-import { ChangePageStateProps, PaginationContextProps, PageSTate } from '../../types/index';
+import { Context } from './Context';
+import { useTutorials } from '../../api/hooks';
 
-function PaginationContext({ children }: PaginationContextProps) {
+function PaginationContext({ children }: { children: React.ReactNode }) {
   const location = useLocation();
-  const [pageState, setPageState] = useState<PageSTate>(INITIAL_STATE.pageState);
-
-  function prevPage() {
-    const newcurrentPageIndex = pageState.currentPageIndex - 1;
-
-    changePageState({ newcurrentPageIndex });
-  }
-
-  function nextPage() {
-    const newcurrentPageIndex = pageState.currentPageIndex + 1;
-
-    changePageState({ newcurrentPageIndex });
-  }
-
-  const changePageState = useCallback(({ newcurrentPageIndex }: ChangePageStateProps) => {
-    setPageState(previous => ({
-      ...previous,
-      currentPageIndex: newcurrentPageIndex,
-      nextPage: previous.listOfPages[newcurrentPageIndex + 1] ?? '',
-      prevPage: previous.listOfPages[newcurrentPageIndex - 1] ?? '',
-    }));
-  }, []);
-
+  const { data } = useTutorials();
+  const listOfPages = data?.map(item =>
+    item.kind === 'overview'
+      ? '/tutorial'
+      : item.kind === 'parts'
+        ? '/tutorial/parts'
+        : `/tutorial/step/${item.stepNumber}`
+  ) ?? ['/tutorial'];
+  const route = location.pathname === '/' ? '/tutorial' : location.pathname;
+  const lastTutorial = useRef('/tutorial');
   useEffect(() => {
-    const currentPage = pageState.listOfPages.find(page => page === window.location.pathname);
-
-    if (!currentPage) return;
-
-    const currentPageIndex = pageState.listOfPages.indexOf(currentPage);
-
-    changePageState({ newcurrentPageIndex: currentPageIndex });
-  }, [location, pageState.listOfPages, changePageState]);
-
-  return (
-    <Context.Provider
-      value={{
-        pageState,
-        prevPage,
-        nextPage,
-        changePageState,
-      }}
-    >
-      {children}
-    </Context.Provider>
+    if (route.startsWith('/tutorial')) lastTutorial.current = route;
+  }, [route]);
+  const currentPageIndex = Math.max(
+    0,
+    listOfPages.indexOf(route.startsWith('/tutorial') ? route : lastTutorial.current)
   );
+  const pageState = {
+    listOfPages,
+    currentPageIndex,
+    nextPage: listOfPages[currentPageIndex + 1] ?? '',
+    prevPage: listOfPages[currentPageIndex - 1] ?? '',
+  };
+
+  return <Context.Provider value={{ pageState }}>{children}</Context.Provider>;
 }
 
 export default PaginationContext;

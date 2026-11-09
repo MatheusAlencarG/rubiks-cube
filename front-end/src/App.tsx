@@ -1,29 +1,42 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import PageRender from './Components/PageRender';
 import MainTutorial from './Pages/Tutorial/MainTutorial';
-import RubicksCube from './Pages/RubiksCube3x3';
-import TutorialParts from './Pages/Tutorial/TutorialParts';
-import TutorialStep from './Pages/Tutorial/TutorialStep';
 import PageNotFound from './Pages/PageNotFound';
 
 import GeneralConfigContext from './Contexts/GeneralConfigContext/GeneralConfigContext';
+import AuthProvider from './Contexts/AuthContext';
+import { SWRConfig } from 'swr';
+import RubicksCube3x3Context from './Contexts/RubicksCubeContext/RubicksCube3x3Context';
+
+const RubicksCube = lazy(() => import('./Pages/RubiksCube3x3'));
+const TutorialParts = lazy(() => import('./Pages/Tutorial/TutorialParts'));
+const TutorialStep = lazy(() => import('./Pages/Tutorial/TutorialStep'));
+const swrConfig = { provider: () => new Map(), errorRetryCount: 1, revalidateOnFocus: false };
 
 function App() {
   return (
-    <GeneralConfigContext>
-      <Router>
-        <Routes>
-          <Route path="/" element={<PageRender page={<MainTutorial />} />} />
-          <Route path="/tutorial" element={<PageRender page={<MainTutorial />} />} />
-          <Route path="/tutorial/parts" element={<PageRender page={<TutorialParts />} />} />
-          <Route path="/tutorial/step/:id" element={<PageRender page={<TutorialStep />} />} />
-          <Route path="*" element={<PageNotFound />}></Route>
-          <Route path="/rubicksCube" element={<PageRender page={<RubicksCube />} />} />
-        </Routes>
-      </Router>
-    </GeneralConfigContext>
+    <SWRConfig value={swrConfig}>
+      <AuthProvider>
+        <GeneralConfigContext>
+          <RubicksCube3x3Context>
+            <Router>
+              <Routes>
+                <Route element={<PageRender />}>
+                  <Route index element={<MainTutorial />} />
+                  <Route path="tutorial" element={<MainTutorial />} />
+                  <Route path="tutorial/parts" element={<TutorialParts />} />
+                  <Route path="tutorial/step/:id" element={<TutorialStep />} />
+                  <Route path="rubicksCube" element={<RubicksCube />} />
+                </Route>
+                <Route path="*" element={<PageNotFound />}></Route>
+              </Routes>
+            </Router>
+          </RubicksCube3x3Context>
+        </GeneralConfigContext>
+      </AuthProvider>
+    </SWRConfig>
   );
 }
 

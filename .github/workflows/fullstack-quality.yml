@@ -1,0 +1,63 @@
+name: Frontend + Strapi integration
+on:
+  push:
+    paths: ['front-end/**', 'back-end/**', '.github/workflows/fullstack-quality.yml']
+  pull_request:
+    paths: ['front-end/**', 'back-end/**', '.github/workflows/fullstack-quality.yml']
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: rubiks_cube_frontend_test
+          MYSQL_USER: rubiks_test
+          MYSQL_PASSWORD: integration-only-password
+          MYSQL_ROOT_PASSWORD: integration-root-password
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=5s --health-timeout=5s --health-retries=30
+    env:
+      HUSKY: '0'
+      DATABASE_HOST: 127.0.0.1
+      DATABASE_PORT: '3306'
+      DATABASE_NAME: rubiks_cube_frontend_test
+      DATABASE_USERNAME: rubiks_test
+      DATABASE_PASSWORD: integration-only-password
+      DATABASE_SSL: 'false'
+      STRAPI_TELEMETRY_DISABLED: 'true'
+      REACT_APP_STRAPI_URL: http://127.0.0.1:1340
+      STRAPI_E2E_URL: http://127.0.0.1:1340
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            front-end/package-lock.json
+            back-end/package-lock.json
+      - run: npm ci --prefix back-end
+      - run: npm ci --prefix front-end
+      - run: npm --prefix front-end run build
+      - run: npx playwright install --with-deps chromium
+        working-directory: front-end
+      - name: Start isolated Strapi and import tutorials
+        working-directory: back-end
+        run: |
+          npm run test:serve > /tmp/rubiks-strapi.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if grep -q 'FULLSTACK TEST READY' /tmp/rubiks-strapi.log; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/rubiks-strapi.log
+          exit 1
+      - run: npm run test:e2e
+        working-directory: front-end
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: fullstack-test-results
+          path: front-end/test-results

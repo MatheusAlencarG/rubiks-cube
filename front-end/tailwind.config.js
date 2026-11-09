@@ -9,6 +9,9 @@ module.exports = {
         canvas: 'var(--black)',
         surface: 'var(--white)',
         accent: 'var(--primary-color)',
+        ink: 'var(--ink)',
+        'on-canvas': 'var(--on-canvas)',
+        'on-accent': 'var(--on-accent)',
       },
       screens: {
         'short-screen': { raw: '(max-height: 800px)' },

@@ -13,6 +13,7 @@
     "seed": "node scripts/seed.mjs",
     "test": "tsx --test tests/contracts.test.ts tests/setup-env.test.cjs",
     "test:integration": "node --test --test-concurrency=1 tests/integration.test.cjs",
+    "test:serve": "node scripts/test-server.cjs",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

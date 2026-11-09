@@ -23,6 +23,12 @@ Enum tutorial_kind {
   step
 }
 
+Enum theme_mode {
+  dark
+  light
+  custom
+}
+
 // ------------------------------------
 // Recursos nativos do Strapi
 // ------------------------------------
@@ -85,6 +91,11 @@ Table user_settings {
 
   theme_primary_color varchar(7) [not null, default: '#111827']
   theme_secondary_color varchar(7) [not null, default: '#f9fafb']
+  theme_mode theme_mode [not null, default: 'dark']
+  theme_surface_color varchar(7) [not null, default: '#242420']
+  theme_accent_color varchar(7) [not null, default: '#d7fa19']
+  keyboard_bindings json
+  hints_enabled boolean [not null, default: false]
 
   created_at datetime [not null]
   updated_at datetime [not null]

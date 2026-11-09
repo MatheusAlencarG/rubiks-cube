@@ -38,7 +38,7 @@
 }
 
 .tutorialPartsContainer .partDescription {
-  @apply m-0 flex h-[61px] items-center p-[5px] text-[13px] text-surface opacity-0;
+  @apply m-0 flex h-[61px] items-center p-[5px] text-[13px] text-on-canvas opacity-0;
 }
 
 .tutorialPartsContainer .partContainer.swiper-slide-active .partDescription {

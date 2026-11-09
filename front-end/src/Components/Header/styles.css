@@ -1,11 +1,15 @@
+.headerContainer {
+  @apply box-border gap-2 p-2;
+}
+.headerLinkContainer {
+  @apply flex-1 rounded-[10px] border border-solid border-transparent text-[17px] font-medium transition-colors duration-150 mobile:text-[16px];
+}
 .headerLinkContainer.active {
-  @apply border-solid border-accent bg-canvas text-accent;
+  @apply border-accent bg-accent text-[19px] font-bold text-on-accent mobile:text-[18px];
 }
-
-.headerLinkContainer.tutorial.active {
-  @apply rounded-[13px_0] border-b-2 border-l-0 border-r-2 border-t-0;
+.headerLinkContainer:hover {
+  @apply border-accent;
 }
-
-.headerLinkContainer.rubick.active {
-  @apply rounded-[0_13px] border-b-2 border-l-2 border-r-0 border-t-0;
+.headerLinkContainer:focus-visible {
+  @apply outline outline-2 outline-offset-2 outline-accent;
 }

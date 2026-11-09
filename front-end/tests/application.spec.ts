@@ -1,6 +1,8 @@
 import { expect, test, Page } from '@playwright/test';
+import { mockStrapi } from './fixtures/strapi';
 
 test.beforeEach(async ({ page }) => {
+  await mockStrapi(page);
   // Embedded third-party videos must not make the application's tests depend on YouTube.
   await page.route(/https:\/\/(?:www\.)?youtube\.com\//, route => route.abort());
 });
@@ -10,10 +12,7 @@ test('preserves the layout, theme and tutorial routes', async ({ page }) => {
     await page.goto(route);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('projeto do cubo mágico');
     await expect(page.getByRole('heading', { level: 2 }).first()).toBeVisible();
-    await expect(page.locator('.pageContainer')).toHaveCSS(
-      'background-color',
-      'rgb(245, 245, 245)'
-    );
+    await expect(page.locator('.pageContainer')).toHaveCSS('background-color', 'rgb(36, 36, 32)');
     await expect(page.locator('.pageContainer')).toHaveCSS('border-top-color', 'rgb(215, 250, 25)');
     await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(21, 21, 19)');
   }
@@ -23,7 +22,7 @@ test('opens settings, switches language and closes the popup', async ({ page }) 
   await page.goto('/tutorial');
   await page.getByAltText('Config Icon', { exact: true }).click();
   await expect(page.locator('.generalConfigPopup')).toBeVisible();
-  await page.locator('.languageConfigTitle').click();
+  await page.getByRole('button', { name: /idiomas/ }).click();
   await page.getByLabel('English', { exact: true }).check();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText("rubick's cube project");
   await page.getByAltText('Close Config Popup', { exact: true }).click();
@@ -44,6 +43,44 @@ test('navigates forward and backward through the tutorial', async ({ page }) => 
     .filter({ has: page.getByAltText('Prev Arrow') })
     .click();
   await expect(page).toHaveURL(/\/tutorial$/);
+});
+
+test('remembers the current tutorial when switching to the cube and back', async ({ page }) => {
+  await page.goto('/tutorial/step/4');
+  await expect(page.locator('.tutorialStepDescription h2')).toBeVisible();
+  await page.getByRole('link', { name: 'cubo mágico', exact: true }).click();
+  await expect(page.locator('.cube')).toBeVisible();
+  await page.getByRole('link', { name: 'tutorial', exact: true }).click();
+  await expect(page).toHaveURL(/\/tutorial\/step\/4$/);
+  await expect(page.locator('.tutorialStepDescription h2')).toBeVisible();
+});
+
+test('supports keyboard settings and responsive carousels', async ({ page }) => {
+  await page.goto('/tutorial/parts');
+  const settings = page.getByRole('button', { name: 'configurações', exact: true });
+  await settings.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  const languages = page.getByRole('button', { name: /idiomas/ });
+  await languages.focus();
+  await page.keyboard.press('Space');
+  await expect(languages).toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect(settings).toBeFocused();
+  const slidesPerView = () =>
+    page
+      .locator('.swiper-container')
+      .evaluate(
+        element =>
+          (element as HTMLElement & { swiper: { params: { slidesPerView: number } } }).swiper.params
+            .slidesPerView
+      );
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await expect.poll(slidesPerView).toBe(3);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect.poll(slidesPerView).toBe(1);
+  await expect(page.locator('.swiper-container')).toBeVisible();
 });
 
 test('preserves the carousel and video disclosure', async ({ page }) => {

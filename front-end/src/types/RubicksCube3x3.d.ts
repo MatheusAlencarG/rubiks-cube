@@ -1,7 +1,7 @@
-import { Piece } from '../Contexts/RubicksCube3x3Context/RucksCube3x3/Piece';
+import { Piece } from '../Contexts/RubicksCubeContext/RucksCube3x3/Piece';
 
 interface RubicksCube3x3Constructor {
-  colors: Colors;
+  colors: RubicksCube3x3Colors;
   styles: RubicksCube3x3Styles;
   piece?: Piece;
   rotateAxle: RubicksCube3x3RotateAxle;
@@ -112,7 +112,7 @@ interface LinkedTransformOrigins {
 
 interface SetPieceValueOnTimeoutProps {
   currentPiece: Piece;
-  nextCacheColors: string & PieceColors[];
+  nextCacheColors: PieceColors[];
   shiftPressed: boolean;
   faceInverted?: boolean;
   rotateAxle: PieceStylesKeys;
@@ -163,7 +163,7 @@ type LinkedTransformOriginsKeys =
   | 'bottomY'
   | 'bottomZ';
 
-type PieceClassValues = 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom';
+type PieceClassValues = 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom' | 'none';
 type PieceColors = 'red' | 'blue' | 'yellow' | 'white' | 'orange' | 'green';
 type RotateAxleValues = 'x' | 'y' | 'z';
 

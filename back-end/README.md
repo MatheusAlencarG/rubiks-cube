@@ -71,7 +71,11 @@ Dois detalhes de implementação preservam as regras do diagrama:
 - `cubeType` mantém o valor `3x3` como string validada no backend, porque enums do Strapi não aceitam valores começando por número.
 - `user-setting` possui `ownerKey`, um atributo interno, privado e único, derivado do usuário. Ele reforça a unicidade mesmo em criações concorrentes; não é aceito do cliente nem retornado pela API.
 
-Os idiomas configurados são `pt-BR` e `en-US`, com português como padrão na primeira inicialização. O frontend atual usa chaves locais `pt-br` e `en-us`; a futura integração deverá fazer essa correspondência.
+Os idiomas configurados são `pt-BR` e `en-US`, com português como padrão na primeira inicialização. O frontend converte suas chaves locais `pt-br` e `en-us` para esses valores ao consultar conteúdo e sincronizar preferências.
+
+`user-setting` também guarda `themeMode` (`dark`, `light`, `custom`), `themeSurfaceColor`, `themeAccentColor`, `keyboardBindings` e `hintsEnabled`. No tema personalizado, `themePrimaryColor` representa o fundo da página, `themeSecondaryColor` o texto, `themeSurfaceColor` os painéis e `themeAccentColor` o destaque. Nos modos escuro e claro, o React aplica as paletas predefinidas e preserva a última paleta personalizada.
+
+`keyboardBindings` usa as chaves `front`, `left`, `back`, `right`, `top`, `bottom`, `viewLeft`, `viewRight`, `viewUp` e `viewDown`. Os valores aceitam letras minúsculas, números ou `ArrowLeft`, `ArrowRight`, `ArrowUp`, `ArrowDown`, sem repetições. `hintsEnabled` é somente uma preferência para o futuro sistema de dicas, desativada por padrão. Atualizações parciais preservam os demais campos.
 
 ## Autenticação e permissões
 
@@ -146,7 +150,7 @@ O campo `engineVersion` deve ser `cubejs-1.3.2`. Os movimentos são canônicos (
 - Quando `preset` é informado na criação, o servidor copia sua aparência para `appearanceSnapshot`. Sem preset, informe `appearanceSnapshot` diretamente; um objeto vazio aplica os padrões.
 - Alterar ou excluir um preset não altera snapshots anteriores. A exclusão remove as referências ao preset, preservando os registros históricos.
 
-O backend valida consistência do replay, mas a duração continua sendo informada pelo cliente. Isso não constitui, por si só, um mecanismo antitrapaça para rankings competitivos. A interface atual do cubo ainda precisa de um adaptador para serializar seus dados nesse contrato e consumir as rotas privadas.
+O backend valida consistência do replay, mas a duração continua sendo informada pelo cliente. Isso não constitui, por si só, um mecanismo antitrapaça para rankings competitivos. O frontend serializa os movimentos e estados nesse contrato e reconstrói a aparência visual ao retomar uma partida.
 
 ## Importar os tutoriais existentes
 
@@ -158,9 +162,11 @@ npm run seed
 
 A importação lê os JSONs e imagens de `front-end`, cria os documentos traduzidos, envia as imagens à Media Library e publica o conteúdo. Cada idioma do mesmo tutorial compartilha o `documentId`. O comando é idempotente e preserva entradas que já possuem os slugs de importação; ele não é executado automaticamente a cada inicialização.
 
+O seed atualiza a descrição antiga e padronizada dos comandos para um texto compatível com atalhos personalizados. Isso só ocorre se o texto corresponder exatamente ao importado originalmente e as versões de rascunho e publicação forem iguais, sem partes ou vídeos adicionais. Conteúdo personalizado e rascunhos em edição são preservados.
+
 Execute o seed a partir deste repositório completo. Para uma hospedagem que contém somente a pasta do backend, importe localmente e use as ferramentas de transferência do Strapi para levar o conteúdo ao destino.
 
-O React continua usando seus JSONs locais nesta etapa. A migração das telas para consumir a Content API é uma tarefa separada, sem alteração do visual ou dos controles atuais.
+O React consome a Content API para tutoriais e dados pessoais. Os JSONs locais são mantidos como fonte do seed e fixtures dos testes. Consulte o [guia do frontend](../front-end/README.md) para configurar a URL, autenticação e persistência do cubo.
 
 ## Qualidade e testes
 

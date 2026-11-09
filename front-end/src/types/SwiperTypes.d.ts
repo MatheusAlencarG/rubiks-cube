@@ -1,4 +1,5 @@
 export interface SwiperParams {
+  breakpoints?: Record<number, { slidesPerView: number }>;
   effect: 'coverflow' | 'slide' | 'fade' | 'cube' | 'flip' | 'creative' | 'cards' | undefined;
   grabCursor: boolean;
   centeredSlides: boolean;

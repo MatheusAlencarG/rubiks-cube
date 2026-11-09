@@ -173,6 +173,64 @@ describe('Strapi + MySQL integration', { timeout: 180000 }, () => {
     );
   });
 
+  it('stores theme, keyboard and hints preferences without losing them on partial updates', async () => {
+    const keyboardBindings = {
+      front: 'x',
+      left: 'a',
+      back: 's',
+      right: 'd',
+      top: 'q',
+      bottom: 'e',
+      viewLeft: 'ArrowLeft',
+      viewRight: 'ArrowRight',
+      viewUp: 'ArrowUp',
+      viewDown: 'ArrowDown',
+    };
+    const saved = success(
+      await request(`/api/user-settings/${settings.documentId}`, {
+        method: 'PUT',
+        token: alice.token,
+        data: {
+          themeMode: 'custom',
+          themePrimaryColor: '#123456',
+          themeSurfaceColor: '#234567',
+          themeSecondaryColor: '#ffffff',
+          themeAccentColor: '#abcdef',
+          keyboardBindings,
+          hintsEnabled: true,
+        },
+      })
+    );
+    assert.equal(saved.hintsEnabled, true);
+    assert.deepEqual(saved.keyboardBindings, keyboardBindings);
+    const partial = success(
+      await request(`/api/user-settings/${settings.documentId}`, {
+        method: 'PUT',
+        token: alice.token,
+        data: { language: 'en-US' },
+      })
+    );
+    assert.equal(partial.themeMode, 'custom');
+    assert.equal(partial.themeSurfaceColor, '#234567');
+    assert.equal(partial.themeAccentColor, '#abcdef');
+    assert.equal(partial.hintsEnabled, true);
+    assert.deepEqual(partial.keyboardBindings, keyboardBindings);
+    assert.equal(
+      (
+        await request(`/api/user-settings/${settings.documentId}`, {
+          method: 'PUT',
+          token: alice.token,
+          data: { keyboardBindings: { ...keyboardBindings, front: 'a' } },
+        })
+      ).status,
+      400
+    );
+    assert.equal(
+      (await request(`/api/user-settings/${settings.documentId}`, { token: bob.token })).status,
+      404
+    );
+  });
+
   it('copies immutable attempt snapshots from the preset and checks the replay', async () => {
     const data = {
       preset: preset.documentId,
@@ -352,5 +410,43 @@ describe('Strapi + MySQL integration', { timeout: 180000 }, () => {
     assert.equal(portuguese.documentId, english.documentId);
     assert.ok(portuguese.parts[0].image.url.startsWith('/uploads/'));
     assert.equal(portuguese.videos.length, 2);
+  });
+
+  it('updates only unchanged legacy control descriptions and preserves CMS edits', async () => {
+    const { seedTutorials } = require('../dist/src/lib/seed-tutorials.js');
+    const documents = app.documents('api::tutorial.tutorial');
+    const overview = await documents.findFirst({
+      locale: 'pt-BR',
+      filters: { slug: 'overview-pt-br' },
+    });
+    const legacy =
+      'Use W, A, S, D, Q e E para mover as faces do cubo. Segure Shift para os movimentos inversos. Use as setas para girar a visualização do cubo.';
+    await documents.update({
+      documentId: overview.documentId,
+      locale: 'pt-BR',
+      status: 'published',
+      data: { description: legacy },
+    });
+    const migrated = await seedTutorials(app, path.resolve(__dirname, '../..'));
+    assert.equal(migrated.updated, 1);
+    const published = await documents.findOne({
+      documentId: overview.documentId,
+      locale: 'pt-BR',
+      status: 'published',
+    });
+    assert.ok(published.description.includes('comandos atuais'));
+    await documents.update({
+      documentId: overview.documentId,
+      locale: 'pt-BR',
+      status: 'published',
+      data: { description: 'Conteúdo editado no CMS' },
+    });
+    assert.equal((await seedTutorials(app, path.resolve(__dirname, '../..'))).updated, 0);
+    await documents.update({
+      documentId: overview.documentId,
+      locale: 'pt-BR',
+      status: 'published',
+      data: { description: published.description },
+    });
   });
 });

@@ -56,14 +56,6 @@
   @apply w-[160px];
 }
 
-.tutorialStepContainer .videos {
-  @apply text-center;
-}
-
-.tutorialStepContainer .videos a {
-  @apply p-[3px];
-}
-
 .tutorialStepContainer .partId {
   @apply absolute bottom-[8px] right-[10px] rounded-[10px] border-2 border-solid border-accent bg-canvas p-[3px] text-accent;
 }
@@ -90,7 +82,7 @@
 }
 
 .videosTitle {
-  @apply relative m-0 cursor-pointer rounded-[15px] px-0 py-[15px] text-center text-accent;
+  @apply relative m-0 cursor-pointer rounded-[15px] bg-canvas px-0 py-[15px] text-center text-accent;
 }
 
 .videoArrow {

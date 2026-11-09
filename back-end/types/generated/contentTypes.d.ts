@@ -679,6 +679,10 @@ export interface ApiUserSettingUserSetting extends Struct.CollectionTypeSchema {
     activePreset: Schema.Attribute.Relation<'manyToOne', 'api::cube-preset.cube-preset'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
+    hintsEnabled: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    keyboardBindings: Schema.Attribute.JSON;
     language: Schema.Attribute.Enumeration<['pt-BR', 'en-US']> &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'pt-BR'>;
@@ -693,6 +697,16 @@ export interface ApiUserSettingUserSetting extends Struct.CollectionTypeSchema {
         maxLength: 64;
       }>;
     publishedAt: Schema.Attribute.DateTime;
+    themeAccentColor: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 7;
+        minLength: 7;
+      }> &
+      Schema.Attribute.DefaultTo<'#d7fa19'>;
+    themeMode: Schema.Attribute.Enumeration<['dark', 'light', 'custom']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'dark'>;
     themePrimaryColor: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
@@ -707,6 +721,13 @@ export interface ApiUserSettingUserSetting extends Struct.CollectionTypeSchema {
         minLength: 7;
       }> &
       Schema.Attribute.DefaultTo<'#f9fafb'>;
+    themeSurfaceColor: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 7;
+        minLength: 7;
+      }> &
+      Schema.Attribute.DefaultTo<'#242420'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> & Schema.Attribute.Private;
     user: Schema.Attribute.Relation<'oneToOne', 'plugin::users-permissions.user'> &

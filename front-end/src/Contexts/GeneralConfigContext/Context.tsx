@@ -1,5 +1,10 @@
 import { createContext } from 'react';
-import { Initial_State_Language, Context_Language, CurrentLanguageValues } from '../../types/index';
+import { DEFAULT_UI } from '../../preferences';
+import {
+  Initial_State_Language,
+  Context_Language,
+  CurrentLanguageValues,
+} from '../../types/GeneralConfigContext';
 
 const allLanguages: Initial_State_Language = {
   'en-us': {
@@ -73,6 +78,13 @@ const allLanguages: Initial_State_Language = {
 };
 
 export const INITIAL_STATE: Context_Language = {
+  preferences: {
+    loading: false,
+    error: '',
+    ui: DEFAULT_UI,
+    update: () => {},
+    save: async () => {},
+  },
   language: {
     currentLanguage: 'pt-br',
     allLanguages,

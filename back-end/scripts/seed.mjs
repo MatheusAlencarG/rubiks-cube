@@ -11,7 +11,7 @@ try {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
   const result = await seedTutorials(app, root);
   console.log(
-    `Importação concluída: ${result.created} traduções novas; ${result.images} imagens utilizadas.`
+    `Importação concluída: ${result.created} traduções novas; ${result.images} imagens utilizadas; ${result.updated} textos de comandos atualizados.`
   );
 } finally {
   await app.destroy();

@@ -1,58 +1,33 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext } from 'react';
 import './styles.css';
-
 import { Link, useLocation } from 'react-router-dom';
 import { Context } from '../../Contexts/PaginationContext/Context';
-import { Context as GeneralConfigContext } from '../../Contexts/GeneralConfigContext/Context';
+import { Context as LanguageContext } from '../../Contexts/GeneralConfigContext/Context';
 
+const linkClass = 'headerLinkContainer bg-surface text-center capitalize text-ink no-underline';
 function Header() {
   const { pageState } = useContext(Context);
-  const { allLanguages, currentLanguage } = useContext(GeneralConfigContext).language;
-  const [tutorialLink, setTutorialLink] = useState<string>();
-  const tutorialRef = useRef<HTMLDivElement>(null);
-  const rubickRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
+  const { allLanguages, currentLanguage } = useContext(LanguageContext).language;
+  const { pathname } = useLocation();
+  const cubeActive = pathname === '/rubicksCube';
   const { tabOne, tabTwo } = allLanguages[currentLanguage].global;
-
-  function detectPage() {
-    const tutorialParent = tutorialRef.current?.parentNode as Element;
-    const rubickParent = rubickRef.current?.parentNode as Element;
-    const pathName = window.location.pathname;
-
-    if (pathName.includes('tutorial')) {
-      tutorialParent?.classList.add('active');
-      rubickParent?.classList.remove('active');
-    } else if (pathName === '/rubicksCube') {
-      rubickParent?.classList.add('active');
-      tutorialParent?.classList.remove('active');
-    }
-  }
-
-  useEffect(() => {
-    detectPage();
-    setTutorialLink(pageState.listOfPages[pageState.currentPageIndex]);
-  }, [location, pageState.currentPageIndex, pageState.listOfPages]);
-
   return (
     <div className="headerContainer z-[1] flex w-full">
       <Link
-        className="headerLinkContainer tutorial active w-[-webkit-fill-available] rounded-[13px] bg-surface text-center capitalize text-canvas no-underline"
-        to={tutorialLink ?? '/tutorial'}
+        className={`${linkClass} tutorial ${cubeActive ? '' : 'active'}`}
+        to={pageState.listOfPages[pageState.currentPageIndex] ?? '/tutorial'}
+        aria-current={cubeActive ? undefined : 'page'}
       >
-        <div ref={tutorialRef} className="py-[13px]">
-          {tabOne}
-        </div>
+        <div className="py-[13px]">{tabOne}</div>
       </Link>
       <Link
-        className="headerLinkContainer rubick w-[-webkit-fill-available] rounded-[13px] bg-surface text-center capitalize text-canvas no-underline"
+        className={`${linkClass} rubick ${cubeActive ? 'active' : ''}`}
         to="/rubicksCube"
+        aria-current={cubeActive ? 'page' : undefined}
       >
-        <div ref={rubickRef} className="py-[13px]">
-          {tabTwo}
-        </div>
+        <div className="py-[13px]">{tabTwo}</div>
       </Link>
     </div>
   );
 }
-
 export default Header;

@@ -9,7 +9,7 @@ import {
   RotateAxleValues,
   PieceColors,
   SetPieceValueOnTimeoutProps,
-} from '../../../types';
+} from '../../../types/RubicksCube3x3';
 
 import { Piece } from './Piece';
 
@@ -18,6 +18,11 @@ export class RubicksCube3x3 {
   private styles: RubicksCube3x3Styles;
   private rotateAxle: RubicksCube3x3RotateAxle;
   private pieces: Piece[];
+  private animationMs = 500;
+
+  public setAnimationMs(value: number) {
+    this.animationMs = value;
+  }
 
   constructor({
     colors: { frontColor, backColor, leftColor, rightColor, topColor, bottomColor },
@@ -106,9 +111,9 @@ export class RubicksCube3x3 {
       });
       const nextCacheColors = cachePieceColor.find(
         cacheColor => cacheColor.id === nextPiece?.getId()
-      )?.colors as string & PieceColors[];
+      )?.colors as PieceColors[];
 
-      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transition', this.animationMs / 1000);
       currentPiece.setStyle('transformOriginX', backX);
       currentPiece.setStyle('transformOriginY', backY);
       currentPiece.setStyle('transformOriginZ', backZ);
@@ -147,7 +152,7 @@ export class RubicksCube3x3 {
           rotateAxle: 'pieceRotateZ',
           pieceRotateAxle: 'rotateZ',
         });
-      }, 500);
+      }, this.animationMs);
     });
   }
 
@@ -185,9 +190,9 @@ export class RubicksCube3x3 {
       });
       const nextCacheColors = cachePieceColor.find(
         cacheColor => cacheColor.id === nextPiece?.getId()
-      )?.colors as string & PieceColors[];
+      )?.colors as PieceColors[];
 
-      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transition', this.animationMs / 1000);
       currentPiece.setStyle('transformOriginX', leftX);
       currentPiece.setStyle('transformOriginY', leftY);
       currentPiece.setStyle('transformOriginZ', leftZ);
@@ -226,7 +231,7 @@ export class RubicksCube3x3 {
           rotateAxle: 'pieceRotateX',
           pieceRotateAxle: 'rotateX',
         });
-      }, 500);
+      }, this.animationMs);
     });
   }
 
@@ -264,9 +269,9 @@ export class RubicksCube3x3 {
       });
       const nextCacheColors = cachePieceColor.find(
         cacheColor => cacheColor.id === nextPiece?.getId()
-      )?.colors as string & PieceColors[];
+      )?.colors as PieceColors[];
 
-      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transition', this.animationMs / 1000);
       currentPiece.setStyle('transformOriginX', topX);
       currentPiece.setStyle('transformOriginY', topY);
       currentPiece.setStyle('transformOriginZ', topZ);
@@ -305,7 +310,7 @@ export class RubicksCube3x3 {
           rotateAxle: 'pieceRotateY',
           pieceRotateAxle: 'rotateY',
         });
-      }, 500);
+      }, this.animationMs);
     });
   }
 
@@ -343,9 +348,9 @@ export class RubicksCube3x3 {
       });
       const nextCacheColors = cachePieceColor.find(
         cacheColor => cacheColor.id === nextPiece?.getId()
-      )?.colors as string & PieceColors[];
+      )?.colors as PieceColors[];
 
-      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transition', this.animationMs / 1000);
       currentPiece.setStyle('transformOriginX', frontX);
       currentPiece.setStyle('transformOriginY', frontY);
       currentPiece.setStyle('transformOriginZ', frontZ);
@@ -382,7 +387,7 @@ export class RubicksCube3x3 {
           rotateAxle: 'pieceRotateZ',
           pieceRotateAxle: 'rotateZ',
         });
-      }, 500);
+      }, this.animationMs);
     });
   }
 
@@ -420,9 +425,9 @@ export class RubicksCube3x3 {
       });
       const nextCacheColors = cachePieceColor.find(
         cacheColor => cacheColor.id === nextPiece?.getId()
-      )?.colors as string & PieceColors[];
+      )?.colors as PieceColors[];
 
-      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transition', this.animationMs / 1000);
       currentPiece.setStyle('transformOriginX', bottomX);
       currentPiece.setStyle('transformOriginY', bottomY);
       currentPiece.setStyle('transformOriginZ', bottomZ);
@@ -459,7 +464,7 @@ export class RubicksCube3x3 {
           rotateAxle: 'pieceRotateY',
           pieceRotateAxle: 'rotateY',
         });
-      }, 500);
+      }, this.animationMs);
     });
   }
 
@@ -497,9 +502,9 @@ export class RubicksCube3x3 {
       });
       const nextCacheColors = cachePieceColor.find(
         cacheColor => cacheColor.id === nextPiece?.getId()
-      )?.colors as string & PieceColors[];
+      )?.colors as PieceColors[];
 
-      currentPiece.setStyle('transition', 0.5);
+      currentPiece.setStyle('transition', this.animationMs / 1000);
       currentPiece.setStyle('transformOriginX', rightX);
       currentPiece.setStyle('transformOriginY', rightY);
       currentPiece.setStyle('transformOriginZ', rightZ);
@@ -536,7 +541,7 @@ export class RubicksCube3x3 {
           rotateAxle: 'pieceRotateX',
           pieceRotateAxle: 'rotateX',
         });
-      }, 500);
+      }, this.animationMs);
     });
   }
 

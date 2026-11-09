@@ -1,42 +1,11 @@
-import { Piece } from '../Contexts/RubicksCubeContext/RucksCube3x3/Piece';
-
-export interface CubeProps {
-  widthCustom: number;
-  heightCustom: number;
-  rotateX: number;
-  rotateY: number;
-  rotateZ: number;
-  transition: number;
-}
-
-export interface PieceFaceProps {
-  widthCustom: number;
-  heightCustom: number;
-  translateX?: number;
-  translateY?: number;
-  translateZ: number;
-  pieceRadius: number;
-}
-
+import type { Piece } from '../Contexts/RubicksCubeContext/RucksCube3x3/Piece';
+import type { PieceClassValues } from './RubicksCube3x3';
 export interface RenderPieceFaceProps {
-  pieceFaceType: 'front' | 'back' | 'right' | 'left' | 'top' | 'bottom';
+  pieceFaceType: PieceClassValues;
   piece: Piece;
   rotateX?: number;
   rotateY?: number;
   translateX?: number;
   translateY?: number;
   translateZ?: number;
-}
-
-export interface PieceContainerProps {
-  pieceRotateX: number;
-  pieceRotateY: number;
-  pieceRotateZ: number;
-  topFaceColor: string;
-  bottomFaceColor: string;
-  leftFaceColor: string;
-  rightFaceColor: string;
-  frontFaceColor: string;
-  backFaceColor: string;
-  transition: number;
 }
