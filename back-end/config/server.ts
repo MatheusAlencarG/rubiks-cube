@@ -3,5 +3,6 @@ export default ({ env }) => ({
   port: env.int('PORT', 1337),
   url: env('PUBLIC_URL', 'http://localhost:1337'),
   app: { keys: env.array('APP_KEYS') },
+  localPasswordReset: env.bool('LOCAL_PASSWORD_RESET', true),
   proxy: { koa: env.bool('IS_PROXIED', false) },
 });

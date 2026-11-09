@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 import Header from '../Header';
 import Footer from '../Footer';
+import Account from '../Account';
 import GeneralConfigs from '../GeneralConfigs';
 import PaginationContext from '../../Contexts/PaginationContext/PaginationContext';
 import { Context } from '../../Contexts/GeneralConfigContext/Context';
@@ -13,6 +14,7 @@ function PageRender() {
 
   return (
     <div className="pageRender relative flex h-screen w-screen flex-col items-center justify-center compact-screen:h-auto compact-screen:w-auto">
+      <Account />
       <GeneralConfigs />
       <h1 className="projectTitle text-center font-normal capitalize text-on-canvas mobile:mt-[55px]">
         {projectTitle}

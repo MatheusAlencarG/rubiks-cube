@@ -24,7 +24,9 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   await page.route(/https:\/\/(?:www\.)?youtube\.com\//, route => route.abort());
   await page.goto('/tutorial');
   await expect(page.getByRole('heading', { name: 'Comandos do Jogo' })).toBeVisible();
-  await page.getByAltText('Config Icon', { exact: true }).click();
+  const accountButton = page.getByRole('button', { name: /^(Conta|Account)$/ });
+  const accountDialog = page.getByRole('dialog', { name: /^(Conta|Account)$/ });
+  await accountButton.click();
   await page.getByRole('button', { name: 'Cadastrar', exact: true }).click();
   await page.getByLabel('Nome de usuário', { exact: true }).fill(username);
   await page.getByLabel('E-mail', { exact: true }).fill(email);
@@ -35,7 +37,10 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   await page.getByRole('button', { name: 'Criar conta', exact: true }).click();
   const auth = await (await registration).json();
   expect(auth.jwt).toBeTruthy();
-  await expect(page.getByText(username, { exact: true })).toBeVisible();
+  await expect(accountDialog.getByText(username, { exact: true })).toBeVisible();
+  await expect(accountDialog.getByText(email, { exact: true })).toBeVisible();
+  await accountDialog.getByRole('button', { name: 'Fechar conta' }).click();
+  await page.getByRole('button', { name: /^(configurações|configurations)$/i }).click();
   await page.getByRole('button', { name: /idiomas/ }).click();
   const preferences = page.waitForResponse(
     response =>
@@ -43,7 +48,7 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   );
   await page.getByLabel('English', { exact: true }).check();
   expect((await preferences).status()).toBe(201);
-  await page.getByAltText('Close Config Popup', { exact: true }).click();
+  await page.getByRole('button', { name: /^(fechar configurações|close settings)$/i }).click();
 
   await page.goto('/rubicksCube');
   await expect(page.getByRole('button', { name: 'Save game', exact: true })).toBeEnabled();
@@ -66,6 +71,13 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   await page.getByRole('button', { name: 'Resume', exact: true }).click();
   await expect(page.getByLabel('Game controls')).toContainText('1 moves');
   expect(await colors(page)).toEqual(savedColors);
+
+  const gamesTable = page.getByRole('table', { name: 'Saved games' });
+  await gamesTable.getByRole('button', { name: 'Rename', exact: true }).click();
+  await gamesTable.getByRole('textbox', { name: 'Game name' }).fill('Practice replay');
+  await gamesTable.getByRole('button', { name: 'Save name' }).click();
+  await expect(gamesTable.getByRole('rowheader', { name: 'Practice replay' })).toBeVisible();
+
   await page.getByText('Games and appearance', { exact: true }).click();
   await blur(page);
   await page.keyboard.press('Shift+W');
@@ -76,7 +88,9 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
       response.request().method() === 'PUT'
   );
   await page.getByRole('button', { name: 'Save game', exact: true }).click();
-  expect((await updated).status()).toBe(200);
+  const updatedGame = await updated;
+  expect(updatedGame.status()).toBe(200);
+  expect((await updatedGame.json()).data.name).toBe('Practice replay');
   await page.getByText('Games and appearance', { exact: true }).click();
   const attemptResponse = page.waitForResponse(
     response =>
@@ -90,13 +104,18 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
 
   await page.getByLabel('Preset name', { exact: true }).fill('My cloud preset');
   await page.locator('input[name="frontColor"]').fill('#123456');
+  await page.getByLabel('Cube size (px)', { exact: true }).fill('300');
   await page.getByLabel('Animation (ms)', { exact: true }).fill('0');
+  await expect(
+    page.locator('input[name="pieceRadiusPx"], input[name="initialRotationX"]')
+  ).toHaveCount(0);
   const presetResponse = page.waitForResponse(
     response =>
       response.url().endsWith('/api/cube-presets') && response.request().method() === 'POST'
   );
   await page.getByRole('button', { name: 'Create preset', exact: true }).click();
   const preset = (await (await presetResponse).json()).data;
+  expect(preset.appearance).toMatchObject({ widthPx: 300, pieceRadiusPx: 25, transitionMs: 0 });
   await expect(
     page.getByRole('combobox', { name: 'Active preset (starts a new game)', exact: true })
   ).toHaveValue(preset.documentId);
@@ -124,10 +143,23 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   await page.getByRole('button', { name: 'Save game', exact: true }).click();
   const retained = (await (await retainedResponse).json()).data;
   await expect(page.getByRole('status')).toHaveText('Saved.');
-  await page.getByAltText('Config Icon', { exact: true }).click();
+
+  await accountButton.click();
   await page.getByRole('button', { name: 'Sign out', exact: true }).click();
+  await accountDialog.getByRole('button', { name: 'Forgot my password' }).click();
+  const newPassword = `${password}-new`;
   await page.getByLabel('Email', { exact: true }).fill(email);
-  await page.getByLabel('Password', { exact: true }).fill(password);
+  await page.getByLabel('New password', { exact: true }).fill(newPassword);
+  await page.getByLabel('Confirm new password', { exact: true }).fill(password);
+  await accountDialog.getByRole('button', { name: 'Save new password' }).click();
+  await expect(accountDialog.getByRole('alert')).toHaveText('The passwords must match.');
+  await page.getByLabel('Confirm new password', { exact: true }).fill(newPassword);
+  await accountDialog.getByRole('button', { name: 'Save new password' }).click();
+  await expect(accountDialog.getByRole('status')).toHaveText(
+    'Password updated. Sign in with your new password.'
+  );
+  await expect(page.getByLabel('Email', { exact: true })).toHaveValue(email);
+  await page.getByLabel('Password', { exact: true }).fill(newPassword);
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
   await expect(page.getByText(username, { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Sign out', exact: true }).click();
@@ -141,7 +173,7 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   await page.getByRole('button', { name: 'Create account', exact: true }).click();
   const secondUser = await (await secondRegistration).json();
   await expect(page.getByText(`${username}b`, { exact: true })).toBeVisible();
-  await page.getByAltText('Close Config Popup', { exact: true }).click();
+  await accountDialog.getByRole('button', { name: 'Close account' }).click();
   await page.getByText('Games and appearance', { exact: true }).click();
   await expect(page.getByText('No saved games yet.', { exact: true })).toBeVisible();
   const forbidden = await page.request.get(
@@ -154,7 +186,7 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
     { headers: { Authorization: `Bearer ${auth.jwt}` } }
   );
   expect(own.status()).toBe(200);
-  await page.getByAltText('Config Icon', { exact: true }).click();
+  await page.getByRole('button', { name: /^(configurações|configurations)$/i }).click();
   await page.getByRole('button', { name: /^Theme/ }).click();
   const createPreferences = page.waitForResponse(
     response =>
@@ -170,6 +202,13 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   await page.getByLabel('Front face', { exact: true }).focus();
   await page.keyboard.press('x');
   expect((await saveKeys).status()).toBe(200);
+  const savePause = page.waitForResponse(
+    response =>
+      response.url().includes('/api/user-settings/') && response.request().method() === 'PUT'
+  );
+  await page.getByLabel('Pause or resume timer', { exact: true }).focus();
+  await page.keyboard.press('k');
+  expect((await savePause).status()).toBe(200);
   await page.getByRole('button', { name: /^Hints/ }).click();
   const saveHints = page.waitForResponse(
     response =>
@@ -179,15 +218,25 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   const storedPreferences = (await (await saveHints).json()).data;
   expect(storedPreferences.hintsEnabled).toBe(true);
   expect(storedPreferences.keyboardBindings.front).toBe('x');
+  expect(storedPreferences.keyboardBindings.pause).toBe('k');
   expect(storedPreferences.themeMode).toBe('light');
+
+  await page.evaluate(() => {
+    localStorage.removeItem('rubiks.ui.v1');
+    localStorage.removeItem('rubiks.language.v1');
+  });
   await page.reload();
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(238, 242, 247)');
   await expect(page.getByRole('button', { name: 'Save game', exact: true })).toBeEnabled();
-  await page.getByAltText('Config Icon', { exact: true }).click();
+  await page.getByRole('button', { name: /^(configurações|configurations)$/i }).click();
   await page.getByRole('button', { name: /^Hints/ }).click();
   await expect(page.getByLabel('Hints mode', { exact: true })).toBeChecked();
-  await page.getByAltText('Close Config Popup', { exact: true }).click();
+  await page.getByRole('button', { name: /^(fechar configurações|close settings)$/i }).click();
   await blur(page);
+  await page.keyboard.press('k');
+  await expect(page.getByRole('button', { name: 'Resume timer' })).toBeVisible();
+  await page.keyboard.press('k');
+  await expect(page.getByRole('button', { name: 'Pause timer' })).toBeVisible();
   await page.keyboard.press('x');
   await expect(page.getByRole('button', { name: 'Save game', exact: true })).toBeEnabled();
   const boundSave = page.waitForResponse(
@@ -197,4 +246,39 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   await page.getByRole('button', { name: 'Save game', exact: true }).click();
   expect((await (await boundSave).json()).data.moves[0].move).toBe('F');
   await expect(page.getByRole('alert')).toHaveCount(0);
+
+  const solvedFacelets = 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB';
+  await page.getByRole('button', { name: 'New game', exact: true }).click();
+  await expect(page.getByLabel('Game controls')).toContainText('0 moves');
+
+  const scrambledSave = page.waitForResponse(
+    response =>
+      response.url().endsWith('/api/saved-games') && response.request().method() === 'POST'
+  );
+  await page.getByRole('button', { name: 'Save game', exact: true }).click();
+  const scrambled = (await (await scrambledSave).json()).data;
+  expect(scrambled.initialState.facelets).not.toBe(solvedFacelets);
+  expect(scrambled.scramble.length).toBeGreaterThanOrEqual(20);
+  expect(scrambled.moves).toEqual([]);
+
+  const solve = page.getByRole('button', { name: 'Solve cube', exact: true });
+  await solve.click();
+  await expect(page.getByText(/Auto-solve used/)).toBeVisible();
+  await expect(solve).toBeDisabled();
+
+  const assistedSave = page.waitForResponse(
+    response =>
+      response.url().endsWith(`/api/saved-games/${scrambled.documentId}`) &&
+      response.request().method() === 'PUT'
+  );
+  await page.getByRole('button', { name: 'Save game', exact: true }).click();
+  const assisted = (await (await assistedSave).json()).data;
+  expect(assisted.cubeState.facelets).toBe(solvedFacelets);
+  expect(assisted.moves.map((entry: { move: string }) => entry.move)).toEqual(['AUTO_SOLVE']);
+
+  await page.reload();
+  await page.getByText('Games and appearance', { exact: true }).click();
+  await page.getByRole('button', { name: 'Resume', exact: true }).first().click();
+  await expect(page.getByText(/Auto-solve used/)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Record solved attempt' })).toBeDisabled();
 });

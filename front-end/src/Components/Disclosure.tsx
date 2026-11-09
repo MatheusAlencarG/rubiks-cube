@@ -1,4 +1,5 @@
 import React, { useId, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 
 interface DisclosureProps {
   title: React.ReactNode;
@@ -6,20 +7,18 @@ interface DisclosureProps {
   buttonClass: string;
   contentClass: string;
   arrowClass: string;
-  arrowSrc: string;
-  arrowAlt: string;
 }
+
 export default function Disclosure({
   title,
   children,
   buttonClass,
   contentClass,
   arrowClass,
-  arrowSrc,
-  arrowAlt,
 }: DisclosureProps) {
   const [expanded, setExpanded] = useState(false);
   const contentId = useId();
+
   return (
     <>
       <button
@@ -31,10 +30,9 @@ export default function Disclosure({
         onClick={() => setExpanded(previous => !previous)}
       >
         {title}
-        <img
-          className={`${arrowClass} ${expanded ? 'active' : ''}`}
-          src={arrowSrc}
-          alt={arrowAlt}
+        <ChevronDown
+          className={`${arrowClass} transition-transform motion-reduce:transition-none ${expanded ? 'rotate-180' : ''}`}
+          aria-hidden="true"
         />
       </button>
       <div

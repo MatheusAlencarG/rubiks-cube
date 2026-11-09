@@ -14,13 +14,17 @@ O texto rico é sanitizado com DOMPurify. Imagens relativas são resolvidas cont
 
 ## Conta e preferências
 
-Abra a engrenagem para cadastrar uma conta do aplicativo ou entrar com e-mail e senha. Essa conta é diferente do administrador do Strapi. O JWT fica no `sessionStorage` da aba, é validado em `/users/me` ao recarregar e é enviado nas requisições privadas. Sair remove a sessão e os dados pessoais do cache; trocar de usuário reinicia a partida em memória.
+Abra **Conta** no canto superior esquerdo para entrar, cadastrar uma conta do aplicativo ou consultar seu perfil. Em **Editar perfil**, você pode mudar o nome de usuário e enviar uma foto PNG, JPEG ou WebP de até 5 MB. A foto aparece no botão de Conta assim que o Strapi confirma o salvamento.
+
+A conta do aplicativo é diferente da conta de administração do Strapi. O JWT fica no `sessionStorage` da aba, é validado em `/account/profile` ao recarregar e é enviado nas requisições privadas. Sair remove a sessão e os dados pessoais do cache. Trocar de usuário reinicia a partida em memória.
+
+Em desenvolvimento local, **Esqueci minha senha** solicita o e-mail da conta, a nova senha e a confirmação. O Strapi atualiza a senha diretamente, sem envio de e-mail. O servidor só aceita conexões locais em desenvolvimento ou teste. Use `LOCAL_PASSWORD_RESET=false` no ambiente do backend para ocultar e desativar esse recurso também localmente.
 
 O idioma muda imediatamente na interface e é sincronizado com `user-settings` quando há login. Visitantes mantêm o idioma no `localStorage`. Leituras usam SWR com cache separado por usuário e idioma; alterações revalidam as coleções correspondentes.
 
 O menu também oferece temas escuro, claro e personalizado (fundo, painéis, texto e destaque), remapeamento das seis faces e das quatro rotações de visualização e restauração dos atalhos padrão. Para atribuir um comando, foque o campo e pressione uma letra, número ou seta. Uma tecla já usada troca de posição com o comando anterior; Shift continua reservado aos movimentos inversos das faces. A página `/tutorial` mostra sempre os atalhos atuais.
 
-O modo dicas possui somente uma opção ON/OFF persistida. Ele ainda não apresenta sugestões nem altera o cubo. Tema, teclado e essa opção ficam em `localStorage` para visitantes e em `user-settings` para contas autenticadas. Após uma atualização do projeto, reinicie o backend para carregar os novos campos.
+O modo dicas guarda a preferência de ativação. Tema, cores personalizadas, teclado e modo dicas ficam em `localStorage` para visitantes e em `user-settings` para contas autenticadas.
 
 ## Cubo e persistência
 
@@ -28,9 +32,13 @@ Os controles W/A/S/D/Q/E, Shift para inversos, setas, visual 3D, carrosséis e v
 
 - **Salvar partida** cria ou atualiza o mesmo documento, com movimentos, duração, estado lógico, aparência e rotação visual. O tempo começa no primeiro movimento e inclui o tempo transcorrido durante a sessão aberta; retomar preserva o tempo acumulado e continua a contagem no próximo movimento.
 - **Retomar** reconstrói o estado visual salvo imediatamente, sem reproduzir a animação de todo o histórico. Os movimentos anteriores são preservados nos salvamentos seguintes.
-- **Nova partida** inicia outro cubo usando o preset ativo e reinicia o histórico em memória. Salve a partida atual antes de começar outra ou recarregar a página.
-- Presets permitem criar, atualizar, selecionar e excluir aparência: cores, largura, raio das peças, animação e rotação inicial. Aplicar um preset inicia uma nova partida. Partidas já salvas conservam seu snapshot original.
-- **Registrar tentativa resolvida** envia o replay ao backend quando o cubo termina resolvido. Tentativas e partidas salvas podem ser consultadas e excluídas pela conta proprietária.
+- **Partidas salvas** mostra nome, tempo decorrido e número de movimentos em páginas de cinco. Use **Renomear** para alterar apenas o nome da partida.
+- **Nova partida** embaralha o cubo com o preset ativo e começa com zero movimentos do jogador, inclusive durante a pausa. Salve a partida atual antes de começar outra ou recarregar a página.
+- **Resolver cubo** volta o cubo ao estado resolvido, congela o cronômetro no tempo atual e marca a partida como assistida. Você pode salvar e retomar a partida assistida para praticar.
+- O cronômetro abaixo dos controles mostra o tempo da sessão. Use o botão ou a tecla **P** para pausar e retomar. A pausa congela a contagem e bloqueia os movimentos e a rotação da visualização. Você pode trocar a tecla em **Comandos do teclado**.
+- Presets permitem editar as seis cores, o tamanho geral e a duração da animação. O arredondamento das peças acompanha a escala do cubo. Aplicar um preset inicia uma nova partida. Partidas já salvas conservam sua aparência original.
+- **Registrar tentativa resolvida** envia o replay ao backend quando o cubo termina resolvido apenas com os comandos do jogador. Tentativas e partidas salvas podem ser consultadas e excluídas pela conta proprietária.
+- **Tentativas concluídas** mostra cinco registros por página. Clique fora de **Partidas e aparência** para fechar o painel.
 
 O adaptador usa a ordem URFDLB e o mesmo motor `cubejs-1.3.2` do backend. As posições e classes CSS não são persistidas. Os testes comparam o motor visual com os movimentos canônicos, incluindo inversos, sequências mistas e restauração.
 

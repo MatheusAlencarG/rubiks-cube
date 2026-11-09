@@ -1,42 +1,57 @@
 import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Context } from '../../Contexts/PaginationContext/Context';
+import { Context as LanguageContext } from '../../Contexts/GeneralConfigContext/Context';
 
-function PageArrow({ destination, previous = false }: { destination: string; previous?: boolean }) {
-  const image = (
-    <img
-      className={`pageImage w-[30px] [filter:var(--ink-icon-filter)] ${previous ? 'rotate-180' : ''}`}
-      src={`/images/simple-arrow${destination ? '' : '-grey'}.svg`}
-      alt={previous ? 'Prev Arrow' : 'Next Arrow'}
-    />
-  );
+function PageArrow({
+  destination,
+  label,
+  previous = false,
+}: {
+  destination: string;
+  label: string;
+  previous?: boolean;
+}) {
+  const Icon = previous ? ChevronLeft : ChevronRight;
+  const icon = <Icon className="h-[30px] w-[30px]" aria-hidden="true" />;
+
+  if (!destination)
+    return (
+      <span className="flex opacity-[.35]" aria-hidden="true">
+        {icon}
+      </span>
+    );
 
   return (
-    <div
-      className={`flex text-[30px] ${previous ? 'prevPage' : 'nextPage'} ${destination ? 'active cursor-pointer' : ''}`}
+    <Link
+      className="footerLink flex text-ink no-underline"
+      to={destination}
+      aria-label={label}
+      title={label}
     >
-      {destination ? (
-        <Link className="footerLink flex text-ink no-underline" to={destination}>
-          {image}
-        </Link>
-      ) : (
-        image
-      )}
-    </div>
+      {icon}
+    </Link>
   );
 }
 
 function Footer() {
   const { pageState } = useContext(Context);
+  const { currentLanguage } = useContext(LanguageContext).language;
   const { pathname } = useLocation();
   const isTutorial = pathname === '/' || pathname.startsWith('/tutorial');
+  const en = currentLanguage === 'en-us';
 
   return (
     <div className="footerContainer flex w-[calc(100%_-_70px)] flex-col items-center px-[35px] py-0">
       {isTutorial && (
         <div className="navigatorContainer flex items-center gap-[7px]">
-          <PageArrow destination={pageState.prevPage} previous />
+          <PageArrow
+            destination={pageState.prevPage}
+            label={en ? 'Previous tutorial page' : 'Página anterior do tutorial'}
+            previous
+          />
           {pageState.listOfPages.map((page, index) => {
             const isCurrentPage = index === pageState.currentPageIndex;
 
@@ -53,7 +68,10 @@ function Footer() {
               </Link>
             );
           })}
-          <PageArrow destination={pageState.nextPage} />
+          <PageArrow
+            destination={pageState.nextPage}
+            label={en ? 'Next tutorial page' : 'Próxima página do tutorial'}
+          />
         </div>
       )}
       <p className="copyrightText w-full text-center text-[10px]">

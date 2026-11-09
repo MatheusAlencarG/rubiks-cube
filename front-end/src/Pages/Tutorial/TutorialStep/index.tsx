@@ -75,9 +75,7 @@ function StepVideos({ title, videos }: { title: string; videos: Tutorial['videos
           title={title}
           buttonClass="videosTitle relative m-0 cursor-pointer rounded-[15px] bg-canvas px-0 py-[15px] text-center text-accent mobile:pr-[30px]"
           contentClass="videoContent flex h-0 flex-col items-center gap-[15px] overflow-hidden rounded-[15px] p-0 [transition:0.5s] [&.active]:h-auto [&.active]:px-0 [&.active]:py-[20px]"
-          arrowClass="absolute right-[10px] top-[calc(50%-15px)] w-[30px] [filter:var(--canvas-icon-filter)] [transform:rotate(90deg)] [transition:0.5s] [&.active]:[transform:rotate(270deg)]"
-          arrowSrc="/images/simple-arrow-white.svg"
-          arrowAlt="Simple Arrow"
+          arrowClass="absolute right-[10px] top-[calc(50%-12px)] h-6 w-6"
         >
           {videos.map(video => (
             <iframe

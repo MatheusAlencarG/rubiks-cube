@@ -20,12 +20,12 @@ test('preserves the layout, theme and tutorial routes', async ({ page }) => {
 
 test('opens settings, switches language and closes the popup', async ({ page }) => {
   await page.goto('/tutorial');
-  await page.getByAltText('Config Icon', { exact: true }).click();
+  await page.getByRole('button', { name: /^(configurações|configurations)$/i }).click();
   await expect(page.locator('.generalConfigPopup')).toBeVisible();
   await page.getByRole('button', { name: /idiomas/ }).click();
   await page.getByLabel('English', { exact: true }).check();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText("rubick's cube project");
-  await page.getByAltText('Close Config Popup', { exact: true }).click();
+  await page.getByRole('button', { name: /^(fechar configurações|close settings)$/i }).click();
   await expect(page.locator('.generalConfigPopup')).toBeHidden();
   await page.getByRole('link', { name: 'tutorial', exact: true }).click();
   await expect(page.getByRole('heading', { level: 2 })).toHaveText('Game Commands');
@@ -33,15 +33,9 @@ test('opens settings, switches language and closes the popup', async ({ page }) 
 
 test('navigates forward and backward through the tutorial', async ({ page }) => {
   await page.goto('/tutorial');
-  await page
-    .getByRole('link')
-    .filter({ has: page.getByAltText('Next Arrow') })
-    .click();
+  await page.getByRole('link', { name: 'Próxima página do tutorial' }).click();
   await expect(page).toHaveURL(/\/tutorial\/parts$/);
-  await page
-    .getByRole('link')
-    .filter({ has: page.getByAltText('Prev Arrow') })
-    .click();
+  await page.getByRole('link', { name: 'Página anterior do tutorial' }).click();
   await expect(page).toHaveURL(/\/tutorial$/);
 });
 

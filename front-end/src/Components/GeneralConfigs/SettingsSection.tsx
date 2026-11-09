@@ -1,36 +1,42 @@
 import React, { ReactNode } from 'react';
+import type { LucideIcon } from 'lucide-react';
 
 import Disclosure from '../Disclosure';
 
 const contentClasses = {
-  language:
-    'flex h-0 flex-wrap justify-center gap-[20px] overflow-hidden p-0 [transition:0.8s] [&.active]:h-fit [&.active]:p-[15px]',
-  preferences:
-    'h-0 overflow-hidden p-0 text-left normal-case [&.active]:h-auto [&.active]:p-[15px]',
+  language: 'flex flex-wrap justify-center gap-[20px]',
+  preferences: 'text-left normal-case',
 };
 
 interface SettingsSectionProps {
-  title: ReactNode;
+  title: string;
+  icon: LucideIcon;
   children: ReactNode;
   variant?: keyof typeof contentClasses;
 }
 
 export default function SettingsSection({
   title,
+  icon: Icon,
   children,
   variant = 'preferences',
 }: SettingsSectionProps) {
   return (
     <section className="w-4/5 rounded-[15px] border-2 border-solid border-accent capitalize">
       <Disclosure
-        title={title}
-        buttonClass="relative m-0 flex min-h-[45px] cursor-pointer items-center justify-center gap-[10px] rounded-[10px] bg-accent p-0 font-bold capitalize text-black"
-        contentClass={contentClasses[variant]}
-        arrowClass="absolute right-0 top-[calc(50%-17.5px)] w-[35px] cursor-pointer [filter:var(--accent-icon-filter)] [transform:rotate(90deg)] [transition:0.5s] [&.active]:[transform:rotate(270deg)]"
-        arrowSrc="/images/simple-arrow.svg"
-        arrowAlt="Simple Arrow"
+        title={
+          <>
+            <Icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+            <span>{title}</span>
+          </>
+        }
+        buttonClass="m-0 grid min-h-[45px] cursor-pointer grid-cols-[24px_minmax(0,1fr)_24px] items-center gap-2 rounded-[10px] bg-accent px-2 py-1 text-center font-bold capitalize text-on-accent"
+        contentClass="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none [&.active]:grid-rows-[1fr]"
+        arrowClass="h-6 w-6 duration-300"
       >
-        {children}
+        <div className="min-h-0 overflow-hidden">
+          <div className={`${contentClasses[variant]} p-[15px]`}>{children}</div>
+        </div>
       </Disclosure>
     </section>
   );

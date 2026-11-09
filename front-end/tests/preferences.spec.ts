@@ -13,7 +13,7 @@ test('retrying synchronization resends the unsaved preferences', async ({ page }
   await page.route('**/api/**', async route => {
     const request = route.request();
     const pathname = new URL(request.url()).pathname;
-    if (pathname === '/api/users/me')
+    if (pathname === '/api/account/profile')
       return route.fulfill({ json: { id: 1, username: 'test-user', email: 'test@example.test' } });
     if (pathname.startsWith('/api/user-settings')) {
       if (request.method() === 'PUT') {
@@ -38,8 +38,10 @@ test('retrying synchronization resends the unsaved preferences', async ({ page }
     return route.fallback();
   });
   await page.goto('/tutorial');
-  await page.getByAltText('Config Icon', { exact: true }).click();
+  await page.getByRole('button', { name: 'Conta', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Sair', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Fechar conta', exact: true }).click();
+  await page.getByRole('button', { name: /^(configurações|configurations)$/i }).click();
   await expect(page.getByRole('status')).toHaveCount(0);
   await page.getByRole('button', { name: /^Tema/ }).click();
   await page.getByRole('combobox', { name: 'Aparência', exact: true }).selectOption('light');
@@ -54,7 +56,7 @@ test('themes, custom palette, bindings and hints preference survive reload for v
   page,
 }) => {
   await page.goto('/rubicksCube');
-  await page.getByAltText('Config Icon', { exact: true }).click();
+  await page.getByRole('button', { name: /^(configurações|configurations)$/i }).click();
   await page.getByRole('button', { name: /^Tema/ }).click();
   await page.getByRole('combobox', { name: 'Aparência', exact: true }).selectOption('light');
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(238, 242, 247)');
@@ -72,7 +74,7 @@ test('themes, custom palette, bindings and hints preference survive reload for v
   await expect(front).toHaveValue('X');
   await page.getByRole('button', { name: /^Dicas/ }).click();
   await page.getByLabel('Modo dicas', { exact: true }).check();
-  await page.getByAltText('Close Config Popup', { exact: true }).click();
+  await page.getByRole('button', { name: /^(fechar configurações|close settings)$/i }).click();
   await page.locator('body').click({ position: { x: 3, y: 3 } });
   await page.keyboard.press('w');
   await expect(page.getByLabel('Controles da partida')).toContainText('0 movimentos');
@@ -82,12 +84,50 @@ test('themes, custom palette, bindings and hints preference survive reload for v
   await expect(page.locator('kbd').filter({ hasText: /^X$/ })).toBeVisible();
   await page.reload();
   await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(18, 52, 86)');
-  await page.getByAltText('Config Icon', { exact: true }).click();
+  await page.getByRole('button', { name: /^(configurações|configurations)$/i }).click();
   await page.getByRole('button', { name: /^Dicas/ }).click();
   await expect(page.getByLabel('Modo dicas', { exact: true })).toBeChecked();
   await page.getByRole('button', { name: /^Comandos do teclado/ }).click();
   await page.getByRole('button', { name: 'Restaurar comandos padrão', exact: true }).click();
   await expect(page.getByLabel('Face frontal', { exact: true })).toHaveValue('W');
+});
+
+test('settings sections show icons and animate both opening and closing', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/tutorial');
+  await page.getByRole('button', { name: 'configurações' }).click();
+
+  for (const name of ['Tema', 'Comandos do teclado', 'Dicas', 'idiomas']) {
+    const trigger = page.getByRole('button', { name, exact: true });
+    await expect(trigger.locator('svg[aria-hidden="true"]')).toHaveCount(2);
+
+    const regionId = await trigger.getAttribute('aria-controls');
+    const region = page.locator(`[id="${regionId}"]`);
+    await expect(region).toHaveCSS('height', '0px');
+    await region.evaluate(element => {
+      element.addEventListener('transitionend', event => {
+        if (event.target === element && event.propertyName === 'grid-template-rows') {
+          element.dataset.completedTransitions = String(
+            Number(element.dataset.completedTransitions ?? 0) + 1
+          );
+        }
+      });
+    });
+
+    await trigger.click();
+    await expect(region).toHaveAttribute('data-completed-transitions', '1');
+    await expect(region).not.toHaveCSS('height', '0px');
+
+    await trigger.click();
+    await expect(region).toHaveAttribute('aria-hidden', 'true');
+    await expect(region).toHaveAttribute('data-completed-transitions', '2');
+    await expect(region).toHaveCSS('height', '0px');
+  }
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  const theme = page.getByRole('button', { name: 'Tema', exact: true });
+  await theme.click();
+  await expect(page.getByRole('region', { name: 'Tema' })).toHaveCSS('transition-property', 'none');
 });
 
 test('the selected header tab has stronger typography and follows navigation', async ({ page }) => {

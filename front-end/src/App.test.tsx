@@ -13,7 +13,7 @@ test('switches the interface language through settings', () => {
     </GeneralConfigContext>
   );
 
-  fireEvent.click(screen.getByAltText('Config Icon'));
+  fireEvent.click(screen.getByRole('button', { name: 'configurações' }));
   fireEvent.click(screen.getByText('idiomas'));
   fireEvent.click(screen.getByLabelText('English'));
 

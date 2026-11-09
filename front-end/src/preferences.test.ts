@@ -36,3 +36,10 @@ test('custom colors and hints survive storage and contrasting text remains reada
   expect(contrastingColor('#ffffff')).toBe('#151513');
   expect(contrastingColor('#000000')).toBe('#f5f5f5');
 });
+test('a legacy keyboard layout keeps its existing keys when pause is added', () => {
+  const { pause: _pause, ...legacy } = { ...DEFAULT_BINDINGS, front: 'p' };
+  const { keyboardBindings } = readUiPreferences({ keyboardBindings: legacy });
+
+  expect(keyboardBindings).toMatchObject(legacy);
+  expect(keyboardBindings.pause).not.toBe('p');
+});

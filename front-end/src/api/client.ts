@@ -20,16 +20,18 @@ export async function api<T>(
 ): Promise<T> {
   const abort = new AbortController();
   const timeout = window.setTimeout(() => abort.abort(), 15000);
+  const { body: payload } = options;
+  const multipart = payload instanceof FormData;
 
   try {
     const response = await fetch(`${STRAPI_URL}/api${route}`, {
       method: options.method || 'GET',
       signal: abort.signal,
       headers: {
-        ...(options.body === undefined ? {} : { 'Content-Type': 'application/json' }),
+        ...(payload !== undefined && !multipart ? { 'Content-Type': 'application/json' } : {}),
         ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
       },
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      body: multipart ? payload : JSON.stringify(payload),
     });
 
     const body = response.status === 204 ? null : await response.json();
@@ -53,14 +55,24 @@ export async function listAll<T>(
   const results: T[] = [];
 
   for (let page = 1; ; page++) {
-    const response = await api<Collection<T>>(
-      `/${resource}?pagination[pageSize]=100&pagination[page]=${page}${query ? `&${query}` : ''}`,
-      { token }
-    );
+    const response = await listPage<T>(resource, page, 100, token, query);
 
     results.push(...response.data);
     if (page >= response.meta.pagination.pageCount) return results;
   }
+}
+
+export function listPage<T>(
+  resource: string,
+  page: number,
+  pageSize: number,
+  token?: string | null,
+  query = ''
+) {
+  return api<Collection<T>>(
+    `/${resource}?pagination[pageSize]=${pageSize}&pagination[page]=${page}${query ? `&${query}` : ''}`,
+    { token }
+  );
 }
 
 export function mediaUrl(value: string) {

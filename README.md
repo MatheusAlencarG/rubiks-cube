@@ -72,6 +72,7 @@ As versões abaixo correspondem às faixas declaradas nos arquivos `package.json
 | React Router DOM                   | Frontend `^6.8.1`; painel Strapi `^6.30.1`                                          | Navegação das interfaces                                              |
 | CSS e transformações 3D            | Nativo do navegador                                                                 | Layout, estilos e representação visual do cubo                        |
 | Tailwind CSS                       | `^3.4.17`                                                                           | Classes utilitárias, cores do tema e variantes nos componentes TSX    |
+| Lucide React                       | `^1.70.0`                                                                           | Ícones dos controles, dos modais e da navegação                       |
 | Swiper e `react-id-swiper`         | `^9.2.0` e `^4.0.0`                                                                 | Carrosséis dos tutoriais                                              |
 | Node.js                            | Backend: versões 22 a 26                                                            | Runtime da API e das ferramentas; workflows usam Node.js 22           |
 | Strapi e Users & Permissions       | `5.60.0`                                                                            | API, CMS, autenticação, papéis e mídia                                |

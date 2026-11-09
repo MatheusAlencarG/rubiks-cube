@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const { randomBytes } = require('node:crypto');
+const { readFileSync } = require('node:fs');
 const { before, after, describe, it } = require('node:test');
 const path = require('node:path');
 
@@ -98,6 +99,117 @@ describe('Strapi + MySQL integration', { timeout: 180000 }, () => {
     if (app) await app.destroy();
   });
 
+  it('updates only the authenticated profile and saves an uploaded avatar', async () => {
+    const route = '/api/account/profile';
+    assert.ok([401, 403].includes((await request(route)).status));
+    const original = (await request(route, { token: alice.token })).body;
+    const other = (await request(route, { token: bob.token })).body;
+    assert.equal(original.id, alice.id);
+    assert.equal(original.password, undefined);
+
+    const update = data => request(route, { method: 'PUT', token: alice.token, raw: true, data });
+    assert.equal((await update({ username: other.username })).status, 409);
+    assert.equal((await update({ username: other.email })).status, 409);
+    assert.equal((await update({ id: bob.id, username: 'Outra conta' })).status, 400);
+
+    const username = `profile-${Date.now()}`;
+    const form = new FormData();
+    const png = readFileSync(
+      path.resolve(__dirname, '../../front-end/public/images/cube-center.png')
+    );
+    form.set('username', username);
+    form.set('files', new Blob([png], { type: 'image/png' }), 'profile.png');
+    const response = await fetch(base + route, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${alice.token}` },
+      body: form,
+    });
+    const updated = await response.json();
+
+    try {
+      assert.equal(response.status, 200, JSON.stringify(updated));
+      assert.equal(updated.id, alice.id);
+      assert.equal(updated.username, username);
+      assert.match(updated.avatar.url, /^\/uploads\//);
+      assert.deepEqual((await request(route, { token: alice.token })).body, updated);
+      assert.deepEqual((await request(route, { token: bob.token })).body, other);
+      assert.equal((await fetch(base + updated.avatar.url)).status, 200);
+
+      const renamed = await update({ username: `${username}-next` });
+      assert.equal(renamed.status, 200);
+      assert.equal(renamed.body.username, `${username}-next`);
+      assert.deepEqual(renamed.body.avatar, updated.avatar);
+    } finally {
+      if (updated.avatar?.url) {
+        const file = await app.db
+          .query('plugin::upload.file')
+          .findOne({ where: { url: updated.avatar.url } });
+        if (file) await app.plugin('upload').service('upload').remove(file);
+      }
+    }
+  });
+
+  it('resets a local account password without email and rejects non-local origins', async () => {
+    const route = '/api/local-password-reset';
+    const username = `reset${Date.now()}`;
+    const email = `${username}@example.test`;
+    const oldPassword = randomBytes(24).toString('hex');
+    const password = randomBytes(24).toString('hex');
+
+    const registration = await request('/api/auth/local/register', {
+      method: 'POST',
+      raw: true,
+      data: { username, email, password: oldPassword },
+    });
+    assert.equal(registration.status, 200);
+    assert.deepEqual((await request(route)).body, { enabled: true });
+
+    const payload = { email, password, passwordConfirmation: password };
+    const forwardedReset = await fetch(base + route, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '203.0.113.1' },
+      body: JSON.stringify(payload),
+    });
+    assert.equal(forwardedReset.status, 404);
+
+    const remoteOriginReset = await fetch(base + route, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Origin: 'https://example.test' },
+      body: JSON.stringify(payload),
+    });
+    assert.equal(remoteOriginReset.status, 404);
+
+    const environment = process.env.NODE_ENV;
+    try {
+      process.env.NODE_ENV = 'production';
+      const productionReset = await request(route, { method: 'POST', raw: true, data: payload });
+      assert.equal(productionReset.status, 404);
+    } finally {
+      process.env.NODE_ENV = environment;
+    }
+
+    const mismatch = await request(route, {
+      method: 'POST',
+      raw: true,
+      data: { ...payload, passwordConfirmation: oldPassword },
+    });
+    assert.equal(mismatch.status, 400);
+
+    const reset = await request(route, { method: 'POST', raw: true, data: payload });
+    assert.equal(reset.status, 204);
+
+    const login = password =>
+      request('/api/auth/local', {
+        method: 'POST',
+        raw: true,
+        data: { identifier: email, password },
+      });
+    assert.equal((await login(oldPassword)).status, 400);
+    const signedIn = await login(password);
+    assert.equal(signedIn.status, 200);
+    assert.equal(signedIn.body.user.id, registration.body.user.id);
+  });
+
   it('requires authentication and derives ownership from the authenticated user', async () => {
     assert.ok([401, 403].includes((await request('/api/cube-presets')).status));
     const list = success(await request('/api/cube-presets', { token: bob.token }));
@@ -185,6 +297,7 @@ describe('Strapi + MySQL integration', { timeout: 180000 }, () => {
       viewRight: 'ArrowRight',
       viewUp: 'ArrowUp',
       viewDown: 'ArrowDown',
+      pause: 'p',
     };
     const saved = success(
       await request(`/api/user-settings/${settings.documentId}`, {
@@ -339,6 +452,31 @@ describe('Strapi + MySQL integration', { timeout: 180000 }, () => {
     // MySQL may reorder JSON object keys; unchanged move histories must still be accepted.
     assert.equal(resumed.moves.length, 1);
     assert.equal(resumed.name, 'Partida retomada');
+
+    const gameRoute = `/api/saved-games/${game.documentId}`;
+    const renamed = success(
+      await request(gameRoute, {
+        method: 'PUT',
+        token: alice.token,
+        data: { name: '  Partida de treino  ' },
+      })
+    );
+    assert.equal(renamed.name, 'Partida de treino');
+    assert.equal(renamed.savedAt, resumed.savedAt);
+    assert.equal(renamed.elapsedMs, resumed.elapsedMs);
+    assert.deepEqual(renamed.moves, resumed.moves);
+    assert.deepEqual(renamed.appearanceSnapshot, resumed.appearanceSnapshot);
+
+    const progress = success(
+      await request(gameRoute, { method: 'PUT', token: alice.token, data: { elapsedMs: 700 } })
+    );
+    assert.equal(progress.name, renamed.name);
+    assert.equal(
+      (await request(gameRoute, { method: 'PUT', token: bob.token, data: { name: 'Inválido' } }))
+        .status,
+      404
+    );
+
     assert.equal(
       (
         await request(`/api/saved-games/${game.documentId}`, {
@@ -349,6 +487,48 @@ describe('Strapi + MySQL integration', { timeout: 180000 }, () => {
       ).status,
       400
     );
+  });
+
+  it('preserves an automatic solve in saved games and rejects it as a manual attempt', async () => {
+    const moves = [{ move: 'AUTO_SOLVE', atMs: 100 }];
+    const common = {
+      engineVersion: 'cubejs-1.3.2',
+      initialState,
+      scramble: ['R'],
+      moves,
+      appearanceSnapshot: {},
+    };
+
+    const saved = success(
+      await request('/api/saved-games', {
+        method: 'POST',
+        token: alice.token,
+        data: {
+          ...common,
+          name: 'Prática',
+          cubeState: solvedState,
+          elapsedMs: 100,
+          savedAt: new Date().toISOString(),
+        },
+      }),
+      201
+    );
+    const route = `/api/saved-games/${saved.documentId}`;
+    assert.deepEqual(success(await request(route, { token: alice.token })).moves, moves);
+
+    const rewritten = await request(route, {
+      method: 'PUT',
+      token: alice.token,
+      data: { moves: [{ move: "R'", atMs: 100 }] },
+    });
+    assert.equal(rewritten.status, 400);
+
+    const attempt = await request('/api/solve-attempts', {
+      method: 'POST',
+      token: alice.token,
+      data: { ...common, durationMs: 100, completedAt: new Date().toISOString() },
+    });
+    assert.equal(attempt.status, 400);
   });
 
   it('detaches deleted presets without losing historical snapshots', async () => {

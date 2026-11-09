@@ -14,8 +14,9 @@ import {
   applyAppearance,
   DEFAULT_APPEARANCE,
   restoreVisual,
+  SOLVED,
 } from '../../cube/session';
-import { CubeSessionContext } from '../CubeSessionContext';
+import { CubeSessionContext, NewGameOptions } from '../CubeSessionContext';
 import { Context as PreferencesContext } from '../GeneralConfigContext/Context';
 import { useAuth } from '../AuthContext';
 import type { SavedGame } from '../../api/types';
@@ -33,7 +34,8 @@ export default function RubicksCube3x3Context({ children }: { children: ReactNod
   const busy = useRef(false);
   const [isBusy, setIsBusy] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>();
-  const [error, setError] = useState('');
+  const [error, setError] = useState<{ message: string }>();
+  const [pauseBlockCount, setPauseBlockCount] = useState(0);
   const { user } = useAuth();
   const { settings } = useContext(PreferencesContext).preferences;
   const activePreset = settings?.activePreset;
@@ -44,18 +46,53 @@ export default function RubicksCube3x3Context({ children }: { children: ReactNod
     busy.current = false;
     setIsBusy(false);
     clearTimeout(timer.current);
-    setError('');
+    setError(undefined);
+    setPauseBlockCount(0);
     setCurrent(next);
   }, []);
-  function newGame(
+  function newGame({
     appearance = activePreset?.appearance ?? DEFAULT_APPEARANCE,
-    preset = activePreset?.documentId ?? null
-  ) {
-    if (busy.current) return;
-    replace(new CubeSession(appearance, preset));
+    preset = activePreset?.documentId ?? null,
+    scramble = false,
+  }: NewGameOptions = {}) {
+    if (busy.current || (!scramble && latest.current.session.paused)) return;
+
+    replace(
+      scramble ? CubeSession.scrambled(appearance, preset) : new CubeSession(appearance, preset)
+    );
   }
-  function loadGame(game: SavedGame) {
+
+  const blockedByPause = useCallback(() => {
+    if (!latest.current.session.paused) return false;
+
+    setPauseBlockCount(count => count + 1);
+    return true;
+  }, []);
+
+  function solveCube() {
+    if (busy.current || blockedByPause()) return;
+
+    const { cube, session } = latest.current;
+    try {
+      session.autoSolve();
+      restoreVisual(cube, session.logical.asString());
+      setError(undefined);
+      refresh();
+    } catch (failure) {
+      setError({ message: (failure as Error).message });
+    }
+  }
+
+  const togglePause = useCallback(() => {
     if (busy.current) return;
+
+    latest.current.session.togglePause();
+    setPauseBlockCount(0);
+    refresh();
+  }, [refresh]);
+
+  function loadGame(game: SavedGame) {
+    if (busy.current || latest.current.session.paused) return;
     replace(CubeSession.load(game));
     latest.current.cube.setStyle('rotateX', game.viewRotationX);
     latest.current.cube.setStyle('rotateY', game.viewRotationY);
@@ -68,6 +105,8 @@ export default function RubicksCube3x3Context({ children }: { children: ReactNod
   useEffect(() => {
     if (
       !busy.current &&
+      !latest.current.session.paused &&
+      latest.current.session.initialState.facelets === SOLVED &&
       latest.current.session.moves.length === 0 &&
       !latest.current.session.documentId
     ) {
@@ -94,12 +133,12 @@ export default function RubicksCube3x3Context({ children }: { children: ReactNod
       move: string,
       movementType?: 'shift'
     ) => {
-      if (busy.current) return;
+      if (busy.current || blockedByPause()) return;
       const { cube, session } = latest.current;
       try {
         session.move(movementType === 'shift' ? `${move}'` : move);
       } catch (failure) {
-        setError((failure as Error).message);
+        setError({ message: (failure as Error).message });
         return;
       }
       busy.current = true;
@@ -112,15 +151,17 @@ export default function RubicksCube3x3Context({ children }: { children: ReactNod
         refresh();
       }, session.appearance.transitionMs);
     },
-    [refresh]
+    [blockedByPause, refresh]
   );
   const functions = useMemo<CubeFunctions>(
     () => ({
       horizontalCubeMovement: direction => {
+        if (blockedByPause()) return;
         latest.current.cube.horizontalCubeMovement(direction);
         refresh();
       },
       verticalCubeMovement: direction => {
+        if (blockedByPause()) return;
         latest.current.cube.verticalCubeMovement(direction);
         refresh();
       },
@@ -131,11 +172,21 @@ export default function RubicksCube3x3Context({ children }: { children: ReactNod
       topPiecesMovement: direction => turn('topPiecesMovement', 'U', direction),
       bottomPiecesMovement: direction => turn('bottomPiecesMovement', 'D', direction),
     }),
-    [turn, refresh]
+    [blockedByPause, turn, refresh]
   );
   return (
     <CubeSessionContext.Provider
-      value={{ session: current.session, busy: isBusy, error, newGame, loadGame, refresh }}
+      value={{
+        session: current.session,
+        busy: isBusy,
+        error,
+        pauseBlockCount,
+        newGame,
+        solveCube,
+        togglePause,
+        loadGame,
+        refresh,
+      }}
     >
       <Context.Provider
         value={{

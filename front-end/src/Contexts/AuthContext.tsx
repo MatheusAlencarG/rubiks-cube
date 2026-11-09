@@ -4,6 +4,7 @@ import { api, ApiError } from '../api/client';
 import type { User } from '../api/types';
 
 const SESSION_KEY = 'rubiks.session.v1';
+const profilePath = '/account/profile';
 function storedToken(): string | null {
   try {
     return sessionStorage.getItem(SESSION_KEY);
@@ -17,6 +18,7 @@ const AuthContext = createContext({
   loading: false,
   login: async (_data: { identifier: string; password: string }) => {},
   register: async (_data: { username: string; email: string; password: string }) => {},
+  updateProfile: async (_data: FormData) => {},
   logout: () => {},
 });
 export const useAuth = () => useContext(AuthContext);
@@ -29,7 +31,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     data: user,
     error,
     isLoading,
-  } = useSWR<User>(key, ([, jwt]: string[]) => api('/users/me', { token: jwt }), {
+  } = useSWR<User>(key, ([, jwt]: string[]) => api(profilePath, { token: jwt }), {
     shouldRetryOnError: false,
   });
   function logout() {
@@ -62,6 +64,18 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     await mutate(['user', result.jwt], result.user, { revalidate: false });
     setToken(result.jwt);
   }
+
+  async function updateProfile(body: FormData) {
+    if (!token) return;
+
+    const requestGeneration = generation.current;
+    const profile = await api<User>(profilePath, { token, method: 'PUT', body });
+
+    if (requestGeneration === generation.current) {
+      await mutate(['user', token], profile, { revalidate: false });
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -69,6 +83,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         user,
         loading: Boolean(token && isLoading),
         logout,
+        updateProfile,
         login: data => authenticate('/auth/local', data),
         register: data => authenticate('/auth/local/register', data),
       }}

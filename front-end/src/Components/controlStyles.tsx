@@ -3,3 +3,6 @@ export const buttonClass =
 
 export const inputClass =
   'box-border block w-full rounded-md border border-solid border-gray-400 bg-white px-2 py-2 text-sm text-black';
+
+export const compactButtonClass = buttonClass + ' !px-2 !py-1 !text-xs';
+export const compactInputClass = inputClass + ' !px-2 !py-1 !text-xs';

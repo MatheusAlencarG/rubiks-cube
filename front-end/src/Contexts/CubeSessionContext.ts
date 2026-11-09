@@ -1,11 +1,21 @@
 import { createContext, useContext } from 'react';
 import type { Appearance, SavedGame } from '../api/types';
 import type { CubeSession } from '../cube/session';
+
+export interface NewGameOptions {
+  appearance?: Appearance;
+  preset?: string | null;
+  scramble?: boolean;
+}
+
 interface CubeSessionValue {
   session: CubeSession;
   busy: boolean;
-  error: string;
-  newGame: (appearance?: Appearance, preset?: string | null) => void;
+  error?: { message: string };
+  pauseBlockCount: number;
+  newGame: (options?: NewGameOptions) => void;
+  solveCube: () => void;
+  togglePause: () => void;
   loadGame: (game: SavedGame) => void;
   refresh: () => void;
 }

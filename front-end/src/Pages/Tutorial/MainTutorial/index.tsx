@@ -11,7 +11,7 @@ import {
 } from '../../../preferences';
 
 const faceActions = ACTIONS.slice(0, 6);
-const viewActions = ACTIONS.slice(6);
+const viewActions = ACTIONS.slice(6, -1);
 const keyClass =
   'inline-block min-w-[28px] rounded border border-solid border-accent bg-canvas px-2 py-1 text-center text-sm font-semibold text-on-canvas';
 
@@ -33,6 +33,10 @@ function MainTutorial() {
       <div className="tutorialDescription text-center">
         <RichText value={overview.description} />
       </div>
+      <p className="m-0 text-center">
+        <kbd className={keyClass}>{displayKey(ui.keyboardBindings.pause)}</kbd>{' '}
+        {en ? 'pauses or resumes the timer.' : 'pausa ou retoma o cronômetro.'}
+      </p>
       <p className="m-0 text-center">
         {en
           ? 'Each face command turns it 90°. These are your current keyboard controls:'

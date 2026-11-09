@@ -94,6 +94,7 @@ As respostas usam o formato do Strapi 5, com `data` e `meta`.
 | Recurso                                         | Métodos                | Acesso                                     |
 | ----------------------------------------------- | ---------------------- | ------------------------------------------ |
 | `/api/tutorials` e `/api/tutorials/:documentId` | `GET`                  | Conteúdo publicado                         |
+| `/api/account/profile`                          | `GET`, `PUT`           | Perfil da conta autenticada                |
 | `/api/user-settings`                            | `GET`, `POST`          | Usuário autenticado; no máximo um registro |
 | `/api/user-settings/:documentId`                | `GET`, `PUT`, `DELETE` | Proprietário                               |
 | `/api/cube-presets`                             | `GET`, `POST`          | Usuário autenticado                        |
@@ -104,6 +105,8 @@ As respostas usam o formato do Strapi 5, com `data` e `meta`.
 | `/api/saved-games/:documentId`                  | `GET`, `PUT`, `DELETE` | Proprietário                               |
 
 As listagens privadas sempre filtram pelo proprietário. A população de relações é definida pelo servidor para evitar acesso indireto a outros dados. Os tutoriais retornam partes, imagens e vídeos; solicitar `status=draft` pela Content API não expõe rascunhos.
+
+O endpoint de perfil retorna os dados públicos da conta autenticada e a URL do `avatar`. O `PUT` aceita `username` em JSON ou um formulário multipart com `username` e uma foto no campo `files`. A foto é armazenada na biblioteca de mídia do Strapi.
 
 Exemplo de criação de preset, no corpo de `POST /api/cube-presets`:
 

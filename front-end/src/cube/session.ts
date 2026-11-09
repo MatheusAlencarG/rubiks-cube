@@ -23,6 +23,29 @@ const state = (cube: Cube): CubeState => ({
   facelets: cube.asString(),
 });
 export const SOLVED = new Cube().asString();
+const AUTO_SOLVE = 'AUTO_SOLVE';
+const scrambleFaces = ['U', 'R', 'F', 'D', 'L', 'B'];
+const turnVariants = ['', "'", '2'];
+
+function randomItem<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function createScramble() {
+  let previousFace = '';
+
+  return Array.from({ length: 20 }, () => {
+    const face = randomItem(scrambleFaces.filter(item => item !== previousFace));
+    previousFace = face;
+
+    return face + randomItem(turnVariants);
+  });
+}
+
+export function countManualMoves(moves: Move[]) {
+  return moves.filter(entry => entry.move !== AUTO_SOLVE).length;
+}
+
 export const KEY_MOVES: Record<string, string> = { w: 'F', a: 'L', s: 'B', d: 'R', q: 'U', e: 'D' };
 export function keyMove(key: string, inverse: boolean) {
   const move = KEY_MOVES[key.toLowerCase()];
@@ -95,28 +118,95 @@ export class CubeSession {
   documentId?: string;
   name = '';
   attemptRecorded = false;
+  private scramble: string[] | null = null;
   private startedAt: number | null = null;
+  private pausedAt: number | null = null;
   private elapsedBase = 0;
   constructor(appearance: Appearance = DEFAULT_APPEARANCE, preset: string | null = null) {
     this.appearance = { ...appearance };
     this.preset = preset;
   }
+
+  static scrambled(appearance: Appearance, preset: string | null) {
+    const session = new CubeSession(appearance, preset);
+    const scramble = createScramble();
+    session.logical.move(scramble.join(' '));
+
+    if (session.logical.isSolved()) {
+      scramble.push('F');
+      session.logical.move('F');
+    }
+
+    session.scramble = scramble;
+    session.initialState = state(session.logical);
+
+    return session;
+  }
+
+  get usedAutoSolve() {
+    return this.lastAutoSolve !== undefined;
+  }
+
+  get lastAutoSolve() {
+    for (let index = this.moves.length - 1; index >= 0; index -= 1) {
+      const entry = this.moves[index];
+      if (entry.move === AUTO_SOLVE) return entry;
+    }
+
+    return undefined;
+  }
+
+  get paused() {
+    return this.pausedAt !== null;
+  }
+
+  get running() {
+    return this.startedAt !== null && !this.paused;
+  }
+
+  togglePause() {
+    const now = performance.now();
+    if (this.pausedAt === null) {
+      this.pausedAt = now;
+      return;
+    }
+
+    if (this.startedAt !== null) this.startedAt += now - this.pausedAt;
+    this.pausedAt = null;
+  }
+
   elapsed() {
     return Math.min(
       2147483647,
       Math.floor(
-        this.elapsedBase + (this.startedAt === null ? 0 : performance.now() - this.startedAt)
+        this.elapsedBase +
+          (this.startedAt === null ? 0 : (this.pausedAt ?? performance.now()) - this.startedAt)
       )
     );
   }
-  move(move: string) {
-    this.startedAt ??= performance.now();
+  private recordAction(move: string) {
     if (this.moves.length >= 10000)
       throw new Error('Limite de movimentos atingido. / Move limit reached.');
+
+    if (move === AUTO_SOLVE) this.pausedAt = performance.now();
+    else this.startedAt ??= performance.now();
     this.moves.push({ move, atMs: this.elapsed() });
-    this.logical.move(move);
     this.attemptRecorded = false;
   }
+
+  move(move: string) {
+    if (this.paused) return;
+    this.recordAction(move);
+    this.logical.move(move);
+  }
+
+  autoSolve() {
+    if (this.paused || this.logical.isSolved()) return;
+
+    this.recordAction(AUTO_SOLVE);
+    this.logical = new Cube();
+  }
+
   payload(cube: RubicksCube3x3, name: string): GamePayload {
     return {
       name,
@@ -124,6 +214,7 @@ export class CubeSession {
       engineVersion: 'cubejs-1.3.2',
       initialState: this.initialState,
       cubeState: state(this.logical),
+      scramble: this.scramble ? [...this.scramble] : null,
       moves: this.moves.map(entry => ({ ...entry })),
       elapsedMs: this.elapsed(),
       appearanceSnapshot: { ...this.appearance },
@@ -138,12 +229,15 @@ export class CubeSession {
     if (game.engineVersion !== 'cubejs-1.3.2' || game.initialState.version !== 1)
       throw new Error('Versão da partida incompatível. / Unsupported game version.');
     const session = new CubeSession(game.appearanceSnapshot, game.preset?.documentId ?? null);
-    session.logical = Cube.fromString(game.initialState.facelets).move(
-      game.moves.map(entry => entry.move).join(' ')
-    );
+    const history = game.moves.map(entry => entry.move);
+    const lastAutoSolve = history.lastIndexOf(AUTO_SOLVE);
+    const replayStart =
+      lastAutoSolve < 0 ? Cube.fromString(game.initialState.facelets) : new Cube();
+    session.logical = replayStart.move(history.slice(lastAutoSolve + 1).join(' '));
     if (session.logical.asString() !== game.cubeState.facelets)
       throw new Error('Partida inconsistente. / Inconsistent game.');
     session.initialState = game.initialState;
+    session.scramble = game.scramble ? [...game.scramble] : null;
     session.moves = game.moves.map(entry => ({ ...entry }));
     session.elapsedBase = game.elapsedMs;
     session.documentId = game.documentId;

@@ -5,6 +5,7 @@ import {
   appearanceSchema,
   settingsSchema,
   presetSchema,
+  savedGameSchema,
   tutorialSchema,
   validateAttempt,
   validateSavedGame,
@@ -97,6 +98,17 @@ export function registerModelValidation(strapi: any) {
       if (!user) throw new ContractError('Proprietário não encontrado.');
       if (existing && existing.user?.id !== user.id)
         throw new ContractError('Não é permitido transferir o proprietário.');
+
+      if (
+        uid === 'api::saved-game.saved-game' &&
+        action === 'update' &&
+        Object.keys(data).length === 1 &&
+        Object.prototype.hasOwnProperty.call(data, 'name')
+      ) {
+        data.name = savedGameSchema.shape.name.parse(data.name);
+        return next();
+      }
+
       data.user = user.id;
 
       const ownedPreset = async (value, current = null) => {
@@ -145,12 +157,14 @@ export function registerModelValidation(strapi: any) {
             : validateSavedGame(merged);
 
         if (existing) {
+          const game = parsed as ReturnType<typeof validateSavedGame>;
           assertSavedGameOrigin(parsed, existing, preset?.documentId ?? null);
-          assertSavedGameHistory(parsed as ReturnType<typeof validateSavedGame>, existing);
+          assertSavedGameHistory(game, existing);
 
           // Keep the existing component instance; never accept another record's component ID.
           delete data.appearanceSnapshot;
-          const { appearanceSnapshot: _snapshot, ...attributes } = parsed;
+          const { appearanceSnapshot: _snapshot, ...attributes } = game;
+          if (data.name === undefined) delete attributes.name;
           Object.assign(data, attributes);
         } else {
           // Parsed snapshots contain values only, never component IDs or live preset links.

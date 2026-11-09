@@ -56,6 +56,7 @@ export interface User {
   email: string;
   firstName?: string;
   lastName?: string;
+  avatar?: { url: string } | null;
 }
 export interface CubeState {
   version: 1;
@@ -71,6 +72,7 @@ export interface GamePayload {
   engineVersion: 'cubejs-1.3.2';
   initialState: CubeState;
   cubeState: CubeState;
+  scramble?: string[] | null;
   moves: Move[];
   elapsedMs: number;
   appearanceSnapshot: Appearance;

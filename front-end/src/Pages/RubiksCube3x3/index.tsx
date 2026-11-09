@@ -27,7 +27,7 @@ const faceColors: Partial<
 function RubicksCube() {
   const { user } = useAuth();
   const { keyboardBindings } = useContext(PreferencesContext).preferences.ui;
-  const { session } = useCubeSession();
+  const { session, togglePause } = useCubeSession();
   const {
     rubicksCube3x3: {
       functions: {
@@ -90,10 +90,11 @@ function RubicksCube() {
       viewRight: () => horizontalCubeMovement('right'),
       viewUp: () => verticalCubeMovement('top'),
       viewDown: () => verticalCubeMovement('bottom'),
+      pause: togglePause,
     };
 
     function handleShortcut(event: KeyboardEvent) {
-      if (shouldIgnoreShortcut(event)) return;
+      if (shouldIgnoreShortcut(event, session.paused)) return;
 
       const key = normalizeKey(event.key);
       const action = ACTIONS.find(item => keyboardBindings[item] === key);
@@ -107,6 +108,7 @@ function RubicksCube() {
     return () => document.removeEventListener('keydown', handleShortcut);
   }, [
     keyboardBindings,
+    session,
     frontPiecesMovement,
     leftPiecesMovement,
     backPiecesMovement,
@@ -115,6 +117,7 @@ function RubicksCube() {
     bottomPiecesMovement,
     horizontalCubeMovement,
     verticalCubeMovement,
+    togglePause,
   ]);
 
   return (
@@ -207,16 +210,16 @@ function RubicksCube() {
   );
 }
 
-function shouldIgnoreShortcut(event: KeyboardEvent) {
+function shouldIgnoreShortcut(event: KeyboardEvent, paused: boolean) {
   if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return true;
-  if (document.querySelector('.generalConfigPopup.active')) return true;
+  if (document.querySelector('[data-app-modal-open]')) return true;
 
   const { target } = event;
-  return (
-    target instanceof HTMLElement &&
-    (target.isContentEditable ||
-      Boolean(target.closest('input, textarea, select, button, summary')))
-  );
+  if (!(target instanceof HTMLElement)) return false;
+  if (target.isContentEditable || target.closest('input, textarea, select, summary')) return true;
+
+  const button = target.closest('button');
+  return Boolean(button && !(paused && button.closest('[data-cube-controls]')));
 }
 
 export default RubicksCube;

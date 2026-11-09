@@ -1,4 +1,5 @@
 import React, { useContext, useId, useState } from 'react';
+import { Keyboard, Lightbulb, Palette } from 'lucide-react';
 import { buttonClass, inputClass } from './controlStyles';
 import { Context } from '../Contexts/GeneralConfigContext/Context';
 import SettingsSection from './GeneralConfigs/SettingsSection';
@@ -72,7 +73,7 @@ export default function AppPreferences() {
 
   return (
     <>
-      <SettingsSection title={en ? 'Theme' : 'Tema'}>
+      <SettingsSection title={en ? 'Theme' : 'Tema'} icon={Palette}>
         <label htmlFor={themeId}>{en ? 'Appearance' : 'Aparência'}</label>
         <select
           id={themeId}
@@ -107,7 +108,7 @@ export default function AppPreferences() {
           </form>
         )}
       </SettingsSection>
-      <SettingsSection title={en ? 'Keyboard controls' : 'Comandos do teclado'}>
+      <SettingsSection title={en ? 'Keyboard controls' : 'Comandos do teclado'} icon={Keyboard}>
         <p>
           {en
             ? 'Focus a field and press a letter, number or arrow key. Shift remains the inverse modifier. Assigning a used key swaps the two controls.'
@@ -136,7 +137,7 @@ export default function AppPreferences() {
           {en ? 'Reset keyboard controls' : 'Restaurar comandos padrão'}
         </button>
       </SettingsSection>
-      <SettingsSection title={en ? 'Hints' : 'Dicas'}>
+      <SettingsSection title={en ? 'Hints' : 'Dicas'} icon={Lightbulb}>
         <label className="flex items-center gap-2">
           <input
             type="checkbox"

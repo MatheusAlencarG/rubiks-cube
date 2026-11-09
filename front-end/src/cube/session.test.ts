@@ -1,5 +1,13 @@
 import { createRubicksCube3x3 } from '../Contexts/RubicksCubeContext/RucksCube3x3/instantiateRubicksCube3x3';
-import { CubeSession, faceletPositions, restoreVisual, keyMove, SOLVED } from './session';
+import {
+  CubeSession,
+  countManualMoves,
+  DEFAULT_APPEARANCE,
+  faceletPositions,
+  restoreVisual,
+  keyMove,
+  SOLVED,
+} from './session';
 import type { SavedGame } from '../api/types';
 
 function readVisual(cube: ReturnType<typeof createRubicksCube3x3>) {
@@ -77,4 +85,84 @@ test('saved games preserve the initial state, previous elapsed time and immutabl
   expect(payload.moves).toHaveLength(2);
   expect(payload.cubeState.facelets).toBe(SOLVED);
   expect(saved.moves).toHaveLength(1);
+});
+
+test('a scrambled game begins with zero player moves and can be solved using its inverse turns', () => {
+  const cube = createRubicksCube3x3();
+  const session = CubeSession.scrambled(DEFAULT_APPEARANCE, null);
+  const payload = session.payload(cube, 'Scrambled');
+
+  expect(payload.scramble?.length).toBeGreaterThanOrEqual(20);
+  expect(payload.initialState.facelets).not.toBe(SOLVED);
+  expect(payload.cubeState).toEqual(payload.initialState);
+  expect(payload.moves).toEqual([]);
+
+  for (const move of [...payload.scramble!].reverse()) {
+    const inverse = move.endsWith('2') ? move : move.endsWith("'") ? move[0] : `${move}'`;
+    session.move(inverse);
+  }
+
+  expect(session.logical.asString()).toBe(SOLVED);
+  expect(session.usedAutoSolve).toBe(false);
+});
+
+test('the automatic solve remains marked after loading and does not count as a player move', () => {
+  const cube = createRubicksCube3x3();
+  const session = CubeSession.scrambled(DEFAULT_APPEARANCE, null);
+  session.autoSolve();
+  expect(session.logical.asString()).toBe(SOLVED);
+  expect(countManualMoves(session.moves)).toBe(0);
+  expect(session.paused).toBe(true);
+  jest.advanceTimersByTime(5000);
+  expect(session.elapsed()).toBe(0);
+  session.togglePause();
+  jest.advanceTimersByTime(5000);
+  expect(session.elapsed()).toBe(0);
+  session.move('F');
+
+  const saved: SavedGame = {
+    ...session.payload(cube, 'Practice'),
+    preset: null,
+    documentId: 'practice',
+  };
+  const resumed = CubeSession.load(saved);
+  expect(resumed.logical.asString()).toBe(saved.cubeState.facelets);
+  resumed.move("F'");
+  expect(resumed.logical.asString()).toBe(SOLVED);
+  expect(countManualMoves(resumed.moves)).toBe(2);
+  expect(resumed.usedAutoSolve).toBe(true);
+});
+
+test('auto-solving a running session freezes the elapsed time', () => {
+  const session = new CubeSession();
+  session.move('F');
+  jest.advanceTimersByTime(250);
+  session.autoSolve();
+  jest.advanceTimersByTime(5000);
+
+  expect(session.paused).toBe(true);
+  expect(session.elapsed()).toBe(250);
+  expect(session.moves[1].atMs).toBe(250);
+});
+
+test('pausing freezes elapsed time and blocks changes until the timer resumes', () => {
+  const session = new CubeSession();
+  session.move('F');
+  jest.advanceTimersByTime(250);
+  session.togglePause();
+
+  const facelets = session.logical.asString();
+  jest.advanceTimersByTime(5000);
+  session.move('R');
+  session.autoSolve();
+  expect(session.logical.asString()).toBe(facelets);
+  expect(session.elapsed()).toBe(250);
+  expect(session.moves).toHaveLength(1);
+
+  session.togglePause();
+  jest.advanceTimersByTime(250);
+  session.move("F'");
+  expect(session.elapsed()).toBe(500);
+  expect(session.moves[1].atMs).toBe(500);
+  expect(session.logical.asString()).toBe(SOLVED);
 });

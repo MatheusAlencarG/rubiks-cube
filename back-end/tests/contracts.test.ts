@@ -69,6 +69,9 @@ test('validates themes, stored hints preference and unique keyboard controls', (
     settingsSchema.parse({ keyboardBindings: null }).keyboardBindings,
     DEFAULT_KEYBOARD_BINDINGS
   );
+  const { pause: _pause, ...legacy } = { ...DEFAULT_KEYBOARD_BINDINGS, front: 'p' };
+  const upgraded = settingsSchema.parse({ keyboardBindings: legacy }).keyboardBindings;
+  assert.deepEqual(upgraded, { ...legacy, pause: 'b' });
   for (const invalid of [
     { themeMode: 'system' },
     { themeSurfaceColor: 'blue' },

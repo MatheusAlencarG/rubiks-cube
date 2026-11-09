@@ -42,6 +42,7 @@ export const DEFAULT_KEYBOARD_BINDINGS = {
   viewRight: 'ArrowRight',
   viewUp: 'ArrowUp',
   viewDown: 'ArrowDown',
+  pause: 'p',
 };
 export const keyboardBindingsSchema = z
   .object({
@@ -55,10 +56,11 @@ export const keyboardBindingsSchema = z
     viewRight: keyboardKey,
     viewUp: keyboardKey,
     viewDown: keyboardKey,
+    pause: keyboardKey,
   })
   .strict()
   .refine(
-    bindings => new Set(Object.values(bindings)).size === 10,
+    bindings => new Set(Object.values(bindings)).size === Object.keys(bindings).length,
     'Cada comando deve usar uma tecla diferente.'
   );
 
@@ -69,10 +71,15 @@ export const settingsSchema = z.object({
   themeMode: z.enum(['dark', 'light', 'custom']).default('dark'),
   themeSurfaceColor: color.default('#242420'),
   themeAccentColor: color.default('#d7fa19'),
-  keyboardBindings: z.preprocess(
-    value => value ?? DEFAULT_KEYBOARD_BINDINGS,
-    keyboardBindingsSchema
-  ),
+  keyboardBindings: z.preprocess(value => {
+    if (value == null) return DEFAULT_KEYBOARD_BINDINGS;
+    if (typeof value !== 'object' || Array.isArray(value) || 'pause' in value) return value;
+
+    const used = new Set(Object.values(value));
+    const pause = 'pabcdefghijklmnopqrstuvwxyz'.split('').find(key => !used.has(key));
+
+    return { ...value, pause };
+  }, keyboardBindingsSchema),
   hintsEnabled: z.boolean().default(false),
 });
 
@@ -90,7 +97,12 @@ export const cubeStateSchema = z
   })
   .strict();
 
-export const movesSchema = z.array(z.object({ move, atMs: elapsed }).strict()).max(10000);
+const AUTO_SOLVE = 'AUTO_SOLVE';
+const moveEntry = z.object({ move, atMs: elapsed }).strict();
+export const movesSchema = z.array(moveEntry).max(10000);
+const savedMovesSchema = z
+  .array(moveEntry.extend({ move: move.or(z.literal(AUTO_SOLVE)) }))
+  .max(10000);
 const scrambleSchema = z.array(move).max(1000).nullable().optional();
 
 export const attemptSchema = z.object({
@@ -100,7 +112,7 @@ export const attemptSchema = z.object({
   engineVersion: z.literal(ENGINE_VERSION),
   initialState: cubeStateSchema,
   scramble: scrambleSchema,
-  moves: movesSchema,
+  moves: movesSchema.min(1),
   appearanceSnapshot: appearanceSchema,
 });
 
@@ -112,7 +124,7 @@ export const savedGameSchema = z.object({
   initialState: cubeStateSchema,
   cubeState: cubeStateSchema,
   scramble: scrambleSchema,
-  moves: movesSchema,
+  moves: savedMovesSchema,
   appearanceSnapshot: appearanceSchema,
   viewRotationX: z.number().finite().default(0),
   viewRotationY: z.number().finite().default(0),
@@ -221,24 +233,36 @@ export function replay(
   initialState: unknown,
   movesInput: unknown,
   durationMs: number,
-  scramble?: unknown
+  scramble?: unknown,
+  allowAutoSolve = false
 ) {
   const cube = parseCubeState(initialState);
-  const moves = movesSchema.parse(movesInput);
+  const moves = (allowAutoSolve ? savedMovesSchema : movesSchema).parse(movesInput);
   let previous = 0;
-  for (const entry of moves) {
+  let replayFrom = 0;
+
+  for (const [index, entry] of moves.entries()) {
     if (entry.atMs < previous || entry.atMs > durationMs) {
       throw new ContractError('Os tempos dos movimentos devem estar em ordem e dentro da duração.');
     }
     previous = entry.atMs;
+    if (entry.move === AUTO_SOLVE) replayFrom = index + 1;
   }
+
   if (scramble != null) {
     const sequence = z.array(move).max(1000).parse(scramble);
     if (new Cube().move(sequence.join(' ')).asString() !== cube.asString()) {
       throw new ContractError('O embaralhamento não corresponde ao estado inicial.');
     }
   }
-  return cube.move(moves.map(entry => entry.move).join(' '));
+
+  const replayStart = replayFrom === 0 ? cube : new Cube();
+  return replayStart.move(
+    moves
+      .slice(replayFrom)
+      .map(entry => entry.move)
+      .join(' ')
+  );
 }
 
 export function validateAttempt(input: unknown) {
@@ -253,8 +277,13 @@ export function validateSavedGame(input: unknown) {
   const parsed = savedGameSchema.parse(input);
   parseCubeState(parsed.cubeState);
   if (
-    replay(parsed.initialState, parsed.moves, parsed.elapsedMs, parsed.scramble).asString() !==
-    parsed.cubeState.facelets
+    replay(
+      parsed.initialState,
+      parsed.moves,
+      parsed.elapsedMs,
+      parsed.scramble,
+      true
+    ).asString() !== parsed.cubeState.facelets
   ) {
     throw new ContractError('O estado atual não corresponde ao replay dos movimentos.');
   }

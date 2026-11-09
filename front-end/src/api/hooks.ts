@@ -2,8 +2,8 @@ import useSWR from 'swr';
 import { useAuth } from '../Contexts/AuthContext';
 import { useContext } from 'react';
 import { Context } from '../Contexts/GeneralConfigContext/Context';
-import { listAll } from './client';
-import type { Tutorial } from './types';
+import { listAll, listPage } from './client';
+import type { Collection, Tutorial } from './types';
 
 export function usePrivateCollection<T>(resource: string, query = '') {
   const { token, user } = useAuth();
@@ -13,6 +13,17 @@ export function usePrivateCollection<T>(resource: string, query = '') {
     { shouldRetryOnError: false }
   );
 }
+
+export function usePrivatePage<T>(resource: string, page: number, pageSize: number, query = '') {
+  const { token, user } = useAuth();
+  const key = token && user ? ([resource, token, query, page, pageSize] as const) : null;
+
+  return useSWR<Collection<T>>(key, () => listPage<T>(resource, page, pageSize, token, query), {
+    shouldRetryOnError: false,
+    dedupingInterval: 0,
+  });
+}
+
 export function useTutorials() {
   const { currentLanguage } = useContext(Context).language;
   const locale = currentLanguage === 'pt-br' ? 'pt-BR' : 'en-US';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { buttonClass, inputClass } from './controlStyles';
+import { compactButtonClass, compactInputClass } from './controlStyles';
 import type { Appearance, Preset } from '../api/types';
 
 export interface PresetInput {
@@ -29,12 +29,8 @@ const colors = [
 ] as const;
 
 const dimensions = [
-  ['widthPx', 'Width (px)', 'Largura (px)', 80, 600],
-  ['pieceRadiusPx', 'Corner radius (px)', 'Raio das peças (px)', 0, 80],
+  ['widthPx', 'Cube size (px)', 'Tamanho do cubo (px)', 80, 600],
   ['transitionMs', 'Animation (ms)', 'Animação (ms)', 0, 5000],
-  ['initialRotationX', 'Initial X rotation', 'Rotação X inicial', -360, 360],
-  ['initialRotationY', 'Initial Y rotation', 'Rotação Y inicial', -360, 360],
-  ['initialRotationZ', 'Initial Z rotation', 'Rotação Z inicial', -360, 360],
 ] as const;
 
 export default function PresetEditor({
@@ -60,94 +56,143 @@ export default function PresetEditor({
   }
 
   return (
-    <>
-      <h3>Presets</h3>
-      <label htmlFor="active-cube-preset">
-        {en ? 'Active preset (starts a new game)' : 'Preset ativo (inicia nova partida)'}
-      </label>
-      <select
-        id="active-cube-preset"
-        className={inputClass}
-        disabled={disabled}
-        value={activePreset?.documentId ?? ''}
-        onChange={event =>
-          onSelect(presets?.find(preset => preset.documentId === event.target.value))
-        }
-      >
-        <option value="">{en ? 'Default' : 'Padrão'}</option>
-        {presets?.map(preset => (
-          <option key={preset.documentId} value={preset.documentId}>
-            {preset.name}
-          </option>
-        ))}
-      </select>
-      {activePreset && (
-        <button className={`${buttonClass} mt-2`} disabled={disabled} onClick={onDelete}>
-          {en ? 'Delete preset' : 'Excluir preset'}
-        </button>
-      )}
+    <section className="rounded-lg border border-solid border-gray-500/40 bg-canvas p-3 text-on-canvas">
+      <h3 className="m-0 mb-2 text-sm font-semibold">
+        {en ? 'Cube appearance' : 'Aparência do cubo'}
+      </h3>
+
+      <div className="flex flex-wrap items-end gap-2">
+        <label className="min-w-0 flex-1 text-xs" htmlFor="active-cube-preset">
+          {en ? 'Active preset (starts a new game)' : 'Preset ativo (inicia nova partida)'}
+          <select
+            id="active-cube-preset"
+            className={compactInputClass + ' mt-1'}
+            disabled={disabled}
+            value={activePreset?.documentId ?? ''}
+            onChange={event =>
+              onSelect(presets?.find(preset => preset.documentId === event.target.value))
+            }
+          >
+            <option value="">{en ? 'Default' : 'Padrão'}</option>
+            {presets?.map(preset => (
+              <option key={preset.documentId} value={preset.documentId}>
+                {preset.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        {activePreset && (
+          <button
+            type="button"
+            className={compactButtonClass}
+            disabled={disabled}
+            onClick={onDelete}
+          >
+            {en ? 'Delete preset' : 'Excluir preset'}
+          </button>
+        )}
+      </div>
+
       <form
         key={`${activePreset?.documentId}-${appearance.widthPx}`}
         onSubmit={submit}
-        className="my-4 grid grid-cols-2 gap-3 mobile:grid-cols-1"
+        className="mt-3 grid gap-3 border-0 border-t border-solid border-gray-500/40 pt-3 text-xs"
       >
-        <label>
-          {en ? 'Preset name' : 'Nome do preset'}
+        <label className="max-w-[240px]">
+          <span className="mb-1 block">{en ? 'Preset name' : 'Nome do preset'}</span>
           <input
-            className={inputClass}
+            className={compactInputClass}
             name="name"
             required
             maxLength={80}
             defaultValue={activePreset?.name ?? (en ? 'My preset' : 'Meu preset')}
           />
         </label>
-        {colors.map(([key, english, portuguese]) => (
-          <label key={key}>
-            {en ? english : portuguese}
-            <input
-              className={`${inputClass} h-10`}
-              name={key}
-              type="color"
-              defaultValue={appearance[key]}
-            />
-          </label>
-        ))}
-        {dimensions.map(([key, english, portuguese, min, max]) => (
-          <label key={key}>
-            {en ? english : portuguese}
-            <input
-              className={inputClass}
-              name={key}
-              type="number"
-              min={min}
-              max={max}
-              required
-              defaultValue={appearance[key]}
-            />
-          </label>
-        ))}
-        <button className={buttonClass} disabled={disabled} name="action" value="create">
-          {en ? 'Create preset' : 'Criar preset'}
-        </button>
-        {activePreset && (
-          <button className={buttonClass} disabled={disabled} name="action" value="update">
-            {en ? 'Update preset' : 'Atualizar preset'}
+        <fieldset className="m-0 min-w-0 border-0 p-0" disabled={disabled}>
+          <legend className="mb-2 p-0 font-semibold">
+            {en ? 'Face colors' : 'Cores das faces'}
+          </legend>
+          <div className="grid w-fit grid-cols-3 gap-x-3 gap-y-2 sm:grid-cols-6">
+            {colors.map(([key, english, portuguese]) => (
+              <label key={key} className="flex min-w-[36px] flex-col items-center gap-1">
+                <input
+                  className="box-border h-7 w-7 cursor-pointer overflow-hidden rounded border border-solid border-gray-500/70 bg-transparent p-0 disabled:cursor-not-allowed [&::-moz-color-swatch]:border-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-0"
+                  name={key}
+                  type="color"
+                  defaultValue={appearance[key]}
+                />
+                {en ? english : portuguese}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset className="m-0 min-w-0 border-0 p-0" disabled={disabled}>
+          <legend className="mb-2 p-0 font-semibold">
+            {en ? 'Size and motion' : 'Tamanho e movimento'}
+          </legend>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {dimensions.map(([key, english, portuguese, min, max]) => (
+              <label key={key} className="flex flex-col gap-1">
+                {en ? english : portuguese}
+                <input
+                  className={compactInputClass + ' !w-20'}
+                  name={key}
+                  type="number"
+                  min={min}
+                  max={max}
+                  required
+                  defaultValue={appearance[key]}
+                />
+              </label>
+            ))}
+          </div>
+          <p className="mb-0 mt-2 opacity-75">
+            {en
+              ? 'Size scales the entire cube. Use 0 ms for instant turns.'
+              : 'O tamanho redimensiona o cubo inteiro. Use 0 ms para giros instantâneos.'}
+          </p>
+        </fieldset>
+
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="submit"
+            className={compactButtonClass}
+            disabled={disabled}
+            name="action"
+            value="create"
+          >
+            {en ? 'Create preset' : 'Criar preset'}
           </button>
-        )}
+          {activePreset && (
+            <button
+              type="submit"
+              className={compactButtonClass}
+              disabled={disabled}
+              name="action"
+              value="update"
+            >
+              {en ? 'Update preset' : 'Atualizar preset'}
+            </button>
+          )}
+        </div>
       </form>
-    </>
+    </section>
   );
 }
 
 function readAppearance(appearance: Appearance, values: FormData) {
-  const nextAppearance = { ...appearance };
+  const widthPx = Number(values.get('widthPx'));
+  const transitionMs = Number(values.get('transitionMs'));
+  const nextAppearance = {
+    ...appearance,
+    widthPx,
+    transitionMs,
+    pieceRadiusPx: appearance.pieceRadiusPx * (widthPx / appearance.widthPx),
+  };
 
-  for (const key of Object.keys(appearance) as (keyof Appearance)[]) {
-    const raw = values.get(key);
-
-    if (raw !== null) {
-      Object.assign(nextAppearance, { [key]: key.endsWith('Color') ? String(raw) : Number(raw) });
-    }
+  for (const [key] of colors) {
+    nextAppearance[key] = String(values.get(key));
   }
 
   return nextAppearance;

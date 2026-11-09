@@ -168,7 +168,6 @@ function applyTheme(ui: UiPreferences) {
   const palette = { custom: ui, light: LIGHT_COLORS, dark: DARK_COLORS }[ui.themeMode];
   const canvasText = contrastingColor(palette.themePrimaryColor);
   const accentText = contrastingColor(palette.themeAccentColor);
-  const inkContrast = contrastingColor(palette.themeSecondaryColor);
   const isLightCanvas = canvasText === '#151513';
 
   const root = document.documentElement;
@@ -180,9 +179,6 @@ function applyTheme(ui: UiPreferences) {
   root.style.setProperty('--on-canvas', canvasText);
   root.style.setProperty('--primary-color', palette.themeAccentColor);
   root.style.setProperty('--on-accent', accentText);
-  root.style.setProperty('--canvas-icon-filter', isLightCanvas ? 'invert(1)' : 'none');
-  root.style.setProperty('--accent-icon-filter', accentText === '#f5f5f5' ? 'invert(1)' : 'none');
-  root.style.setProperty('--ink-icon-filter', inkContrast === '#151513' ? 'invert(1)' : 'none');
 }
 
 export default GeneralConfigContext;

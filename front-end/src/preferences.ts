@@ -9,6 +9,7 @@ export const ACTIONS = [
   'viewRight',
   'viewUp',
   'viewDown',
+  'pause',
 ] as const;
 
 export type KeyboardAction = (typeof ACTIONS)[number];
@@ -36,6 +37,7 @@ export const DEFAULT_BINDINGS: KeyboardBindings = {
   viewRight: 'ArrowRight',
   viewUp: 'ArrowUp',
   viewDown: 'ArrowDown',
+  pause: 'p',
 };
 
 export const DARK_COLORS = {
@@ -91,8 +93,15 @@ export function readUiPreferences(value: unknown): UiPreferences {
     }
   }
 
-  if (validBindings(source.keyboardBindings)) {
-    result.keyboardBindings = { ...source.keyboardBindings };
+  const bindings = source.keyboardBindings;
+  if (bindings && typeof bindings === 'object') {
+    const used = new Set(Object.values(bindings));
+    const pause = Object.prototype.hasOwnProperty.call(bindings, 'pause')
+      ? bindings.pause
+      : 'pabcdefghijklmnopqrstuvwxyz'.split('').find(key => !used.has(key));
+    const upgraded = { ...bindings, pause };
+
+    if (validBindings(upgraded)) result.keyboardBindings = upgraded;
   }
   if (typeof source.hintsEnabled === 'boolean') result.hintsEnabled = source.hintsEnabled;
 
@@ -134,6 +143,7 @@ export function actionLabel(action: KeyboardAction, en: boolean) {
     viewRight: ['Rotate view right', 'Girar visualização à direita'],
     viewUp: ['Rotate view up', 'Girar visualização para cima'],
     viewDown: ['Rotate view down', 'Girar visualização para baixo'],
+    pause: ['Pause or resume timer', 'Pausar ou retomar cronômetro'],
   };
 
   return labels[action][en ? 0 : 1];
