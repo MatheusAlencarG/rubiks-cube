@@ -1,125 +1,159 @@
 import React, { useContext, useEffect, useId, useRef, useState } from 'react';
-import './styles.css';
-import Checkbox from '../Checkbox';
+
+import { Context } from '../../Contexts/GeneralConfigContext/Context';
 import Account from '../Account';
 import AppPreferences from '../AppPreferences';
-import Disclosure from '../Disclosure';
-import { Context } from '../../Contexts/GeneralConfigContext/Context';
+import Checkbox from '../Checkbox';
+import SettingsSection from './SettingsSection';
 
 function GeneralConfigs() {
-  const { setLanguage, currentLanguage, allLanguages } = useContext(Context).language;
-  const { configurations, language } = allLanguages[currentLanguage].global;
-  const en = currentLanguage === 'en-us';
-  const [open, setOpen] = useState(false);
-  const trigger = useRef<HTMLButtonElement>(null);
-  const closeButton = useRef<HTMLButtonElement>(null);
-  const dialog = useRef<HTMLDivElement>(null);
+  const { currentLanguage, allLanguages } = useContext(Context).language;
+  const { configurations } = allLanguages[currentLanguage].global;
+  const closeLabel = currentLanguage === 'en-us' ? 'Close settings' : 'Fechar configurações';
+
+  const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
+
   useEffect(() => {
-    if (!open) return;
-    const previousTrigger = trigger.current;
-    closeButton.current?.focus();
-    function keydown(event: KeyboardEvent) {
+    if (!isOpen) return;
+
+    const trigger = triggerRef.current;
+    closeButtonRef.current?.focus();
+
+    function handleDialogKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         event.preventDefault();
-        setOpen(false);
+        setIsOpen(false);
+        return;
       }
-      if (event.key === 'Tab') {
-        const items = Array.from(
-          dialog.current?.querySelectorAll<HTMLElement>(
-            'button:not(:disabled), input:not(:disabled), select:not(:disabled), a[href]'
-          ) ?? []
-        ).filter(item => !item.closest('[inert]'));
-        const first = items[0];
-        const last = items[items.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last?.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first?.focus();
-        }
+
+      if (event.key === 'Tab' && dialogRef.current) {
+        wrapDialogFocus(event, dialogRef.current);
       }
     }
-    document.addEventListener('keydown', keydown);
+
+    document.addEventListener('keydown', handleDialogKeyDown);
+
     return () => {
-      document.removeEventListener('keydown', keydown);
-      previousTrigger?.focus();
+      document.removeEventListener('keydown', handleDialogKeyDown);
+      trigger?.focus();
     };
-  }, [open]);
+  }, [isOpen]);
+
+  function handleBackdropClick(event: React.MouseEvent<HTMLDivElement>) {
+    if (event.target === event.currentTarget) {
+      setIsOpen(false);
+    }
+  }
+
   return (
     <>
       <button
-        ref={trigger}
+        ref={triggerRef}
         type="button"
-        className="generalConfigIcon"
+        className="absolute right-[15px] top-[15px] w-[40px] cursor-pointer border-0 bg-transparent p-0"
         aria-label={configurations}
         aria-haspopup="dialog"
-        onClick={() => setOpen(true)}
+        onClick={() => setIsOpen(true)}
       >
-        <img src="/images/config-icon.svg" alt="Config Icon" />
+        <img
+          className="block w-full [filter:var(--canvas-icon-filter)]"
+          src="/images/config-icon.svg"
+          alt="Config Icon"
+        />
       </button>
+
       <div
-        onClick={event => {
-          if (event.target === event.currentTarget) setOpen(false);
-        }}
-        className={`generalConfigPopup ${open ? 'active' : ''}`}
-        aria-hidden={!open}
+        className={`generalConfigPopup fixed top-0 z-50 h-screen w-screen items-center justify-center bg-black/50 ${isOpen ? 'active flex' : 'hidden'}`}
+        aria-hidden={!isOpen}
+        onClick={handleBackdropClick}
       >
         <div
-          ref={dialog}
-          className="generalConfigContainer"
+          ref={dialogRef}
+          className="relative h-1/2 w-1/2 overflow-auto rounded-[10px] border-2 border-solid border-accent bg-canvas text-center text-on-canvas mobile:h-4/5 mobile:w-4/5"
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
         >
           <button
-            ref={closeButton}
+            ref={closeButtonRef}
             type="button"
-            className="generalConfigClose"
-            aria-label={en ? 'Close settings' : 'Fechar configurações'}
-            onClick={() => setOpen(false)}
+            className="absolute right-[10px] top-[10px] w-[30px] cursor-pointer border-0 bg-transparent p-0"
+            aria-label={closeLabel}
+            onClick={() => setIsOpen(false)}
           >
-            <img src="/images/close-config.svg" alt="Close Config Popup" />
+            <img
+              className="block w-full [filter:var(--canvas-icon-filter)]"
+              src="/images/close-config.svg"
+              alt="Close Config Popup"
+            />
           </button>
-          <h3 id={titleId}>{configurations}</h3>
-          <div className="generalConfigContent">
+
+          <h3 id={titleId} className="capitalize">
+            {configurations}
+          </h3>
+
+          <div className="flex flex-col items-center justify-between gap-[20px] pb-[20px]">
             <Account />
             <AppPreferences />
-            <div className="languageConfig">
-              <Disclosure
-                title={
-                  <>
-                    <img
-                      className="iconConfig"
-                      src="/images/language-icon.svg"
-                      alt="Language Icon"
-                    />
-                    {language}
-                  </>
-                }
-                buttonClass="languageConfigTitle"
-                contentClass="languageConfigContent"
-                arrowClass="configArrow"
-                arrowSrc="/images/simple-arrow.svg"
-                arrowAlt="Simple Arrow"
-              >
-                <Checkbox
-                  checked={currentLanguage === 'pt-br'}
-                  functionEvent={() => setLanguage('pt-br')}
-                  text="Português"
-                />
-                <Checkbox
-                  checked={currentLanguage === 'en-us'}
-                  functionEvent={() => setLanguage('en-us')}
-                  text="English"
-                />
-              </Disclosure>
-            </div>
+            <LanguageSettings />
           </div>
         </div>
       </div>
     </>
   );
 }
+
+function LanguageSettings() {
+  const { setLanguage, currentLanguage, allLanguages } = useContext(Context).language;
+  const { language } = allLanguages[currentLanguage].global;
+
+  const title = (
+    <>
+      <img
+        className="w-[45px] [filter:var(--accent-icon-filter)]"
+        src="/images/language-icon.svg"
+        alt="Language Icon"
+      />
+      {language}
+    </>
+  );
+
+  return (
+    <SettingsSection title={title} variant="language">
+      <Checkbox
+        checked={currentLanguage === 'pt-br'}
+        functionEvent={() => setLanguage('pt-br')}
+        text="Português"
+      />
+      <Checkbox
+        checked={currentLanguage === 'en-us'}
+        functionEvent={() => setLanguage('en-us')}
+        text="English"
+      />
+    </SettingsSection>
+  );
+}
+
+function wrapDialogFocus(event: KeyboardEvent, dialog: HTMLDivElement) {
+  const focusableElements = Array.from(
+    dialog.querySelectorAll<HTMLElement>(
+      'button:not(:disabled), input:not(:disabled), select:not(:disabled), a[href]'
+    )
+  ).filter(element => !element.closest('[inert]'));
+
+  const first = focusableElements[0];
+  const last = focusableElements[focusableElements.length - 1];
+  const boundary = event.shiftKey ? first : last;
+  const next = event.shiftKey ? last : first;
+
+  if (document.activeElement === boundary) {
+    event.preventDefault();
+    next?.focus();
+  }
+}
+
 export default GeneralConfigs;

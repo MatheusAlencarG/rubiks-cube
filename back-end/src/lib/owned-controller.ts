@@ -42,10 +42,12 @@ export function createOwnedController(uid: keyof typeof populateByUid) {
       if (!data || typeof data !== 'object' || Array.isArray(data)) {
         throw new errors.ValidationError('Envie um objeto JSON no campo data.');
       }
+
       for (const field of reservedFields) {
         if (Object.prototype.hasOwnProperty.call(data, field))
           throw new errors.ValidationError(`O campo ${field} é gerenciado pelo servidor.`);
       }
+
       return data;
     }
 
@@ -55,6 +57,7 @@ export function createOwnedController(uid: keyof typeof populateByUid) {
         filters: { documentId: ctx.params.id, user: { id: userId } },
         populate: populateByUid[uid],
       });
+
       if (!entity) throw new errors.NotFoundError('Registro não encontrado.');
       return entity;
     }
@@ -64,44 +67,55 @@ export function createOwnedController(uid: keyof typeof populateByUid) {
         const userId = getUser(ctx);
         await this.validateQuery(ctx);
         const query = await this.sanitizeQuery(ctx);
+
         const { results, pagination } = await (strapi.service(uid as any) as any).find({
           ...query,
           filters: { $and: [query.filters || {}, { user: { id: userId } }] },
           populate: populateByUid[uid],
         });
+
         return this.transformResponse(await this.sanitizeOutput(results, ctx), { pagination });
       },
+
       async findOne(ctx) {
         return this.transformResponse(await this.sanitizeOutput(await getOwned(ctx), ctx));
       },
+
       async create(ctx) {
         const userId = getUser(ctx);
         const data = getData(ctx);
         await this.validateInput(data, ctx);
         const sanitized: any = await this.sanitizeInput(data, ctx);
+
         // Set ownership AFTER sanitizing client input; never accept it from the request body.
         const entity = await documents.create({
           data: { ...sanitized, user: userId },
           populate: populateByUid[uid],
         });
+
         ctx.status = 201;
         return this.transformResponse(await this.sanitizeOutput(entity, ctx));
       },
+
       async update(ctx) {
         const existing = await getOwned(ctx);
         if (uid === 'api::solve-attempt.solve-attempt') {
           throw new errors.ValidationError('Tentativas concluídas são imutáveis.');
         }
+
         const data = getData(ctx);
         await this.validateInput(data, ctx);
         const sanitized: any = await this.sanitizeInput(data, ctx);
+
         const entity = await documents.update({
           documentId: existing.documentId,
           data: sanitized,
           populate: populateByUid[uid],
         });
+
         return this.transformResponse(await this.sanitizeOutput(entity, ctx));
       },
+
       async delete(ctx) {
         const existing = await getOwned(ctx);
         await documents.delete({ documentId: existing.documentId });

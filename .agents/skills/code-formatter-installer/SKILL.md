@@ -1,11 +1,25 @@
 ---
 name: code-formatter-installer
-description: Installs and configures Prettier, ESLint, EditorConfig, and other code quality tools to enforce consistent code style across the team. Generates config files, npm scripts, editor settings recommendations, and CI integration suggestions. Use when users request "setup prettier", "add eslint", "configure code formatting", or "enforce code style".
+description: Configure formatters and linters such as Prettier, ESLint, and EditorConfig, or review code for readability when requested. Follow this project's React and Tailwind styling conventions when reviewing or refactoring components.
 ---
 
 # Code Formatter & Linter Installer
 
-Establish consistent code formatting and linting across your project.
+Establish consistent formatting and linting. When the user asks for more readable code, review its structure as well as its formatting. Preserve behavior and keep the review within the requested files or feature.
+
+## Readability Review
+
+- Use one blank line between distinct steps, such as preparing data, saving it, and updating the interface. Keep statements that belong to the same step together. Treat line length as a formatting setting and use blank lines to show how the code is organized.
+- Extract a named function when it gives a meaningful rule or operation a clear name, such as `normalizeKeyboardShortcut`. Keep simple assignments and calls at their point of use. A function can improve clarity even when it has one caller.
+- Keep JSX easy to scan. Move validation, data transformations, and lengthy conditions out of the markup. Extract a component when it represents a recognizable part of the interface, such as keyboard settings.
+- Make the main flow readable from top to bottom. Use names that explain each step and keep supporting details close to where they are used.
+- After reviewing the structure, run the project's formatter and lint checks. For behavior-sensitive changes, run the relevant existing tests.
+
+## React Styling with Tailwind
+
+When the frontend uses Tailwind, keep all application and component styling in `.tsx` files. Use Tailwind utilities in `className` and explicit class mappings for variants. Keep dynamic style values, such as user-selected colors, in the component via React's `style` prop or CSS custom properties set there.
+
+Do not create, extend, or import separate `.css` files or CSS Modules for application styles. If the build requires a CSS entry point to load Tailwind, reserve that file for the framework directives or import. Move existing application styles into TSX when a styling migration is within the requested scope.
 
 ## Core Workflow
 

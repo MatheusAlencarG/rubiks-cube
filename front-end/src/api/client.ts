@@ -4,6 +4,7 @@ export const STRAPI_URL = (process.env.REACT_APP_STRAPI_URL || 'http://localhost
   /\/+$/,
   ''
 );
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -12,12 +13,14 @@ export class ApiError extends Error {
     super(message);
   }
 }
+
 export async function api<T>(
   route: string,
   options: { token?: string | null; method?: string; body?: unknown } = {}
 ): Promise<T> {
   const abort = new AbortController();
   const timeout = window.setTimeout(() => abort.abort(), 15000);
+
   try {
     const response = await fetch(`${STRAPI_URL}/api${route}`, {
       method: options.method || 'GET',
@@ -28,9 +31,11 @@ export async function api<T>(
       },
       body: options.body === undefined ? undefined : JSON.stringify(options.body),
     });
+
     const body = response.status === 204 ? null : await response.json();
     if (!response.ok)
       throw new ApiError(response.status, body?.error?.message || `HTTP ${response.status}`);
+
     return body as T;
   } catch (error) {
     if (error instanceof ApiError) throw error;
@@ -39,39 +44,42 @@ export async function api<T>(
     window.clearTimeout(timeout);
   }
 }
+
 export async function listAll<T>(
   resource: string,
   token?: string | null,
   query = ''
 ): Promise<T[]> {
   const results: T[] = [];
+
   for (let page = 1; ; page++) {
     const response = await api<Collection<T>>(
       `/${resource}?pagination[pageSize]=100&pagination[page]=${page}${query ? `&${query}` : ''}`,
       { token }
     );
+
     results.push(...response.data);
     if (page >= response.meta.pagination.pageCount) return results;
   }
 }
+
 export function mediaUrl(value: string) {
   const url = new URL(value, `${STRAPI_URL}/`);
   return ['https:', 'http:'].includes(url.protocol) ? url.href : '';
 }
+
 export async function writeDocument<T>(
   resource: string,
   token: string,
   data: unknown,
   documentId?: string
 ) {
-  return (
-    await api<{ data: T }>(
-      `/${resource}${documentId ? `/${encodeURIComponent(documentId)}` : ''}`,
-      {
-        token,
-        method: documentId ? 'PUT' : 'POST',
-        body: { data },
-      }
-    )
-  ).data;
+  const path = documentId ? `/${resource}/${encodeURIComponent(documentId)}` : `/${resource}`;
+  const response = await api<{ data: T }>(path, {
+    token,
+    method: documentId ? 'PUT' : 'POST',
+    body: { data },
+  });
+
+  return response.data;
 }

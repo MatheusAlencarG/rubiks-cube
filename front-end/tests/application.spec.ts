@@ -97,11 +97,13 @@ test('preserves the carousel and video disclosure', async ({ page }) => {
   });
   await page.mouse.up();
   await expect(carousel.locator('.swiper-slide-active h3')).not.toHaveText(firstTitle || '');
-  await page.locator('.videosTitle').click();
-  await expect(page.locator('.videoContent')).toHaveClass(/active/);
+  const videosToggle = page.locator('.videosTitle');
+  await videosToggle.click();
+  await expect(videosToggle).toHaveAttribute('aria-expanded', 'true');
   await expect(page.locator('.videoContent iframe').first()).toBeVisible();
-  await page.locator('.videosTitle').click();
-  await expect(page.locator('.videoContent')).not.toHaveClass(/active/);
+
+  await videosToggle.click();
+  await expect(videosToggle).toHaveAttribute('aria-expanded', 'false');
   await expect(page.locator('.videoContent')).toHaveCSS('height', '0px');
 });
 

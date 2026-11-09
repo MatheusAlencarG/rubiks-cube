@@ -1,4 +1,5 @@
 import React from 'react';
+import { buttonClass } from './controlStyles';
 import type { SavedGame } from '../api/types';
 interface SavedGamesProps {
   en: boolean;
@@ -27,10 +28,10 @@ export default function SavedGames({
             {game.name} · {(game.elapsedMs / 1000).toFixed(2)}s · {game.moves.length}{' '}
             {en ? 'moves' : 'movimentos'}
           </span>
-          <button className="app-button" disabled={disabled} onClick={() => onResume(game)}>
+          <button className={buttonClass} disabled={disabled} onClick={() => onResume(game)}>
             {en ? 'Resume' : 'Retomar'}
           </button>
-          <button className="app-button" disabled={disabled} onClick={() => onDelete(game)}>
+          <button className={buttonClass} disabled={disabled} onClick={() => onDelete(game)}>
             {en ? 'Delete game' : 'Excluir partida'}
           </button>
         </div>

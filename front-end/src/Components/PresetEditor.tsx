@@ -1,10 +1,13 @@
 import React from 'react';
+import { buttonClass, inputClass } from './controlStyles';
 import type { Appearance, Preset } from '../api/types';
+
 export interface PresetInput {
   name: string;
   appearance: Appearance;
   update: boolean;
 }
+
 interface PresetEditorProps {
   en: boolean;
   appearance: Appearance;
@@ -15,6 +18,7 @@ interface PresetEditorProps {
   onDelete: () => void;
   onSave: (input: PresetInput) => void;
 }
+
 const colors = [
   ['frontColor', 'Front', 'Frente'],
   ['backColor', 'Back', 'Trás'],
@@ -23,6 +27,7 @@ const colors = [
   ['topColor', 'Top', 'Cima'],
   ['bottomColor', 'Bottom', 'Baixo'],
 ] as const;
+
 const dimensions = [
   ['widthPx', 'Width (px)', 'Largura (px)', 80, 600],
   ['pieceRadiusPx', 'Corner radius (px)', 'Raio das peças (px)', 0, 80],
@@ -31,6 +36,7 @@ const dimensions = [
   ['initialRotationY', 'Initial Y rotation', 'Rotação Y inicial', -360, 360],
   ['initialRotationZ', 'Initial Z rotation', 'Rotação Z inicial', -360, 360],
 ] as const;
+
 export default function PresetEditor({
   en,
   appearance,
@@ -45,18 +51,14 @@ export default function PresetEditor({
     event.preventDefault();
     const values = new FormData(event.currentTarget);
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
-    const nextAppearance = { ...appearance };
-    for (const key of Object.keys(appearance) as (keyof Appearance)[]) {
-      const raw = values.get(key);
-      if (raw !== null)
-        Object.assign(nextAppearance, { [key]: key.endsWith('Color') ? String(raw) : Number(raw) });
-    }
+
     onSave({
       name: String(values.get('name')),
-      appearance: nextAppearance,
+      appearance: readAppearance(appearance, values),
       update: submitter?.value === 'update',
     });
   }
+
   return (
     <>
       <h3>Presets</h3>
@@ -65,7 +67,7 @@ export default function PresetEditor({
       </label>
       <select
         id="active-cube-preset"
-        className="app-input"
+        className={inputClass}
         disabled={disabled}
         value={activePreset?.documentId ?? ''}
         onChange={event =>
@@ -80,7 +82,7 @@ export default function PresetEditor({
         ))}
       </select>
       {activePreset && (
-        <button className="app-button mt-2" disabled={disabled} onClick={onDelete}>
+        <button className={`${buttonClass} mt-2`} disabled={disabled} onClick={onDelete}>
           {en ? 'Delete preset' : 'Excluir preset'}
         </button>
       )}
@@ -92,7 +94,7 @@ export default function PresetEditor({
         <label>
           {en ? 'Preset name' : 'Nome do preset'}
           <input
-            className="app-input"
+            className={inputClass}
             name="name"
             required
             maxLength={80}
@@ -103,7 +105,7 @@ export default function PresetEditor({
           <label key={key}>
             {en ? english : portuguese}
             <input
-              className="app-input h-10"
+              className={`${inputClass} h-10`}
               name={key}
               type="color"
               defaultValue={appearance[key]}
@@ -114,7 +116,7 @@ export default function PresetEditor({
           <label key={key}>
             {en ? english : portuguese}
             <input
-              className="app-input"
+              className={inputClass}
               name={key}
               type="number"
               min={min}
@@ -124,15 +126,29 @@ export default function PresetEditor({
             />
           </label>
         ))}
-        <button className="app-button" disabled={disabled} name="action" value="create">
+        <button className={buttonClass} disabled={disabled} name="action" value="create">
           {en ? 'Create preset' : 'Criar preset'}
         </button>
         {activePreset && (
-          <button className="app-button" disabled={disabled} name="action" value="update">
+          <button className={buttonClass} disabled={disabled} name="action" value="update">
             {en ? 'Update preset' : 'Atualizar preset'}
           </button>
         )}
       </form>
     </>
   );
+}
+
+function readAppearance(appearance: Appearance, values: FormData) {
+  const nextAppearance = { ...appearance };
+
+  for (const key of Object.keys(appearance) as (keyof Appearance)[]) {
+    const raw = values.get(key);
+
+    if (raw !== null) {
+      Object.assign(nextAppearance, { [key]: key.endsWith('Color') ? String(raw) : Number(raw) });
+    }
+  }
+
+  return nextAppearance;
 }

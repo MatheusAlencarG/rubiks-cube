@@ -7,6 +7,22 @@ import { useCubeSession } from '../../Contexts/CubeSessionContext';
 import { Context as PreferencesContext } from '../../Contexts/GeneralConfigContext/Context';
 import { ACTIONS, KeyboardAction, normalizeKey } from '../../preferences';
 import { RenderPieceFaceProps } from '../../types/rubiksCubePage';
+import type {
+  PieceClassValues,
+  PieceColors,
+  RubicksCube3x3ColorsKeys,
+} from '../../types/RubicksCube3x3';
+
+const faceColors: Partial<
+  Record<PieceClassValues, { sticker: PieceColors; colorKey: RubicksCube3x3ColorsKeys }>
+> = {
+  top: { sticker: 'yellow', colorKey: 'topColor' },
+  left: { sticker: 'blue', colorKey: 'leftColor' },
+  right: { sticker: 'green', colorKey: 'rightColor' },
+  bottom: { sticker: 'white', colorKey: 'bottomColor' },
+  back: { sticker: 'orange', colorKey: 'backColor' },
+  front: { sticker: 'red', colorKey: 'frontColor' },
+};
 
 function RubicksCube() {
   const { user } = useAuth();
@@ -37,20 +53,16 @@ function RubicksCube() {
     translateY,
     translateZ,
   }: RenderPieceFaceProps): ReactNode {
-    const backgroundColor =
-      piece.getData('colors').includes('yellow') && pieceFaceType === 'top'
-        ? cube.getColor('topColor')
-        : piece.getData('colors').includes('blue') && pieceFaceType === 'left'
-          ? cube.getColor('leftColor')
-          : piece.getData('colors').includes('green') && pieceFaceType === 'right'
-            ? cube.getColor('rightColor')
-            : piece.getData('colors').includes('white') && pieceFaceType === 'bottom'
-              ? cube.getColor('bottomColor')
-              : piece.getData('colors').includes('orange') && pieceFaceType === 'back'
-                ? cube.getColor('backColor')
-                : piece.getData('colors').includes('red') && pieceFaceType === 'front'
-                  ? cube.getColor('frontColor')
-                  : '';
+    const face = faceColors[pieceFaceType];
+    const hasSticker = face && piece.getData('colors').includes(face.sticker);
+    const backgroundColor = hasSticker ? cube.getColor(face.colorKey) : '';
+    const transform = [
+      translateX ? `translateX(${translateX}px)` : '',
+      translateY ? `translateY(${translateY}px)` : '',
+      translateZ ? `translateZ(${translateZ}px)` : '',
+      rotateX ? `rotateX(${rotateX}deg)` : '',
+      rotateY ? `rotateY(${rotateY}deg)` : '',
+    ].join(' ');
 
     return (
       <div
@@ -58,7 +70,7 @@ function RubicksCube() {
         style={{
           width: piece.getStyle('faceWidth'),
           height: piece.getStyle('faceHeight'),
-          transform: `${translateX ? `translateX(${translateX}px)` : ''} ${translateY ? `translateY(${translateY}px)` : ''} ${translateZ ? `translateZ(${translateZ}px)` : ''} ${rotateX ? `rotateX(${rotateX}deg)` : ''} ${rotateY ? `rotateY(${rotateY}deg)` : ''}`,
+          transform,
           borderRadius: cube.getStyle('pieceRadius'),
           backgroundColor,
         }}
@@ -67,40 +79,32 @@ function RubicksCube() {
   }
 
   useEffect(() => {
-    function keydown(event: KeyboardEvent) {
-      if (
-        event.repeat ||
-        event.ctrlKey ||
-        event.metaKey ||
-        event.altKey ||
-        document.querySelector('.generalConfigPopup.active')
-      )
-        return;
-      const target = event.target;
-      if (
-        target instanceof HTMLElement &&
-        (target.isContentEditable || target.closest('input, textarea, select, button, summary'))
-      )
-        return;
-      const action = ACTIONS.find(item => keyboardBindings[item] === normalizeKey(event.key));
+    const handlers: Record<KeyboardAction, (inverse?: 'shift') => void> = {
+      front: frontPiecesMovement,
+      left: leftPiecesMovement,
+      back: backPiecesMovement,
+      right: rightPiecesMovement,
+      top: topPiecesMovement,
+      bottom: bottomPiecesMovement,
+      viewLeft: () => horizontalCubeMovement('left'),
+      viewRight: () => horizontalCubeMovement('right'),
+      viewUp: () => verticalCubeMovement('top'),
+      viewDown: () => verticalCubeMovement('bottom'),
+    };
+
+    function handleShortcut(event: KeyboardEvent) {
+      if (shouldIgnoreShortcut(event)) return;
+
+      const key = normalizeKey(event.key);
+      const action = ACTIONS.find(item => keyboardBindings[item] === key);
       if (!action) return;
-      const handlers: Record<KeyboardAction, (inverse?: 'shift') => void> = {
-        front: frontPiecesMovement,
-        left: leftPiecesMovement,
-        back: backPiecesMovement,
-        right: rightPiecesMovement,
-        top: topPiecesMovement,
-        bottom: bottomPiecesMovement,
-        viewLeft: () => horizontalCubeMovement('left'),
-        viewRight: () => horizontalCubeMovement('right'),
-        viewUp: () => verticalCubeMovement('top'),
-        viewDown: () => verticalCubeMovement('bottom'),
-      };
+
       event.preventDefault();
       handlers[action](event.shiftKey ? 'shift' : undefined);
     }
-    document.addEventListener('keydown', keydown);
-    return () => document.removeEventListener('keydown', keydown);
+
+    document.addEventListener('keydown', handleShortcut);
+    return () => document.removeEventListener('keydown', handleShortcut);
   }, [
     keyboardBindings,
     frontPiecesMovement,
@@ -200,6 +204,18 @@ function RubicksCube() {
         </div>
       </div>
     </>
+  );
+}
+
+function shouldIgnoreShortcut(event: KeyboardEvent) {
+  if (event.repeat || event.ctrlKey || event.metaKey || event.altKey) return true;
+  if (document.querySelector('.generalConfigPopup.active')) return true;
+
+  const { target } = event;
+  return (
+    target instanceof HTMLElement &&
+    (target.isContentEditable ||
+      Boolean(target.closest('input, textarea, select, button, summary')))
   );
 }
 

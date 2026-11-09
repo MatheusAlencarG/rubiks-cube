@@ -25,7 +25,7 @@ export default function Disclosure({
       <button
         type="button"
         id={`${contentId}-trigger`}
-        className={`disclosure-button ${buttonClass}`}
+        className={`box-border w-full border-0 [font-family:inherit] [font-size:inherit] ${buttonClass}`}
         aria-expanded={expanded}
         aria-controls={contentId}
         onClick={() => setExpanded(previous => !previous)}

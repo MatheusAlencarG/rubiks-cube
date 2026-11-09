@@ -49,6 +49,7 @@ export function registerModelValidation(strapi: any) {
     const { uid, action, params } = context;
     const isPrivate = privateUids.includes(uid);
     const isTutorial = uid === 'api::tutorial.tutorial';
+
     if ((!isPrivate && !isTutorial) || !['create', 'update'].includes(action)) return next();
 
     if (uid === 'api::solve-attempt.solve-attempt' && action === 'update') {
@@ -72,10 +73,12 @@ export function registerModelValidation(strapi: any) {
             .documents(uid)
             .findOne({ documentId: params.documentId, locale: params.locale, populate })
         : null;
+
     if (isPrivate && action === 'update' && !existing) throw new errors.NotFoundError();
 
     try {
       const merged = { ...existing, ...data };
+
       if (isTutorial) {
         const parsed = tutorialSchema.parse(merged);
         const { videos, ...attributes } = parsed;
@@ -86,9 +89,11 @@ export function registerModelValidation(strapi: any) {
 
       const userRef = reference(data.user, existing?.user);
       if (!userRef) throw new ContractError('Um proprietário é obrigatório.');
+
       const user = await strapi.db
         .query('plugin::users-permissions.user')
         .findOne({ where: whereReference(userRef) });
+
       if (!user) throw new ContractError('Proprietário não encontrado.');
       if (existing && existing.user?.id !== user.id)
         throw new ContractError('Não é permitido transferir o proprietário.');
@@ -97,16 +102,19 @@ export function registerModelValidation(strapi: any) {
       const ownedPreset = async (value, current = null) => {
         const ref = reference(value, current);
         if (!ref) return null;
+
         const preset = await strapi.documents('api::cube-preset.cube-preset').findFirst({
           filters: { ...whereReference(ref), user: { id: user.id } },
           populate: { appearance: true },
         });
+
         if (!preset) throw new ContractError('O preset deve existir e pertencer ao usuário.');
         return preset;
       };
 
       if (uid === 'api::user-setting.user-setting') {
         Object.assign(data, settingsSchema.parse(merged), { ownerKey: String(user.id) });
+
         if (action === 'create') {
           const duplicate = await strapi.db
             .query(uid)
@@ -116,6 +124,7 @@ export function registerModelValidation(strapi: any) {
               'O usuário já possui configurações. Atualize o registro existente.'
             );
         }
+
         if (data.activePreset !== undefined) {
           const preset = await ownedPreset(data.activePreset, existing?.activePreset);
           data.activePreset = preset?.documentId ?? null;
@@ -129,35 +138,16 @@ export function registerModelValidation(strapi: any) {
         if (data.preset !== undefined) data.preset = preset?.documentId ?? null;
         if (action === 'create' && preset)
           merged.appearanceSnapshot = appearanceSchema.parse(preset.appearance);
+
         const parsed =
           uid === 'api::solve-attempt.solve-attempt'
             ? validateAttempt(merged)
             : validateSavedGame(merged);
 
         if (existing) {
-          if (
-            parsed.engineVersion !== existing.engineVersion ||
-            !isDeepStrictEqual(parsed.initialState, existing.initialState) ||
-            !isDeepStrictEqual(
-              parsed.appearanceSnapshot,
-              appearanceSchema.parse(existing.appearanceSnapshot)
-            ) ||
-            (preset?.documentId ?? null) !== (existing.preset?.documentId ?? null)
-          ) {
-            throw new ContractError(
-              'Estado inicial, motor, preset de origem e snapshot são imutáveis.'
-            );
-          }
-          const game = parsed as ReturnType<typeof validateSavedGame>;
-          if (
-            game.elapsedMs < existing.elapsedMs ||
-            game.moves.length < existing.moves.length ||
-            existing.moves.some((entry, index) => !isDeepStrictEqual(entry, game.moves[index]))
-          ) {
-            throw new ContractError(
-              'Uma partida salva deve preservar o tempo e o histórico anterior.'
-            );
-          }
+          assertSavedGameOrigin(parsed, existing, preset?.documentId ?? null);
+          assertSavedGameHistory(parsed as ReturnType<typeof validateSavedGame>, existing);
+
           // Keep the existing component instance; never accept another record's component ID.
           delete data.appearanceSnapshot;
           const { appearanceSnapshot: _snapshot, ...attributes } = parsed;
@@ -174,6 +164,35 @@ export function registerModelValidation(strapi: any) {
       if (error instanceof ContractError) throw new errors.ValidationError(error.message);
       throw error;
     }
+
     return next();
   });
+}
+
+function assertSavedGameOrigin(
+  game: ReturnType<typeof validateSavedGame> | ReturnType<typeof validateAttempt>,
+  existing: any,
+  presetDocumentId: string | null
+) {
+  if (
+    game.engineVersion !== existing.engineVersion ||
+    !isDeepStrictEqual(game.initialState, existing.initialState) ||
+    !isDeepStrictEqual(
+      game.appearanceSnapshot,
+      appearanceSchema.parse(existing.appearanceSnapshot)
+    ) ||
+    presetDocumentId !== (existing.preset?.documentId ?? null)
+  ) {
+    throw new ContractError('Estado inicial, motor, preset de origem e snapshot são imutáveis.');
+  }
+}
+
+function assertSavedGameHistory(game: ReturnType<typeof validateSavedGame>, existing: any) {
+  if (
+    game.elapsedMs < existing.elapsedMs ||
+    game.moves.length < existing.moves.length ||
+    existing.moves.some((entry, index) => !isDeepStrictEqual(entry, game.moves[index]))
+  ) {
+    throw new ContractError('Uma partida salva deve preservar o tempo e o histórico anterior.');
+  }
 }

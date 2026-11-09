@@ -16,9 +16,11 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
 
   async function importImage(relativeUrl: string) {
     if (mediaCache.has(relativeUrl)) return mediaCache.get(relativeUrl);
+
     const publicRoot = path.resolve(sourceRoot, 'public');
     const file = path.resolve(publicRoot, `.${relativeUrl}`);
     if (!file.startsWith(`${publicRoot}${path.sep}`)) throw new Error('Imagem fora de public.');
+
     const name = `rubiks-seed-${path.basename(file)}`;
     let media = await files.findOne({ where: { name } });
     if (!media) {
@@ -36,6 +38,7 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
           },
         });
     }
+
     mediaCache.set(relativeUrl, media.id);
     return media.id;
   }
@@ -55,9 +58,11 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
         videos: [],
       };
     }
+
     const source =
       kind === 'parts' ? parts[sourceKey] : steps[sourceKey].find(step => step.id === number);
     if (!source) throw new Error(`Conteúdo não encontrado: ${sourceKey}/${number}`);
+
     const importedParts = [];
     for (const part of source.parts) {
       importedParts.push({
@@ -67,6 +72,7 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
         imageAlt: part.title,
       });
     }
+
     return {
       title: source.title,
       description: source.description,
@@ -82,81 +88,97 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
     };
   }
 
+  async function updateLegacyOverview(
+    existing: { description: string; documentId: string },
+    sourceKey: string,
+    locale: string
+  ) {
+    const legacyDescription =
+      sourceKey === 'en-us'
+        ? 'Use W, A, S, D, Q and E to move the cube faces. Hold Shift for inverse moves. Use the arrow keys to rotate the cube view.'
+        : 'Use W, A, S, D, Q e E para mover as faces do cubo. Segure Shift para os movimentos inversos. Use as setas para girar a visualização do cubo.';
+
+    if (existing.description !== legacyDescription) return false;
+
+    const { documentId } = existing;
+    const populate = { parts: true, videos: true };
+    const draft = await documents.findOne({ documentId, locale, status: 'draft', populate });
+    const published = await documents.findOne({
+      documentId,
+      locale,
+      status: 'published',
+      populate,
+    });
+
+    const fields = [
+      'title',
+      'slug',
+      'description',
+      'kind',
+      'cubeType',
+      'displayOrder',
+      'stepNumber',
+    ];
+    const hasUntouchedContent =
+      draft &&
+      published &&
+      fields.every(key => draft[key] === published[key]) &&
+      !draft.parts.length &&
+      !draft.videos.length &&
+      !published.parts.length &&
+      !published.videos.length;
+
+    if (!hasUntouchedContent) return false;
+
+    const source = await tutorialData(sourceKey, 'overview');
+    if (draft.title !== source.title) return false;
+
+    await documents.update({
+      documentId,
+      locale,
+      status: 'published',
+      data: { description: source.description },
+    });
+
+    return true;
+  }
+
   let created = 0;
   let updated = 0;
+
   for (const item of [
     { key: 'overview', kind: 'overview' },
     { key: 'cube-parts', kind: 'parts' },
     ...steps['pt-br'].map(step => ({ key: `step-${step.id}`, kind: 'step', number: step.id })),
   ]) {
     let documentId: string | undefined;
+
     for (const [sourceKey, locale] of [
       ['pt-br', 'pt-BR'],
       ['en-us', 'en-US'],
     ]) {
       const slug = `${item.key}-${sourceKey}`;
       const existing = await documents.findFirst({ locale, filters: { slug } });
+
       if (existing) {
         documentId ??= existing.documentId;
-        if (item.kind === 'overview') {
-          const legacyDescription =
-            sourceKey === 'en-us'
-              ? 'Use W, A, S, D, Q and E to move the cube faces. Hold Shift for inverse moves. Use the arrow keys to rotate the cube view.'
-              : 'Use W, A, S, D, Q e E para mover as faces do cubo. Segure Shift para os movimentos inversos. Use as setas para girar a visualização do cubo.';
-          if (existing.description === legacyDescription) {
-            const populate = { parts: true, videos: true };
-            const draft = await documents.findOne({
-              documentId: existing.documentId,
-              locale,
-              status: 'draft',
-              populate,
-            });
-            const published = await documents.findOne({
-              documentId: existing.documentId,
-              locale,
-              status: 'published',
-              populate,
-            });
-            const fields = [
-              'title',
-              'slug',
-              'description',
-              'kind',
-              'cubeType',
-              'displayOrder',
-              'stepNumber',
-            ];
-            if (
-              draft &&
-              published &&
-              fields.every(key => draft[key] === published[key]) &&
-              !draft.parts.length &&
-              !draft.videos.length &&
-              !published.parts.length &&
-              !published.videos.length
-            ) {
-              const source = await tutorialData(sourceKey, 'overview');
-              if (draft.title === source.title) {
-                await documents.update({
-                  documentId: existing.documentId,
-                  locale,
-                  status: 'published',
-                  data: { description: source.description },
-                });
-                updated++;
-              }
-            }
-          }
+
+        if (item.kind === 'overview' && (await updateLegacyOverview(existing, sourceKey, locale))) {
+          updated++;
         }
+
         continue;
       }
+
       const data = { ...(await tutorialData(sourceKey, item.kind, item.number)), slug };
       const result = documentId
         ? await documents.update({ documentId, locale, status: 'published', data })
         : await documents.create({ locale, status: 'published', data });
+
       documentId = result.documentId;
       created++;
     }
   }
+
   return { created, updated, images: mediaCache.size };
 }

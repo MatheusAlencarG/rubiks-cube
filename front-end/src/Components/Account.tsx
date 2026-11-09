@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { buttonClass, inputClass } from './controlStyles';
 import { useAuth } from '../Contexts/AuthContext';
 import { Context } from '../Contexts/GeneralConfigContext/Context';
 
@@ -6,24 +7,44 @@ export default function Account() {
   const auth = useAuth();
   const { language, preferences } = useContext(Context);
   const en = language.currentLanguage === 'en-us';
+
   const [register, setRegister] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+
+  const accountLabel = en ? 'Account' : 'Conta';
+  const signInLabel = en ? 'Sign in' : 'Entrar';
+  const createAccountLabel = en ? 'Create account' : 'Criar conta';
+  const submitLabel = register ? createAccountLabel : signInLabel;
+  const toggleLabel = register
+    ? en
+      ? 'I already have an account'
+      : 'Já tenho conta'
+    : en
+      ? 'Register'
+      : 'Cadastrar';
+
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
+    const identifier = String(data.get('identifier'));
+    const password = String(data.get('password'));
+
     setBusy(true);
     setError('');
+
     try {
-      const password = String(data.get('password'));
-      if (register)
+      if (register) {
         await auth.register({
           username: String(data.get('username')),
-          email: String(data.get('identifier')),
+          email: identifier,
           password,
         });
-      else await auth.login({ identifier: String(data.get('identifier')), password });
+      } else {
+        await auth.login({ identifier, password });
+      }
+
       form.reset();
     } catch (failure) {
       setError((failure as Error).message);
@@ -31,15 +52,25 @@ export default function Account() {
       setBusy(false);
     }
   }
+
+  function toggleRegistration() {
+    setRegister(current => !current);
+    setError('');
+  }
+
+  function retrySync() {
+    void preferences.save({ ...preferences.ui, language: en ? 'en-US' : 'pt-BR' }).catch(() => {});
+  }
+
   return (
-    <section className="w-4/5" aria-label={en ? 'Account' : 'Conta'}>
-      <h4>{en ? 'Account' : 'Conta'}</h4>
+    <section className="w-4/5" aria-label={accountLabel}>
+      <h4>{accountLabel}</h4>
       {auth.loading ? (
         <p role="status">{en ? 'Loading account…' : 'Carregando conta…'}</p>
       ) : auth.user ? (
         <>
           <p>{auth.user.username}</p>
-          <button className="app-button" onClick={auth.logout}>
+          <button className={buttonClass} onClick={auth.logout}>
             {en ? 'Sign out' : 'Sair'}
           </button>
           <p>
@@ -60,7 +91,7 @@ export default function Account() {
               <label>
                 {en ? 'Username' : 'Nome de usuário'}
                 <input
-                  className="app-input"
+                  className={inputClass}
                   name="username"
                   autoComplete="username"
                   required
@@ -71,7 +102,7 @@ export default function Account() {
             <label>
               {en ? 'Email' : 'E-mail'}
               <input
-                className="app-input"
+                className={inputClass}
                 name="identifier"
                 type="email"
                 autoComplete={register ? 'email' : 'username'}
@@ -81,7 +112,7 @@ export default function Account() {
             <label>
               {en ? 'Password' : 'Senha'}
               <input
-                className="app-input"
+                className={inputClass}
                 name="password"
                 type="password"
                 autoComplete={register ? 'new-password' : 'current-password'}
@@ -89,36 +120,17 @@ export default function Account() {
                 required
               />
             </label>
-            <button className="app-button" disabled={busy}>
-              {busy
-                ? en
-                  ? 'Please wait…'
-                  : 'Aguarde…'
-                : register
-                  ? en
-                    ? 'Create account'
-                    : 'Criar conta'
-                  : en
-                    ? 'Sign in'
-                    : 'Entrar'}
+            <button className={buttonClass} disabled={busy}>
+              {busy ? (en ? 'Please wait…' : 'Aguarde…') : submitLabel}
             </button>
           </form>
           <button
             type="button"
-            className="app-button mt-3"
+            className={`${buttonClass} mt-3`}
             disabled={busy}
-            onClick={() => {
-              setRegister(!register);
-              setError('');
-            }}
+            onClick={toggleRegistration}
           >
-            {register
-              ? en
-                ? 'I already have an account'
-                : 'Já tenho conta'
-              : en
-                ? 'Register'
-                : 'Cadastrar'}
+            {toggleLabel}
           </button>
         </>
       )}
@@ -127,15 +139,7 @@ export default function Account() {
       )}
       {(error || preferences.error) && <p role="alert">{error || preferences.error}</p>}
       {preferences.error && auth.user && (
-        <button
-          className="app-button"
-          disabled={preferences.loading}
-          onClick={() =>
-            void preferences
-              .save({ ...preferences.ui, language: en ? 'en-US' : 'pt-BR' })
-              .catch(() => {})
-          }
-        >
+        <button className={buttonClass} disabled={preferences.loading} onClick={retrySync}>
           {en ? 'Retry sync' : 'Tentar sincronizar novamente'}
         </button>
       )}

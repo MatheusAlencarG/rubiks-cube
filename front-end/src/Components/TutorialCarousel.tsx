@@ -12,9 +12,21 @@ const params: SwiperParams = {
   activeSlideKey: '0',
   breakpoints: { 0: { slidesPerView: 1 }, 601: { slidesPerView: 2 }, 901: { slidesPerView: 3 } },
 };
-export default function TutorialCarousel({ children }: { children: React.ReactElement[] }) {
+
+interface TutorialCarouselProps {
+  children: React.ReactElement[];
+  className?: string;
+}
+
+export default function TutorialCarousel({ children, className = '' }: TutorialCarouselProps) {
+  const firstSlideKey = String(children[0]?.key ?? '0');
+
   return (
-    <Swiper {...params} activeSlideKey={String(children[0]?.key ?? '0')}>
+    <Swiper
+      {...params}
+      activeSlideKey={firstSlideKey}
+      containerClass={`swiper-container [&_.swiper-wrapper]:flex [&_.swiper-wrapper]:items-center ${className}`}
+    >
       {children}
     </Swiper>
   );

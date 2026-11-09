@@ -33,73 +33,63 @@ function localLanguage(): CurrentLanguageValues {
 function GeneralConfigContext({ children }: GeneralConfigContextProps) {
   const [currentLanguage, setCurrentLanguage] = useState<CurrentLanguageValues>(localLanguage);
   const [ui, setUi] = useState(localUi);
-  const latestUi = useRef(ui);
-  latestUi.current = ui;
-  const { token, user } = useAuth();
-  const { data, error, isLoading, mutate } = usePrivateCollection<Settings>('user-settings');
   const [saveError, setSaveError] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const { token, user } = useAuth();
+  const { data, error, isLoading, mutate } = usePrivateCollection<Settings>('user-settings');
+  const settings = data?.[0];
+
+  const latestUi = useRef(ui);
   const latest = useRef(data);
-  latest.current = data;
   const queue = useRef<Promise<void>>(Promise.resolve());
   const editedToken = useRef<string | null>(null);
   const uiEditedToken = useRef<string | null>(null);
   const currentToken = useRef(token);
+
+  latestUi.current = ui;
+  latest.current = data;
   currentToken.current = token;
-  const settings = data?.[0];
+
   useEffect(() => {
     setSaveError('');
   }, [token]);
+
   useEffect(() => {
     if (settings && editedToken.current !== token)
       setCurrentLanguage(settings.language === 'en-US' ? 'en-us' : 'pt-br');
   }, [settings, token]);
+
   useEffect(() => {
     if (settings && uiEditedToken.current !== token) setUi(readUiPreferences(settings));
   }, [settings, token]);
+
   useLayoutEffect(() => {
     try {
       localStorage.setItem('rubiks.ui.v1', JSON.stringify(ui));
     } catch {}
-    const palette =
-      ui.themeMode === 'custom' ? ui : ui.themeMode === 'light' ? LIGHT_COLORS : DARK_COLORS;
-    const root = document.documentElement;
-    root.dataset.theme = ui.themeMode;
-    root.style.setProperty('--black', palette.themePrimaryColor);
-    root.style.setProperty('--white', palette.themeSurfaceColor);
-    root.style.setProperty('--ink', palette.themeSecondaryColor);
-    root.style.setProperty('--on-canvas', contrastingColor(palette.themePrimaryColor));
-    root.style.setProperty('--primary-color', palette.themeAccentColor);
-    root.style.setProperty('--on-accent', contrastingColor(palette.themeAccentColor));
-    root.style.setProperty(
-      '--canvas-icon-filter',
-      contrastingColor(palette.themePrimaryColor) === '#151513' ? 'invert(1)' : 'none'
-    );
-    root.style.setProperty(
-      '--accent-icon-filter',
-      contrastingColor(palette.themeAccentColor) === '#f5f5f5' ? 'invert(1)' : 'none'
-    );
-    root.style.setProperty(
-      '--ink-icon-filter',
-      contrastingColor(palette.themeSecondaryColor) === '#151513' ? 'invert(1)' : 'none'
-    );
-    root.style.colorScheme =
-      contrastingColor(palette.themePrimaryColor) === '#151513' ? 'light' : 'dark';
+
+    applyTheme(ui);
   }, [ui]);
+
   useEffect(() => {
     try {
       localStorage.setItem('rubiks.language.v1', currentLanguage);
     } catch {}
   }, [currentLanguage]);
+
   async function save(changes: SettingsPatch) {
     if (!token || !user) return;
+
     const requestToken = token;
     setSaving(true);
     setSaveError('');
+
     const task = queue.current
       .catch(() => {})
       .then(async () => {
         if (currentToken.current !== requestToken) return;
+
         const existing =
           latest.current?.[0] ?? (await listAll<Settings>('user-settings', requestToken))[0];
         const result = await writeDocument<Settings>(
@@ -114,11 +104,13 @@ function GeneralConfigContext({ children }: GeneralConfigContextProps) {
               },
           existing?.documentId
         );
+
         if (currentToken.current !== requestToken) return;
         latest.current = [result];
         await mutate([result], { revalidate: false });
       });
     queue.current = task;
+
     try {
       await task;
     } catch (failure) {
@@ -128,17 +120,21 @@ function GeneralConfigContext({ children }: GeneralConfigContextProps) {
       if (queue.current === task) setSaving(false);
     }
   }
+
   function setLanguage(language: CurrentLanguageValues) {
     setCurrentLanguage(language);
+
     if (token) {
       editedToken.current = token;
       void save({ language: language === 'en-us' ? 'en-US' : 'pt-BR' }).catch(() => {});
     }
   }
+
   function update(data: Partial<UiPreferences>) {
     const next = readUiPreferences({ ...latestUi.current, ...data });
     latestUi.current = next;
     setUi(next);
+
     if (token) {
       uiEditedToken.current = token;
       void save(data).catch(() => {});
@@ -166,6 +162,27 @@ function GeneralConfigContext({ children }: GeneralConfigContextProps) {
       {children}
     </Context.Provider>
   );
+}
+
+function applyTheme(ui: UiPreferences) {
+  const palette = { custom: ui, light: LIGHT_COLORS, dark: DARK_COLORS }[ui.themeMode];
+  const canvasText = contrastingColor(palette.themePrimaryColor);
+  const accentText = contrastingColor(palette.themeAccentColor);
+  const inkContrast = contrastingColor(palette.themeSecondaryColor);
+  const isLightCanvas = canvasText === '#151513';
+
+  const root = document.documentElement;
+  root.dataset.theme = ui.themeMode;
+  root.style.colorScheme = isLightCanvas ? 'light' : 'dark';
+  root.style.setProperty('--black', palette.themePrimaryColor);
+  root.style.setProperty('--white', palette.themeSurfaceColor);
+  root.style.setProperty('--ink', palette.themeSecondaryColor);
+  root.style.setProperty('--on-canvas', canvasText);
+  root.style.setProperty('--primary-color', palette.themeAccentColor);
+  root.style.setProperty('--on-accent', accentText);
+  root.style.setProperty('--canvas-icon-filter', isLightCanvas ? 'invert(1)' : 'none');
+  root.style.setProperty('--accent-icon-filter', accentText === '#f5f5f5' ? 'invert(1)' : 'none');
+  root.style.setProperty('--ink-icon-filter', inkContrast === '#151513' ? 'invert(1)' : 'none');
 }
 
 export default GeneralConfigContext;
