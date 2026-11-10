@@ -526,6 +526,9 @@ export interface ApiSolveAttemptSolveAttempt extends Struct.CollectionTypeSchema
         minLength: 3;
       }> &
       Schema.Attribute.DefaultTo<'3x3'>;
+    devOnly: Schema.Attribute.Boolean &
+      Schema.Attribute.Private &
+      Schema.Attribute.DefaultTo<false>;
     durationMs: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<

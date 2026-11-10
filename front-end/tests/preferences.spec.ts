@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { mockStrapi } from './fixtures/strapi';
-import { DEFAULT_UI } from '../src/preferences';
+import { DEFAULT_UI } from '../src/features/preferences/preferences';
 
 test.beforeEach(async ({ page }) => {
   await mockStrapi(page);
@@ -59,7 +59,7 @@ test('themes, custom palette, bindings and hints preference survive reload for v
   await page.getByRole('button', { name: /^(configurações|configurations)$/i }).click();
   await page.getByRole('button', { name: /^Tema/ }).click();
   await page.getByRole('combobox', { name: 'Aparência', exact: true }).selectOption('light');
-  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(238, 242, 247)');
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(234, 241, 250)');
   await page.getByRole('combobox', { name: 'Aparência', exact: true }).selectOption('custom');
   await page.getByLabel('Fundo da página', { exact: true }).fill('#123456');
   await page.getByLabel('Painéis', { exact: true }).fill('#234567');
@@ -75,6 +75,7 @@ test('themes, custom palette, bindings and hints preference survive reload for v
   await page.getByRole('button', { name: /^Dicas/ }).click();
   await page.getByLabel('Modo dicas', { exact: true }).check();
   await page.getByRole('button', { name: /^(fechar configurações|close settings)$/i }).click();
+  await page.getByRole('button', { name: 'Nova partida', exact: true }).click();
   await page.locator('body').click({ position: { x: 3, y: 3 } });
   await page.keyboard.press('w');
   await expect(page.getByLabel('Controles da partida')).toContainText('0 movimentos');

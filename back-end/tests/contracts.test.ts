@@ -25,12 +25,16 @@ const moves = [
   { move: "U'", atMs: 300 },
   { move: "R'", atMs: 700 },
 ];
+const rankedScramble = Array.from({ length: 20 }, (_, index) => (index % 2 ? 'U' : 'R'));
+const rankedStart = state(new Cube().move(rankedScramble.join(' ')).asString());
 const attempt = () => ({
   cubeType: '3x3',
   engineVersion: ENGINE_VERSION,
-  initialState: initial,
-  scramble: ['R', 'U'],
-  moves,
+  initialState: rankedStart,
+  scramble: rankedScramble,
+  moves: [...rankedScramble]
+    .reverse()
+    .map((move, index) => ({ move: `${move}'`, atMs: index * 50 })),
   durationMs: 1000,
   completedAt: new Date().toISOString(),
   appearanceSnapshot: {},
@@ -134,6 +138,20 @@ test('does not accept unfinished attempts or non-positive durations', () => {
   assert.throws(() => validateAttempt({ ...attempt(), durationMs: 0 }));
 });
 
+test('rejects ranked attempts starting solved, one turn away, or without a full scramble', () => {
+  assert.throws(() => validateAttempt({ ...attempt(), scramble: null }), /embaralhado/);
+  assert.throws(() => validateAttempt({ ...attempt(), initialState: state() }), /embaralhado/);
+  assert.throws(
+    () =>
+      validateAttempt({
+        ...attempt(),
+        initialState: state(new Cube().move('R').asString()),
+        moves: [{ move: "R'", atMs: 0 }],
+      }),
+    /embaralhado/
+  );
+});
+
 test('a saved state must match the replay, including a game with no moves', () => {
   const saved = {
     ...attempt(),
@@ -143,9 +161,9 @@ test('a saved state must match the replay, including a game with no moves', () =
     savedAt: new Date().toISOString(),
   };
   assert.equal(validateSavedGame(saved).cubeState.facelets, SOLVED_FACELETS);
-  assert.throws(() => validateSavedGame({ ...saved, cubeState: initial }));
+  assert.throws(() => validateSavedGame({ ...saved, cubeState: rankedStart }));
   assert.equal(
-    validateSavedGame({ ...saved, moves: [], elapsedMs: 0, cubeState: initial }).elapsedMs,
+    validateSavedGame({ ...saved, moves: [], elapsedMs: 0, cubeState: rankedStart }).elapsedMs,
     0
   );
 });

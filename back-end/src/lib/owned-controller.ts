@@ -1,5 +1,6 @@
 import { factories } from '@strapi/strapi';
 import { errors } from '@strapi/utils';
+import { isLocalDevelopmentRequest } from './local-request';
 
 const populateByUid = {
   'api::user-setting.user-setting': { activePreset: { populate: { appearance: true } } },
@@ -25,6 +26,7 @@ const reservedFields = [
   'updatedAt',
   'publishedAt',
   'locale',
+  'devOnly',
 ];
 
 export function createOwnedController(uid: keyof typeof populateByUid) {
@@ -62,6 +64,22 @@ export function createOwnedController(uid: keyof typeof populateByUid) {
       return entity;
     }
 
+    async function createOwned(this: any, ctx, devOnly: boolean) {
+      const userId = getUser(ctx);
+      const data = getData(ctx);
+      await this.validateInput(data, ctx);
+      const sanitized: any = await this.sanitizeInput(data, ctx);
+
+      // Ownership and the development marker are assigned by the server.
+      const entity = await documents.create({
+        data: { ...sanitized, user: userId, ...(devOnly ? { devOnly: true } : {}) },
+        populate: populateByUid[uid],
+      });
+
+      ctx.status = 201;
+      return this.transformResponse(await this.sanitizeOutput(entity, ctx));
+    }
+
     return {
       async find(ctx) {
         const userId = getUser(ctx);
@@ -82,19 +100,14 @@ export function createOwnedController(uid: keyof typeof populateByUid) {
       },
 
       async create(ctx) {
-        const userId = getUser(ctx);
-        const data = getData(ctx);
-        await this.validateInput(data, ctx);
-        const sanitized: any = await this.sanitizeInput(data, ctx);
+        return createOwned.call(this, ctx, false);
+      },
 
-        // Set ownership AFTER sanitizing client input; never accept it from the request body.
-        const entity = await documents.create({
-          data: { ...sanitized, user: userId },
-          populate: populateByUid[uid],
-        });
+      async createDev(ctx) {
+        if (uid !== 'api::solve-attempt.solve-attempt' || !isLocalDevelopmentRequest(ctx))
+          return ctx.notFound();
 
-        ctx.status = 201;
-        return this.transformResponse(await this.sanitizeOutput(entity, ctx));
+        return createOwned.call(this, ctx, true);
       },
 
       async update(ctx) {

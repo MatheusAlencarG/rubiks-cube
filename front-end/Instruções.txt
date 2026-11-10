@@ -1,13 +1,31 @@
 To do:
 
-- Organizar estrutura de pastas de arquivos&nomes dos arquivos
+- Fazer sistema de dicas. com as seguintes regras:
+  1. Colocar uma imagem de seta girando com o valor da tecla cadastrada na peça do centro, as faces que estõ escondidas fica flutuando do lado mais perto da face respectiva
+  2. Deixar um modal flutuando no canto direto do cubo com o step respectivo que ele está no momento
+  3. Colocar um botão que redireciona para a página do step que o usuário está no momento
 
--
+- Adicionar um botão nos controles do cubo de "jogo livre", onde vai ter as seguintes regras:
+  1. Nao conta nada no cronometro
+  2. Nao da para iniciar uma nova partida
+  3. Nao salva nada no strapi em geral
+  4. Botao de resolver cubo funciona normal
+  5. contador de movimentos nao fica habilitado
+  6. Sistema de dicas funciona normal nesse modo livre
 
--
+- Contador de movimentos do cubo fica mais destacado no canto inferior esquerdo
 
--
+- Adicionar pequenos botões no canto inferior direito com os tipos de cubos, por enquanto adicione os tipos 3x3, 4x4, 5x5
 
+- Fazer os cubos 4x4 e 5x5
+
+- Adicionar os comandos desses cubos novos, as teclas entre os cubos pode ser o mesmo, organizar melhor os comandos no modal de configuraçoes gerais 
+
+- Adicionar os botões de tipos dos cubos na página de tutorial também, o conteúdo de 4x4 e 5x5 pode deixar vazio por enquanto, depois vou pedir para vc popular com algumas regras
+
+- Verificar como o front está interpretando muitos usuários no ranking, sei que mostra 100, mas tem paginação? Caso nao tenha, adicionar essa paginação
+
+- Quero também que 
 
 =============================================
 

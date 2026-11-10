@@ -44,11 +44,22 @@ O adaptador usa a ordem URFDLB e o mesmo motor `cubejs-1.3.2` do backend. As pos
 
 ## Organização dos componentes
 
+| Pasta                       | Responsabilidade                                                            |
+| --------------------------- | --------------------------------------------------------------------------- |
+| `src/app/`                  | Composição da aplicação, layout e rotas                                     |
+| `src/features/account/`     | Autenticação, perfil e modal da conta                                       |
+| `src/features/cube/`        | Tela do cubo, controles, motor visual, sessão e persistência de partidas    |
+| `src/features/preferences/` | Configurações de idioma, tema, teclado e dicas                              |
+| `src/features/tutorial/`    | Páginas, navegação, carrossel e consulta de conteúdo do tutorial            |
+| `src/shared/`               | Cliente Strapi e componentes de interface usados por várias funcionalidades |
+| `src/types/`                | Declarações de bibliotecas externas                                         |
+| `tests/`                    | Testes de navegador com Playwright                                          |
+
 As rotas compartilham o layout com `Outlet`; páginas do cubo e dos carrosséis são carregadas sob demanda com `React.lazy` e `Suspense`. Menu e paginação são derivados da rota e dos tutoriais publicados, sem cópias em estado ou funções vazias de navegação.
 
 `Disclosure` controla os painéis de idiomas e vídeos com estado React e atributos de acessibilidade. Configurações permitem acesso pelo teclado, Escape, retorno e contenção do foco. `TutorialCarousel` concentra as opções compartilhadas do Swiper e reage às mudanças de largura. `SavedGames` e `PresetEditor` separam a apresentação do fluxo de persistência em `CubeControls`.
 
-Os contextos do cubo criam instâncias por sessão; os handlers de teclado permanecem estáveis entre movimentos. Tipos antigos, CSS vazio e dependências sem uso foram removidos. Use npm e `package-lock.json`.
+Os contextos do cubo criam instâncias por sessão. O modelo e os testes unitários ficam junto à funcionalidade que exercitam. Os dados iniciais do tutorial ficam em `back-end/seed-data/tutorials/` e são usados tanto pelo importador do Strapi quanto pelos testes com respostas simuladas.
 
 ## Verificação
 

@@ -4,6 +4,13 @@ import { z } from 'zod';
 export const ENGINE_VERSION = 'cubejs-1.3.2';
 export const SOLVED_FACELETS = 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB';
 export const MAX_DURATION = 2147483647;
+export const MIN_RANKED_SCRAMBLE_MOVES = 20;
+export const TRIVIAL_STARTS = [
+  SOLVED_FACELETS,
+  ...Array.from('URFDLB').flatMap(face =>
+    ['', "'", '2'].map(turn => new Cube().move(face + turn).asString())
+  ),
+];
 const move = z
   .string()
   .regex(
@@ -267,6 +274,15 @@ export function replay(
 
 export function validateAttempt(input: unknown) {
   const parsed = attemptSchema.parse(input);
+  if (
+    (parsed.scramble?.length ?? 0) < MIN_RANKED_SCRAMBLE_MOVES ||
+    TRIVIAL_STARTS.includes(parsed.initialState.facelets)
+  ) {
+    throw new ContractError(
+      'Inicie uma nova partida com um cubo embaralhado para registrar o tempo.'
+    );
+  }
+
   if (!replay(parsed.initialState, parsed.moves, parsed.durationMs, parsed.scramble).isSolved()) {
     throw new ContractError('A tentativa deve terminar com o cubo resolvido.');
   }

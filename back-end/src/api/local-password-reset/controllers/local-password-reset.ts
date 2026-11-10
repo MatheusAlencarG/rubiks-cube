@@ -1,9 +1,7 @@
 import type { Core } from '@strapi/strapi';
 import type { Context } from 'koa';
 import { z } from 'zod';
-
-const loopbackHosts = new Set(['localhost', '127.0.0.1', '[::1]', '::1']);
-const loopbackAddresses = new Set(['127.0.0.1', '::1', '::ffff:127.0.0.1']);
+import { isLocalDevelopmentRequest } from '../../../lib/local-request';
 
 const resetSchema = z
   .object({
@@ -16,33 +14,10 @@ const resetSchema = z
   })
   .refine(input => input.password === input.passwordConfirmation);
 
-function isLocalRequest(ctx: Context) {
-  if (
-    !loopbackAddresses.has(ctx.req.socket.remoteAddress ?? '') ||
-    !loopbackHosts.has(ctx.hostname) ||
-    ctx.get('forwarded') ||
-    ctx.get('x-forwarded-for') ||
-    ctx.get('x-forwarded-host')
-  ) {
-    return false;
-  }
-
-  const origin = ctx.get('origin');
-  if (!origin) return true;
-
-  try {
-    return loopbackHosts.has(new URL(origin).hostname);
-  } catch {
-    return false;
-  }
-}
-
 export default ({ strapi }: { strapi: Core.Strapi }) => {
   function isAvailable(ctx: Context) {
     return (
-      ['development', 'test'].includes(process.env.NODE_ENV ?? '') &&
-      strapi.config.get('server.localPasswordReset') === true &&
-      isLocalRequest(ctx)
+      strapi.config.get('server.localPasswordReset') === true && isLocalDevelopmentRequest(ctx)
     );
   }
 

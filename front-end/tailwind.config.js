@@ -10,6 +10,8 @@ module.exports = {
         surface: 'var(--white)',
         accent: 'var(--primary-color)',
         ink: 'var(--ink)',
+        'muted-ink': 'var(--muted-ink)',
+        detail: 'var(--detail-border)',
         'on-canvas': 'var(--on-canvas)',
         'on-accent': 'var(--on-accent)',
       },

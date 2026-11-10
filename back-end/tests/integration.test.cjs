@@ -31,6 +31,11 @@ const base = process.env.PUBLIC_URL;
 const state = facelets => ({ version: 1, cubeType: '3x3', facelets });
 const initialState = state(new Cube().move('R').asString());
 const solvedState = state(new Cube().asString());
+const rankedScramble = Array.from({ length: 20 }, (_, index) => (index % 2 ? 'U' : 'R'));
+const rankedStart = state(new Cube().move(rankedScramble.join(' ')).asString());
+const rankedMoves = [...rankedScramble]
+  .reverse()
+  .map((move, index) => ({ move: `${move}'`, atMs: index * 30 }));
 let app;
 let alice;
 let bob;
@@ -39,12 +44,13 @@ let settings;
 let attempt;
 let game;
 
-async function request(route, { method = 'GET', token, data, raw = false } = {}) {
+async function request(route, { method = 'GET', token, data, raw = false, headers } = {}) {
   const response = await fetch(base + route, {
     method,
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...headers,
     },
     body: data === undefined ? undefined : JSON.stringify(raw ? data : { data }),
   });
@@ -350,9 +356,9 @@ describe('Strapi + MySQL integration', { timeout: 180000 }, () => {
       durationMs: 1000,
       completedAt: new Date().toISOString(),
       engineVersion: 'cubejs-1.3.2',
-      initialState,
-      scramble: ['R'],
-      moves: [{ move: "R'", atMs: 700 }],
+      initialState: rankedStart,
+      scramble: rankedScramble,
+      moves: rankedMoves,
     };
     attempt = success(
       await request('/api/solve-attempts', { method: 'POST', token: alice.token, data }),
@@ -404,6 +410,95 @@ describe('Strapi + MySQL integration', { timeout: 180000 }, () => {
         400
       );
     }
+  });
+
+  it('separates the public ranking from local dev and legacy attempts', async () => {
+    const publicRequest = { headers: { 'x-forwarded-for': '192.0.2.1' } };
+    const data = {
+      completedAt: new Date().toISOString(),
+      engineVersion: 'cubejs-1.3.2',
+      initialState: rankedStart,
+      scramble: rankedScramble,
+      moves: rankedMoves,
+      appearanceSnapshot: {},
+    };
+
+    async function record(token, durationMs, route = '/api/solve-attempts', moves = rankedMoves) {
+      return success(
+        await request(route, { method: 'POST', token, data: { ...data, durationMs, moves } }),
+        201
+      );
+    }
+
+    const legacy = await record(alice.token, 3000);
+    const manual = await record(bob.token, 850);
+    await app.db.query('api::solve-attempt.solve-attempt').update({
+      where: { documentId: legacy.documentId },
+      data: { durationMs: 1, scramble: ['R'], initialState, moves: [{ move: "R'", atMs: 1 }] },
+    });
+    const devRoute = '/api/solve-attempts/dev';
+    assert.equal(
+      (
+        await request(devRoute, {
+          ...publicRequest,
+          method: 'POST',
+          token: bob.token,
+          data: { ...data, durationMs: 600 },
+        })
+      ).status,
+      404
+    );
+    assert.equal(
+      (
+        await request('/api/solve-attempts', {
+          method: 'POST',
+          token: bob.token,
+          data: { ...data, durationMs: 600, devOnly: true },
+        })
+      ).status,
+      400
+    );
+    const devMoves = [{ move: 'F', atMs: 0 }, { move: "F'", atMs: 0 }, ...rankedMoves];
+    const dev = await record(bob.token, 600, devRoute, devMoves);
+    const aliceName = (await request('/api/account/profile', { token: alice.token })).body.username;
+    const bobName = (await request('/api/account/profile', { token: bob.token })).body.username;
+    const ranking = success(await request('/api/ranking?populate=*', publicRequest));
+
+    const aliceEntries = ranking.filter(entry => entry.username === aliceName);
+    const bobEntries = ranking.filter(entry => entry.username === bobName);
+    assert.equal(aliceEntries.length, 1);
+    assert.equal(bobEntries.length, 1);
+    assert.equal(aliceEntries[0].durationMs, attempt.durationMs);
+    assert.equal(aliceEntries[0].moveCount, rankedMoves.length);
+    assert.equal(bobEntries[0].durationMs, 850);
+    assert.equal(bobEntries[0].moveCount, rankedMoves.length);
+    assert.ok(bobEntries[0].position < aliceEntries[0].position);
+    for (const entry of ranking) {
+      assert.deepEqual(Object.keys(entry).sort(), [
+        'durationMs',
+        'moveCount',
+        'position',
+        'username',
+      ]);
+    }
+    const localRanking = success(await request('/api/ranking'));
+    const localAlice = localRanking.find(entry => entry.username === aliceName);
+    const localBob = localRanking.find(entry => entry.username === bobName);
+    assert.equal(localAlice.durationMs, 1);
+    assert.equal(localAlice.moveCount, 1);
+    assert.equal(localBob.durationMs, 600);
+    assert.equal(localBob.moveCount, devMoves.length);
+
+    for (const [token, documentId] of [
+      [alice.token, legacy.documentId],
+      [bob.token, manual.documentId],
+      [bob.token, dev.documentId],
+    ]) {
+      success(await request(`/api/solve-attempts/${documentId}`, { method: 'DELETE', token }));
+    }
+
+    const updated = success(await request('/api/ranking'));
+    assert.ok(!updated.some(entry => entry.username === bobName));
   });
 
   it('validates saved games, monotonic progress and user isolation', async () => {

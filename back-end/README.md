@@ -163,7 +163,7 @@ Com MySQL e `.env` configurados, execute na pasta `back-end`:
 npm run seed
 ```
 
-A importação lê os JSONs e imagens de `front-end`, cria os documentos traduzidos, envia as imagens à Media Library e publica o conteúdo. Cada idioma do mesmo tutorial compartilha o `documentId`. O comando é idempotente e preserva entradas que já possuem os slugs de importação; ele não é executado automaticamente a cada inicialização.
+A importação lê os JSONs de `back-end/seed-data/tutorials/` e as imagens de `front-end/public/`, cria os documentos traduzidos, envia as imagens à Media Library e publica o conteúdo. Cada idioma do mesmo tutorial compartilha o `documentId`. O comando é idempotente e preserva entradas que já possuem os slugs de importação; ele não é executado automaticamente a cada inicialização.
 
 O seed atualiza a descrição antiga e padronizada dos comandos para um texto compatível com atalhos personalizados. Isso só ocorre se o texto corresponder exatamente ao importado originalmente e as versões de rascunho e publicação forem iguais, sem partes ou vídeos adicionais. Conteúdo personalizado e rascunhos em edição são preservados.
 

@@ -279,6 +279,7 @@ rubiks-cube/
 │   ├── src/components/        # Aparência, partes e vídeos
 │   ├── src/extensions/        # Extensão do usuário nativo do Strapi
 │   ├── src/lib/               # Validações, propriedade, bootstrap e importação
+│   ├── seed-data/tutorials/   # Conteúdo inicial dos tutoriais
 │   ├── scripts/               # Configuração e seed
 │   ├── tests/                 # Contratos e integração com MySQL
 │   ├── docker-compose.yml     # MySQL 8.4 para desenvolvimento
@@ -290,13 +291,11 @@ rubiks-cube/
 │   ├── scripts/               # Servidor de preview do build
 │   ├── tests/                 # Testes de navegador com Playwright
 │   ├── src/
-│   │   ├── api/               # Cliente HTTP, contratos e consultas SWR
-│   │   ├── cube/              # Estado canônico e adaptação do motor visual
-│   │   ├── Components/        # Componentes compartilhados
-│   │   ├── Contexts/          # Idioma, estado e motor do cubo
-│   │   ├── Pages/             # Páginas e conteúdo dos tutoriais
-│   │   ├── types/             # Tipos e interfaces TypeScript
-│   │   └── App.tsx            # Composição e rotas da aplicação
+│   │   ├── app/               # Composição, layout e rotas da aplicação
+│   │   ├── features/          # Conta, cubo, preferências e tutorial
+│   │   ├── shared/            # Cliente Strapi e componentes reutilizáveis
+│   │   ├── types/             # Declarações de bibliotecas externas
+│   │   └── index.tsx          # Entrada do React
 │   ├── tailwind.config.js     # Tema, breakpoints e integração Tailwind
 │   ├── playwright.config.ts   # Projetos desktop e celular
 │   └── package.json

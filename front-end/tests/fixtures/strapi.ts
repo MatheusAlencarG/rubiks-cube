@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
-import parts from '../../src/Pages/Tutorial/TutorialParts/content.json';
-import steps from '../../src/Pages/Tutorial/TutorialStep/content.json';
+import parts from '../../../back-end/seed-data/tutorials/parts.json';
+import steps from '../../../back-end/seed-data/tutorials/steps.json';
 
 export function tutorials(locale: 'pt-br' | 'en-us') {
   const en = locale === 'en-us';

@@ -17,6 +17,7 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   page,
 }, info) => {
   test.setTimeout(90000);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   const suffix = `${info.project.name}${Date.now()}`;
   const username = `cube${suffix}`;
   const password = `Test-${suffix}-password`;
@@ -52,6 +53,7 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
 
   await page.goto('/rubicksCube');
   await expect(page.getByRole('button', { name: 'Save game', exact: true })).toBeEnabled();
+  await page.getByRole('button', { name: 'New game', exact: true }).click();
   await blur(page);
   await page.keyboard.press('w');
   await expect(page.getByRole('button', { name: 'Save game', exact: true })).toBeEnabled();
@@ -82,6 +84,17 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   await blur(page);
   await page.keyboard.press('Shift+W');
   await expect(page.getByRole('button', { name: 'Save game', exact: true })).toBeEnabled();
+  const keys: Record<string, string> = { U: 'q', R: 'd', F: 'w', D: 'e', L: 'a', B: 's' };
+  for (const move of [...game.scramble].reverse()) {
+    const key = keys[move[0]];
+    const inverse = move.length === 1 ? `Shift+${key.toUpperCase()}` : key;
+    await page.keyboard.press(inverse);
+    await expect(page.getByRole('button', { name: 'Save game', exact: true })).toBeEnabled();
+    if (move.endsWith('2')) {
+      await page.keyboard.press(key);
+      await expect(page.getByRole('button', { name: 'Save game', exact: true })).toBeEnabled();
+    }
+  }
   const updated = page.waitForResponse(
     response =>
       response.url().endsWith(`/api/saved-games/${game.documentId}`) &&
@@ -226,12 +239,13 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
     localStorage.removeItem('rubiks.language.v1');
   });
   await page.reload();
-  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(238, 242, 247)');
+  await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(234, 241, 250)');
   await expect(page.getByRole('button', { name: 'Save game', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: /^(configurações|configurations)$/i }).click();
   await page.getByRole('button', { name: /^Hints/ }).click();
   await expect(page.getByLabel('Hints mode', { exact: true })).toBeChecked();
   await page.getByRole('button', { name: /^(fechar configurações|close settings)$/i }).click();
+  await page.getByRole('button', { name: 'New game', exact: true }).click();
   await blur(page);
   await page.keyboard.press('k');
   await expect(page.getByRole('button', { name: 'Resume timer' })).toBeVisible();
@@ -281,4 +295,14 @@ test('real Strapi: account, language, saved game, replay, attempts, presets and 
   await page.getByRole('button', { name: 'Resume', exact: true }).first().click();
   await expect(page.getByText(/Auto-solve used/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Record solved attempt' })).toBeDisabled();
+
+  await page.getByRole('button', { name: 'New game', exact: true }).click();
+  const devAttempt = page.waitForResponse(
+    response =>
+      response.url().endsWith('/api/solve-attempts/dev') && response.request().method() === 'POST'
+  );
+  await page.getByRole('button', { name: 'Solve cube (dev)', exact: true }).click();
+  expect((await devAttempt).status()).toBe(201);
+  await page.getByRole('link', { name: 'Ranking', exact: true }).click();
+  await expect(page.getByRole('rowheader', { name: `${username}b`, exact: true })).toBeVisible();
 });

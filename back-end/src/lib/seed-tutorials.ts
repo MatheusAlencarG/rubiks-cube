@@ -3,13 +3,10 @@ import path from 'node:path';
 
 /** Import existing repository content explicitly; never overwrite edited entries on startup. */
 export async function seedTutorials(strapi: any, repositoryRoot: string) {
-  const sourceRoot = path.resolve(repositoryRoot, 'front-end');
-  const parts = JSON.parse(
-    await readFile(path.join(sourceRoot, 'src/Pages/Tutorial/TutorialParts/content.json'), 'utf8')
-  ).content;
-  const steps = JSON.parse(
-    await readFile(path.join(sourceRoot, 'src/Pages/Tutorial/TutorialStep/content.json'), 'utf8')
-  ).content;
+  const seedRoot = path.resolve(repositoryRoot, 'back-end/seed-data/tutorials');
+  const publicRoot = path.resolve(repositoryRoot, 'front-end/public');
+  const parts = JSON.parse(await readFile(path.join(seedRoot, 'parts.json'), 'utf8')).content;
+  const steps = JSON.parse(await readFile(path.join(seedRoot, 'steps.json'), 'utf8')).content;
   const documents = strapi.documents('api::tutorial.tutorial');
   const files = strapi.db.query('plugin::upload.file');
   const mediaCache = new Map<string, number>();
@@ -17,7 +14,6 @@ export async function seedTutorials(strapi: any, repositoryRoot: string) {
   async function importImage(relativeUrl: string) {
     if (mediaCache.has(relativeUrl)) return mediaCache.get(relativeUrl);
 
-    const publicRoot = path.resolve(sourceRoot, 'public');
     const file = path.resolve(publicRoot, `.${relativeUrl}`);
     if (!file.startsWith(`${publicRoot}${path.sep}`)) throw new Error('Imagem fora de public.');
 

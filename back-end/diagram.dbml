@@ -189,6 +189,7 @@ Table solve_attempts {
   cube_type cube_type [not null, default: '3x3']
   duration_ms integer [not null]
   completed_at datetime [not null]
+  dev_only boolean [default: false, note: 'Visível no ranking apenas no ambiente local de desenvolvimento']
 
   engine_version varchar(64) [not null]
 

@@ -215,6 +215,11 @@ test('pauses the timer and blocks face turns and view rotation', async ({ page }
     await timer.evaluate(element => parseFloat(getComputedStyle(element).fontSize))
   ).toBeGreaterThanOrEqual(30);
   await page.keyboard.press('w');
+  await page.keyboard.press('Shift+W');
+  await expect(controls).toContainText('0 movimentos');
+  await expect(timer).toHaveText('00:00,0');
+  await newGame.click();
+  await page.keyboard.press('w');
   await expect(controls).toContainText('1 movimentos');
   await page.clock.fastForward(1200);
 
@@ -223,7 +228,7 @@ test('pauses the timer and blocks face turns and view rotation', async ({ page }
   const elapsed = await timer.textContent();
   const view = await page.locator('.cube').getAttribute('style');
   await expect(newGame).toBeEnabled();
-  const solve = page.getByRole('button', { name: 'Resolver cubo' });
+  const solve = page.getByRole('button', { name: 'Resolver cubo', exact: true });
   await expect(solve).toBeDisabled();
   await page.keyboard.press('w');
   const warning = controls.getByText('Comando bloqueado. Retome o cronômetro para mover o cubo.');
@@ -279,4 +284,66 @@ test('pauses the timer and blocks face turns and view rotation', async ({ page }
   await page.clock.fastForward(3000);
   await expect(autoSolved).toBeHidden();
   await expect(timer).toHaveText('00:00,0');
+});
+
+test('celebrates a local dev solve and updates the local ranking', async ({ page }) => {
+  await mockStrapi(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.addInitScript(() => sessionStorage.setItem('rubiks.session.v1', 'test-jwt'));
+  await page.route('**/api/account/profile', route =>
+    route.fulfill({ json: { id: 1, username: 'tester', email: 'tester@example.test' } })
+  );
+  let durationMs: number | undefined;
+  let moveCount: number | undefined;
+  await page.route('**/api/ranking', route =>
+    route.fulfill({
+      json: {
+        data:
+          durationMs === undefined
+            ? []
+            : [{ position: 1, username: 'tester', durationMs, moveCount }],
+      },
+    })
+  );
+  await page.route('**/api/solve-attempts**', route => {
+    if (route.request().method() === 'POST') {
+      expect(new URL(route.request().url()).pathname).toBe('/api/solve-attempts/dev');
+      const { data } = route.request().postDataJSON();
+      expect(data.moves.length).toBeGreaterThanOrEqual(20);
+      durationMs = data.durationMs;
+      moveCount = data.moves.length;
+      return route.fulfill({
+        status: 201,
+        json: { data: { documentId: 'dev-result', durationMs } },
+      });
+    }
+    return route.fulfill({
+      json: { data: [], meta: { pagination: { page: 1, pageCount: 0, total: 0 } } },
+    });
+  });
+
+  await page.goto('/ranking');
+  await expect(page.getByText('Ainda não há resoluções elegíveis para o ranking.')).toBeVisible();
+  await page.getByRole('link', { name: 'cubo mágico', exact: true }).click();
+  const devSolve = page.getByRole('button', { name: 'Resolver cubo (dev)', exact: true });
+  await expect(devSolve).toBeDisabled();
+  await page.getByRole('button', { name: 'Nova partida', exact: true }).click();
+  await devSolve.click();
+  await expect(page.getByText('Resolução de teste concluída.')).toBeVisible();
+  const celebration = page.locator('[data-celebrating="true"]');
+  await expect(celebration).toHaveCount(1);
+  expect(
+    await celebration
+      .locator(':scope > div')
+      .evaluate(element => element.getAnimations()[0].effect?.getTiming().duration)
+  ).toBe(4100);
+  await expect(celebration).toHaveCount(0, { timeout: 7000 });
+  await expect(page.getByRole('button', { name: 'Salvar partida' })).toBeDisabled();
+
+  await page.getByText('Partidas e aparência', { exact: true }).click();
+  const record = page.getByRole('button', { name: 'Registrar tentativa resolvida' });
+  await expect(record).toBeDisabled();
+  await page.getByRole('link', { name: 'Ranking', exact: true }).click();
+  await expect(page.getByRole('rowheader', { name: 'tester' })).toBeVisible();
+  await expect(page.getByRole('cell', { name: String(moveCount), exact: true })).toBeVisible();
 });
